@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblos – Menu główne</title>
+<!-- PWA Manifest -->
+<link rel="manifest" href="manifest.json">
+
+<!-- Ikony dla Androida -->
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#2980b9">
+
+<!-- Pełny ekran na Androidzie -->
+<meta name="mobile-web-app-capable" content="yes">   
+ <style>
+        :root { --accent: #3498db; --accent2: #d35400; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: url('background.png') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5); /* półprzezroczyste czarne tło dla lepszej czytelności */
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            overflow: hidden;
+            text-align: center;
+            padding: 60px 40px;
+        }
+        header {
+            margin-bottom: 50px;
+        }
+        h1 { font-size: 4.5rem; letter-spacing: 8px; text-transform: uppercase; }
+
+        .welcome {
+            font-size: 2rem;
+            margin-bottom: 60px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+        .card-btn {
+            padding: 50px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 24px;
+            cursor: pointer;
+            font-size: 2.2rem;
+            font-weight: 700;
+            transition: 0.4s;
+            border: 3px solid transparent;
+            backdrop-filter: blur(5px);
+        }
+        .card-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-20px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+        }
+        .hebrew { border-color: var(--accent2); }
+        .greek { border-color: var(--accent); }
+        .card-btn p {
+            font-size: 1.4rem;
+            margin-top: 20px;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>BIBLOS</h1>
+    </header>
+
+    <div class="welcome">
+        Witaj, <span id="userName">Gość</span>!
+    </div>
+
+    <div class="grid">
+        <div class="card-btn hebrew" id="hebrewBtn">
+            Hebrajski biblijny
+            <p>Nauka słownictwa z podręczników (Lambdin i inne)</p>
+        </div>
+
+        <div class="card-btn greek" id="greekBtn">
+            Grecki koinē
+            <p>Nauka słownictwa z Nowego Testamentu (w przygotowaniu)</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Wyświetlanie imienia użytkownika
+    const currentUser = localStorage.getItem('biblos_current_user') || 'Gość';
+    document.getElementById('userName').textContent = currentUser;
+
+    // Przyciski
+    document.getElementById('hebrewBtn').onclick = () => {
+        window.location.href = 'hebrew.html';
+    };
+
+    document.getElementById('greekBtn').onclick = () => {
+        window.location.href = 'greek.html';
+    };
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js');
+    });
+  }
+</script>
+</body>
+</html>
