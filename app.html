@@ -19,7 +19,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', sans-serif;
-            background: url('background_s.png') no-repeat center center fixed;
+            background: url('background.png') no-repeat center center fixed;
             background-size: cover;
             color: white;
             min-height: 100vh;
@@ -32,7 +32,7 @@
         .container {
             max-width: 800px;
             width: 100%;
-            background: rgba(0, 0, 0, 0.5); /* półprzezroczyste czarne tło dla lepszej czytelności */
+            background: rgba(0, 0, 0, 0.3); /* półprzezroczyste czarne tło dla lepszej czytelności */
             backdrop-filter: blur(10px);
             border-radius: 24px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.6);
@@ -43,7 +43,7 @@
         header {
             margin-bottom: 50px;
         }
-        h1 { font-size: 4.5rem; letter-spacing: 8px; text-transform: uppercase; }
+        h1 { font-size: 4.5 rem; letter-spacing: 6px; text-transform: uppercase; }
 
         .welcome {
             font-size: 2rem;
@@ -60,7 +60,7 @@
             background: rgba(255,255,255,0.15);
             border-radius: 24px;
             cursor: pointer;
-            font-size: 2.2rem;
+            font-size: 1.5 rem;
             font-weight: 700;
             transition: 0.4s;
             border: 3px solid transparent;
@@ -93,11 +93,11 @@
 
     <div class="grid">
         <div class="card-btn hebrew" id="hebrewBtn">
-            Język hebrajski biblijny
+            Język hebrajski 
         </div>
 
         <div class="card-btn greek" id="greekBtn">
-            Jezyk grecki Nowego Testamentu
+            Jezyk grecki NT
         </div>
     </div>
 </div>
@@ -125,4 +125,3 @@
 </script>
 </body>
 </html>
-
