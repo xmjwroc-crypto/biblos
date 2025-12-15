@@ -203,6 +203,7 @@
     <div id="bookScreen" class="screen active">
         <h2>Wybierz podręcznik</h2>
         <div class="grid" id="bookGrid"></div>
+	<button class="btn-back" onclick="backToApp()">Powrót</button>
     </div>
 
     <!-- 2. Tryb nauki -->
@@ -276,8 +277,8 @@
     let archivePool = JSON.parse(localStorage.getItem(ARCHIVE_KEY)) || [];
 
     // Automatyczny import Lambdina
-    if (!books["Lambdin – Introduction to Biblical Hebrew"]) {
-        books["Lambdin – Introduction to Biblical Hebrew"] = {
+    if (!books["T. Lambdin – Wprowadzenie do hebrajskiego biblijnego"]) {
+        books ["T. Lambdin – Wprowadzenie do hebrajskiego biblijnego"] = {
             "Lekcja 1": [
                 {"hebrew":"אָדָם","translit":"ʾādām","polish":"człowiek"},
                 {"hebrew":"אֵל","translit":"ʾēl","polish":"Bóg"},
@@ -765,7 +766,10 @@
         document.getElementById(screenName + 'Screen').classList.add('active');
     }
 
-    function backToBooks() {
+    function backToApp() {
+        window.location.href = 'app.html';
+    }
+	function backToBooks() {
         showScreen('book');
         renderBooks();
     }
