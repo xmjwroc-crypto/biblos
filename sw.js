@@ -1,4 +1,4 @@
-const CACHE_NAME = 'biblos-v1';
+const CACHE_NAME = 'biblos-v2.0';
 const urlsToCache = [
   './',
   'index.html',
@@ -23,4 +23,5 @@ self.addEventListener('fetch', event => {
     caches.match(event.request)
       .then(response => response || fetch(event.request))
   );
+
 });
