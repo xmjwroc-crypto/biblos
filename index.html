@@ -143,6 +143,12 @@
         <div class="user-list" id="userList">
             <div class="empty">Brak zapisanych użytkowników</div>
         </div>
+<div style="margin: 20px auto; text-align: center;">
+    <button style="background: #95a5a6; color: white; font-size: 0.8rem; padding: 10px 10px;" onclick="resetApp()">
+        Resetuj aplikację
+    </button>
+</div>
+
     </main>
 </div>
 
@@ -192,6 +198,13 @@
             userList.appendChild(div);
         });
     }
+function resetApp() {
+    if (confirm('Na pewno chcesz wyczyścić WSZYSTKIE dane aplikacji?\n\n- Usunięci zostaną wszyscy użytkownicy\n- Postępy w lekcjach\n- Słowa w powtórkach i archiwum\n\nTej operacji nie można cofnąć!')) {
+        localStorage.clear();
+        alert('Dane aplikacji zostały wyczyszczone.\nStrona zostanie przeładowana.');
+        location.reload();
+    }
+}
 
 function goToApp(username) {
     localStorage.setItem('biblos_current_user', username);
@@ -223,6 +236,7 @@ function goToApp(username) {
     });
 
     renderUsers();
+
 </script>
 <script>
   if ('serviceWorker' in navigator) {
