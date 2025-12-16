@@ -69,7 +69,6 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.6);
         }
 
-        /* Responsywna fiszka */
         .flashcard {
             width: 90vw;
             max-width: 460px;
@@ -110,21 +109,10 @@
         }
         .flipped .card-inner { transform: rotateY(180deg); }
 
-        /* Responsywny tekst w fiszce */
-        .card-front > div:first-child { /* hebrajski */
-            font-size: clamp(3rem, 10vw, 5.5rem);
-        }
-        .card-front > div:nth-child(2) { /* transliteracja */
-            font-size: clamp(1.6rem, 5vw, 2.2rem);
-            margin-top: 20px;
-        }
-        .card-front > div:last-child { /* podpowiedź */
-            font-size: clamp(1rem, 3vw, 1.4rem);
-            margin-top: 40px;
-        }
-        .card-back > div {
-            font-size: clamp(3.5rem, 9vw, 5rem);
-        }
+        .card-front > div:first-child { font-size: clamp(3rem, 10vw, 5.5rem); }
+        .card-front > div:nth-child(2) { font-size: clamp(1.6rem, 5vw, 2.2rem); margin-top: 20px; }
+        .card-front > div:last-child { font-size: clamp(1rem, 3vw, 1.4rem); margin-top: 40px; }
+        .card-back > div { font-size: clamp(3.5rem, 9vw, 5rem); }
 
         .btn-group {
             display: flex;
@@ -150,7 +138,6 @@
         }
         .btn-know   { background: var(--success); color: white; }
         .btn-hard   { background: var(--warning); color: white; }
-        .btn-again  { background: #e74c3c; color: white; }
         .btn-archive { background: #7f8c8d; color: white; }
         .btn-restore { background: #27ae60; color: white; padding: 10px 20px; font-size: 1.2rem; }
         .btn-back {
@@ -203,7 +190,7 @@
     <div id="bookScreen" class="screen active">
         <h2>Wybierz podręcznik</h2>
         <div class="grid" id="bookGrid"></div>
-	<button class="btn-back" onclick="backToApp()">Powrót</button>
+        <button class="btn-back" onclick="backToApp()">Powrót</button>
     </div>
 
     <!-- 2. Tryb nauki -->
@@ -239,9 +226,12 @@
 
         <div class="btn-group">
             <button class="btn-check">SPRAWDŹ</button>
-            <button class="btn-again" style="display:none;">Znowu</button>
-            <button class="btn-hard" style="display:none;">Trudne</button>
-            <button class="btn-know" style="display:none;">Wiem!</button>
+            
+            <!-- Przyciski dla trybu NAUKA -->
+            <button class="btn-know" id="btn-learn-master" style="display:none;">Umiem</button>
+            <button class="btn-hard" id="btn-learn-notmaster" style="display:none;">Nie umiem</button>
+            
+            <!-- Przyciski dla trybu POWTÓRKA -->
             <button class="btn-know" id="btn-master" style="display:none;">Umiem</button>
             <button class="btn-hard" id="btn-notmaster" style="display:none;">Nie umiem</button>
             <button class="btn-archive" id="btn-archive" style="display:none;">Archiwum</button>
@@ -276,8 +266,8 @@
     let reviewPool = JSON.parse(localStorage.getItem(REVIEW_KEY)) || [];
     let archivePool = JSON.parse(localStorage.getItem(ARCHIVE_KEY)) || [];
 
-    // Automatyczny import Lambdina
-    if (!books["T. Lambdin – Wprowadzenie do hebrajskiego biblijnego"]) {
+    // === TUTAJ WKLEJ WSZYSTKIE LEKCJE 1–55 ===
+   if (!books["T. Lambdin – Wprowadzenie do hebrajskiego biblijnego"]) {
         books ["T. Lambdin – Wprowadzenie do hebrajskiego biblijnego"] = {
             "Lekcja 1": [
                 {"hebrew":"אָדָם","translit":"ʾādām","polish":"człowiek"},
@@ -750,9 +740,10 @@
                 {"hebrew":"טוֹבָה","translit":"ṭôbâ","polish":"dobro"}
             ]
         };
-        localStorage.setItem(DB_KEY, JSON.stringify(books));
-        books = JSON.parse(localStorage.getItem(DB_KEY));
-    }
+       localStorage.setItem(DB_KEY, JSON.stringify(books));
+         books = JSON.parse(localStorage.getItem(DB_KEY));
+     }
+    // ===========================================
 
     let currentBook = null;
     let currentLesson = null;
@@ -769,11 +760,10 @@
     function backToApp() {
         window.location.href = 'app.html';
     }
-	function backToBooks() {
+    function backToBooks() {
         showScreen('book');
         renderBooks();
     }
-
     function backToMode() {
         showScreen('mode');
         updateReviewCount();
@@ -806,24 +796,20 @@
             list.innerHTML = '<div style="color: #aaa; font-style: italic;">Brak słów w archiwum</div>';
             return;
         }
-
         list.innerHTML = '';
         archivePool.sort((a, b) => a.hebrew.localeCompare(b.hebrew)).forEach(word => {
             const item = document.createElement('div');
             item.className = 'archive-item';
-
             const textDiv = document.createElement('div');
             textDiv.innerHTML = `
                 <div class="archive-hebrew">${word.hebrew}</div>
                 <div class="archive-polish">${word.polish}</div>
                 ${word.translit ? `<div style="font-size:1.3rem; color:#777; margin-top:6px;">${word.translit}</div>` : ''}
             `;
-
             const restoreBtn = document.createElement('button');
             restoreBtn.className = 'btn-restore';
             restoreBtn.textContent = 'Przywróć';
             restoreBtn.onclick = () => restoreFromArchive(word);
-
             item.appendChild(textDiv);
             item.appendChild(restoreBtn);
             list.appendChild(item);
@@ -833,14 +819,12 @@
     function restoreFromArchive(word) {
         archivePool = archivePool.filter(w => !(w.hebrew === word.hebrew && w.polish === word.polish));
         localStorage.setItem(ARCHIVE_KEY, JSON.stringify(archivePool));
-
         const exists = reviewPool.some(w => w.hebrew === word.hebrew && w.polish === word.polish);
         if (!exists) {
             reviewPool.push(word);
             localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewPool));
             updateReviewCount();
         }
-
         renderArchive();
     }
 
@@ -851,7 +835,6 @@
             grid.innerHTML = '';
             const lessonKeys = Object.keys(books[currentBook] || {});
             lessonKeys.sort((a, b) => parseInt(a.replace('Lekcja ', '')) - parseInt(b.replace('Lekcja ', '')));
-
             lessonKeys.forEach(lesson => {
                 const div = document.createElement('div');
                 div.className = 'card-btn';
@@ -859,7 +842,6 @@
                 div.onclick = () => startLearning(lesson);
                 grid.appendChild(div);
             });
-
             showScreen('lesson');
         } else if (mode === 'review') {
             isReviewMode = true;
@@ -867,11 +849,9 @@
                 alert('Nie masz jeszcze żadnych słów w powtórkach.\nUkończ przynajmniej jedną lekcję.');
                 return;
             }
-
             let selected = [...reviewPool];
             selected.sort(() => 0.5 - Math.random());
             currentWords = selected.slice(0, 10);
-
             currentIndex = 0;
             isRevealed = false;
             document.getElementById('lessonTitle').textContent = 'Powtórka – 10 losowych słów';
@@ -885,7 +865,7 @@
 
     function startLearning(lesson) {
         isReviewMode = false;
-        currentWords = books[currentBook][lesson] || [];
+        currentWords = [...books[currentBook][lesson] || []]; // kopia tablicy
         currentLesson = lesson;
         currentIndex = 0;
         isRevealed = false;
@@ -896,18 +876,12 @@
 
     function showCard() {
         if (currentIndex >= currentWords.length) {
+            // Wszystkie słowa opanowane w tej sesji
             if (!isReviewMode) {
                 if (!progress[currentBook]) progress[currentBook] = {};
                 progress[currentBook][currentLesson] = true;
                 localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
-
-                currentWords.forEach(word => {
-                    const exists = reviewPool.some(w => w.hebrew === word.hebrew && w.polish === word.polish);
-                    if (!exists) reviewPool.push(word);
-                });
-                localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewPool));
-                updateReviewCount();
-                alert("Gratulacje! Ukończyłeś lekcję!\nSłowa dodane do powtórek.");
+                alert("Gratulacje! Ukończyłeś lekcję!\nWszystkie słowa są już w powtórkach.");
             } else {
                 alert("Koniec powtórki!");
             }
@@ -916,17 +890,14 @@
         }
 
         const w = currentWords[currentIndex];
-
         document.getElementById('front').innerHTML = `
             <div>${w.hebrew}</div>
             ${w.translit ? `<div>${w.translit}</div>` : ''}
             <div>Kliknij, aby zobaczyć tłumaczenie</div>
         `;
-
         document.getElementById('back').innerHTML = `
             <div>${w.polish}</div>
         `;
-
         isRevealed = false;
         updateButtons();
     }
@@ -935,63 +906,98 @@
         document.querySelector('.btn-check').style.display = isRevealed ? 'none' : 'inline-block';
 
         if (isReviewMode) {
-            document.querySelectorAll('.btn-again, .btn-hard, .btn-know').forEach(b => b.style.display = 'none');
+            // Tryb powtórki
             document.getElementById('btn-master').style.display = isRevealed ? 'inline-block' : 'none';
             document.getElementById('btn-notmaster').style.display = isRevealed ? 'inline-block' : 'none';
             document.getElementById('btn-archive').style.display = isRevealed ? 'inline-block' : 'none';
+
+            document.getElementById('btn-learn-master').style.display = 'none';
+            document.getElementById('btn-learn-notmaster').style.display = 'none';
         } else {
-            document.querySelectorAll('.btn-again, .btn-hard, .btn-know').forEach(b => {
-                b.style.display = isRevealed ? 'inline-block' : 'none';
-            });
-            ['btn-master', 'btn-notmaster', 'btn-archive'].forEach(id => {
-                document.getElementById(id).style.display = 'none';
-            });
+            // Tryb nauki
+            document.getElementById('btn-learn-master').style.display = isRevealed ? 'inline-block' : 'none';
+            document.getElementById('btn-learn-notmaster').style.display = isRevealed ? 'inline-block' : 'none';
+
+            document.getElementById('btn-master').style.display = 'none';
+            document.getElementById('btn-notmaster').style.display = 'none';
+            document.getElementById('btn-archive').style.display = 'none';
         }
     }
 
-    document.getElementById('flashcard').onclick = () => {
+    // Obsługa odwrócenia fiszki
+    document.getElementById('flashcard').onclick = flipCard;
+    document.querySelector('.btn-check').onclick = flipCard;
+
+    function flipCard() {
         if (!isRevealed) {
             document.getElementById('flashcard').classList.add('flipped');
             isRevealed = true;
             updateButtons();
         }
-    };
+    }
 
-    document.querySelector('.btn-check').onclick = () => {
-        document.getElementById('flashcard').classList.add('flipped');
-        isRevealed = true;
-        updateButtons();
-    };
+    // === FUNKCJE DLA TRYBU NAUKA (POPRAWIONE) ===
+    function learnMasterCard() {
+        const word = currentWords[currentIndex];
 
-    function nextCard() {
+        // Dodaj do globalnej puli powtórek (jeśli jeszcze nie ma)
+        const exists = reviewPool.some(w => w.hebrew === word.hebrew && w.polish === word.polish);
+        if (!exists) {
+            reviewPool.push(word);
+            localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewPool));
+            updateReviewCount();
+        }
+
+        // Usuń z bieżącej sesji i przejdź dalej
+        nextCardWithoutReturn();
+    }
+
+   function learnNotMasterCard() {
+    const flashcard = document.getElementById('flashcard');
+    flashcard.classList.remove('flipped');
+
+    setTimeout(() => {
+        // Pobierz bieżącą fiszkę
+        const card = currentWords[currentIndex];
+
+        // Usuń z obecnej pozycji
+        currentWords.splice(currentIndex, 1);
+
+        // Dodaj na KONIEC kolejki (push zamiast unshift)
+        currentWords.push(card);
+
+        // Przejdź do następnej fiszki (która jest teraz kolejną w oryginalnej kolejności)
+        // Nie resetujemy currentIndex do 0 – po prostu idziemy dalej
+        currentIndex = Math.min(currentIndex, currentWords.length - 1);
+
+        showCard();
+    }, 850);
+}
+
+    function nextCardWithoutReturn() {
         const flashcard = document.getElementById('flashcard');
         flashcard.classList.remove('flipped');
+
         setTimeout(() => {
             currentIndex++;
             showCard();
         }, 850);
     }
 
-    function againCard() {
-        const flashcard = document.getElementById('flashcard');
-        flashcard.classList.remove('flipped');
-        setTimeout(() => {
-            currentWords.push(currentWords.splice(currentIndex, 1)[0]);
-            currentIndex++;
-            showCard();
-        }, 850);
-    }
-
+    // === FUNKCJE DLA TRYBU POWTÓRKA ===
     function masterCard() {
-        nextCard();
+        nextCardWithoutReturn();
     }
 
     function notMasterCard() {
         const flashcard = document.getElementById('flashcard');
         flashcard.classList.remove('flipped');
+
         setTimeout(() => {
-            currentWords.unshift(currentWords.splice(currentIndex, 1)[0]);
-            currentIndex++;
+            const card = currentWords[currentIndex];
+            currentWords.splice(currentIndex, 1);
+            currentWords.unshift(card);
+            currentIndex = 0;
             showCard();
         }, 850);
     }
@@ -1002,9 +1008,11 @@
         flashcard.classList.remove('flipped');
 
         setTimeout(() => {
+            // Usuń z powtórek
             reviewPool = reviewPool.filter(w => !(w.hebrew === word.hebrew && w.polish === word.polish));
             localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewPool));
 
+            // Dodaj do archiwum (jeśli jeszcze nie ma)
             const existsInArchive = archivePool.some(w => w.hebrew === word.hebrew && w.polish === word.polish);
             if (!existsInArchive) {
                 archivePool.push(word);
@@ -1017,9 +1025,9 @@
         }, 850);
     }
 
-    document.querySelector('.btn-know').onclick = nextCard;
-    document.querySelector('.btn-hard').onclick = nextCard;
-    document.querySelector('.btn-again').onclick = againCard;
+    // Podpięcie przycisków
+    document.getElementById('btn-learn-master').onclick = learnMasterCard;
+    document.getElementById('btn-learn-notmaster').onclick = learnNotMasterCard;
 
     document.getElementById('btn-master').onclick = masterCard;
     document.getElementById('btn-notmaster').onclick = notMasterCard;
@@ -1028,7 +1036,7 @@
     renderBooks();
     updateReviewCount();
 
-    // Rejestracja Service Worker
+    // Rejestracja Service Worker (PWA)
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js')
