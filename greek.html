@@ -10,189 +10,174 @@
     <meta name="theme-color" content="#2980b9">
     <meta name="mobile-web-app-capable" content="yes">
 
-<style>
-    :root { --bg: #3b1e11; --card: rgba(255,255,255,0.08); --accent: #d35400; --success: #27ae60; --warning: #f39c12; }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-        font-family: 'Segoe UI', Tahoma, sans-serif;
-        background: linear-gradient(135deg, #3b1e11, #5d2e1a, #8b4513);
-        color: #f0e6d2;
-        min-height: 100vh;
-        padding: 10px;
-    }
-    .container {
-        max-width: 1100px;
-        margin: 0 auto;
-        background: var(--card);
-        backdrop-filter: blur(15px);
-        border-radius: 24px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-        overflow: hidden;
-    }
-    header {
-        background: linear-gradient(90deg, #8b4513, #a0522d);
-        padding: 30px 20px;
-        text-align: center;
-        color: white;
-    }
-    h1 { font-size: 2.5rem; letter-spacing: 4px; }
-    header p { font-size: 1.2rem; }
-
-    .screen { display: none; padding: 20px; text-align: center; }
-    .active { display: block !important; }
-
-    .grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 20px;
-        margin: 30px 0;
-    }
-    @media (min-width: 600px) {
-        .grid {
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    <style>
+        :root { --bg: #3b1e11; --card: rgba(255,255,255,0.08); --accent: #d35400; --success: #27ae60; --warning: #f39c12; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(135deg, #3b1e11, #5d2e1a, #8b4513);
+            color: #f0e6d2;
+            min-height: 100vh;
+            padding: 10px;
         }
-    }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: var(--card);
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(90deg, #8b4513, #a0522d);
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+        h1 { font-size: 2.5rem; letter-spacing: 4px; }
+        header p { font-size: 1.2rem; }
 
-    .card-btn {
-        padding: 30px;
-        background: rgba(255,255,255,0.12);
-        border-radius: 20px;
-        cursor: pointer;
-        font-size: 1.6rem;
-        font-weight: 600;
-        transition: 0.4s;
-        border: 2px solid rgba(255,255,255,0.2);
-    }
-    .card-btn:hover {
-        background: rgba(255,255,255,0.25);
-        transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-    }
+        .screen { display: none; padding: 20px; text-align: center; }
+        .active { display: block !important; }
 
-    /* Responsywna fiszka */
-    .flashcard {
-        width: 90vw;
-        max-width: 460px;
-        height: 80vh;
-        max-height: 620px;
-        margin: 20px auto;
-        perspective: 1200px;
-    }
-    .card-inner {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        transform-style: preserve-3d;
-        transition: transform 0.8s ease-in-out;
-    }
-    .card-front, .card-back {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        backface-visibility: hidden;
-        background: white;
-        color: #0a1a2f;
-        border-radius: 24px;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-        font-family: "Gentium", "Times New Roman", "SBL Greek", serif !important;
-        direction: ltr;
-        text-align: center;
-    }
-    .card-back {
-        background: #8b4513;
-        color: white;
-        transform: rotateY(180deg);
-    }
-    .flipped .card-inner { transform: rotateY(180deg); }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        @media (min-width: 600px) {
+            .grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+        }
 
-    /* Responsywny tekst w fiszce */
-    .card-front > div:first-child { /* grecki */
-        font-size: clamp(3rem, 10vw, 5.5rem);
-    }
-    .card-front > div:nth-child(2) { /* transliteracja */
-        font-size: clamp(1.6rem, 5vw, 2.2rem);
-        margin-top: 20px;
-    }
-    .card-front > div:last-child { /* podpowiedź */
-        font-size: clamp(1rem, 3vw, 1.4rem);
-        margin-top: 40px;
-    }
-    .card-back > div {
-        font-size: clamp(2rem, 6vw, 3.8rem);
-line-height: 1.4;                        /* lepsza czytelność przy dłuższych tekstach */
-    padding: 20px;
-    word-wrap: break-word;
-    }
+        .card-btn {
+            padding: 30px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1.6rem;
+            font-weight: 600;
+            transition: 0.4s;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        .card-btn:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        }
 
-    .btn-group {
-        display: flex;
-        gap: 15px;
-        margin-top: 30px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    button {
-        padding: 14px 28px;
-        border: none;
-        border-radius: 20px;
-        font-size: 1.4rem;
-        font-weight: bold;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-    .btn-check {
-        background: #3498db;
-        color: white;
-        font-size: 1.8rem;
-        padding: 18px 50px;
-    }
-    .btn-know   { background: var(--success); color: white; }
-    .btn-hard   { background: var(--warning); color: white; }
-    .btn-again  { background: #e74c3c; color: white; }
-    .btn-archive { background: #7f8c8d; color: white; }
-    .btn-restore { background: #27ae60; color: white; padding: 10px 20px; font-size: 1.2rem; }
-    .btn-back {
-        background: #7f8c8d;
-        color: white;
-        margin-top: 60px;
-    }
+        .flashcard {
+            width: 90vw;
+            max-width: 460px;
+            height: 80vh;
+            max-height: 620px;
+            margin: 20px auto;
+            perspective: 1200px;
+        }
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.8s ease-in-out;
+        }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            background: white;
+            color: #0a1a2f;
+            border-radius: 24px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            font-family: "Gentium Plus", "Times New Roman", "SBL Greek", serif !important;
+            direction: ltr;
+            text-align: center;
+        }
+        .card-back {
+            background: #8b4513;
+            color: white;
+            transform: rotateY(180deg);
+        }
+        .flipped .card-inner { transform: rotateY(180deg); }
 
-    .review-info {
-        margin-top: 30px;
-        font-size: 1.3rem;
-        opacity: 0.9;
-    }
+        .card-front > div:first-child { font-size: clamp(3rem, 10vw, 5.5rem); }
+        .card-front > div:nth-child(2) { font-size: clamp(1.6rem, 5vw, 2.2rem); margin-top: 20px; }
+        .card-front > div:last-child { font-size: clamp(1rem, 3vw, 1.4rem); margin-top: 40px; }
+        .card-back > div { font-size: clamp(2rem, 6vw, 3.8rem); line-height: 1.4; padding: 20px; word-wrap: break-word; }
 
-    .archive-list {
-        max-width: 800px;
-        margin: 30px auto;
-        text-align: left;
-    }
-    .archive-item {
-        background: rgba(255,255,255,0.1);
-        padding: 18px;
-        margin: 12px 0;
-        border-radius: 16px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 1.6rem;
-    }
-    .archive-greek {
-        direction: ltr;
-        font-size: 2.2rem;
-        margin-bottom: 6px;
-    }
-    .archive-polish {
-        font-size: 1.4rem;
-        opacity: 0.9;
-    }
-</style></head>
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        button {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-check {
+            background: #3498db;
+            color: white;
+            font-size: 1.8rem;
+            padding: 18px 50px;
+        }
+        .btn-know   { background: var(--success); color: white; }
+        .btn-hard   { background: var(--warning); color: white; }
+        .btn-archive { background: #7f8c8d; color: white; }
+        .btn-restore { background: #27ae60; color: white; padding: 10px 20px; font-size: 1.2rem; }
+        .btn-back {
+            background: #7f8c8d;
+            color: white;
+            margin-top: 60px;
+        }
+
+        .review-info {
+            margin-top: 30px;
+            font-size: 1.3rem;
+            opacity: 0.9;
+        }
+
+        .archive-list {
+            max-width: 800px;
+            margin: 30px auto;
+            text-align: left;
+        }
+        .archive-item {
+            background: rgba(255,255,255,0.1);
+            padding: 18px;
+            margin: 12px 0;
+            border-radius: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.6rem;
+        }
+        .archive-greek {
+            direction: ltr;
+            font-size: 2.2rem;
+            margin-bottom: 6px;
+        }
+        .archive-polish {
+            font-size: 1.4rem;
+            opacity: 0.9;
+        }
+    </style>
+</head>
 <body>
 
 <div class="container">
@@ -201,66 +186,70 @@ line-height: 1.4;                        /* lepsza czytelność przy dłuższych
         <p>Witaj, <span id="userName">...</span>!</p>
     </header>
 
-<!-- 1. Wybór podręcznika -->
-<div id="bookScreen" class="screen active">
-    <h2>Wybierz podręcznik</h2>
-    <div class="grid" id="bookGrid"></div>
-    <button class="btn-back" onclick="backToApp()">Powrót</button>
-</div>
-
-<!-- 2. Tryb nauki -->
-<div id="modeScreen" class="screen">
-    <h2 id="bookTitle">Podręcznik: ...</h2>
-    <div class="grid">
-        <div class="card-btn" onclick="openMode('learn')">Nauka</div>
-        <div class="card-btn" onclick="openMode('review')">Powtórka</div>
-        <div class="card-btn" onclick="openMode('archive')">Archiwum</div>
+    <!-- 1. Wybór podręcznika -->
+    <div id="bookScreen" class="screen active">
+        <h2>Wybierz podręcznik</h2>
+        <div class="grid" id="bookGrid"></div>
+        <button class="btn-back" onclick="backToApp()">Powrót</button>
     </div>
-    <div class="review-info">
-        Słowa w powtórkach: <strong id="reviewCount">0</strong>
-    </div>
-    <button class="btn-back" onclick="backToBooks()">Powrót</button>
-</div>
 
-<!-- 3. Wybór lekcji -->
-<div id="lessonScreen" class="screen">
-    <h2>Nauka – <span id="currentBookName">...</span></h2>
-    <div class="grid" id="lessonGrid"></div>
-    <button class="btn-back" onclick="backToMode()">Powrót</button>
-</div>
-
-<!-- 4. Fiszki -->
-<div id="flashcardScreen" class="screen">
-    <h2 id="lessonTitle">Lekcja ...</h2>
-    <div class="flashcard" id="flashcard">
-        <div class="card-inner">
-            <div class="card-front" id="front"></div>
-            <div class="card-back" id="back"></div>
+    <!-- 2. Tryb nauki -->
+    <div id="modeScreen" class="screen">
+        <h2 id="bookTitle">Podręcznik: ...</h2>
+        <div class="grid">
+            <div class="card-btn" onclick="openMode('learn')">Nauka</div>
+            <div class="card-btn" onclick="openMode('review')">Powtórka</div>
+            <div class="card-btn" onclick="openMode('archive')">Archiwum</div>
         </div>
+        <div class="review-info">
+            Słowa w powtórkach: <strong id="reviewCount">0</strong>
+        </div>
+        <button class="btn-back" onclick="backToBooks()">Powrót</button>
     </div>
 
-    <div class="btn-group">
-        <button class="btn-check">SPRAWDŹ</button>
-        <button class="btn-again" style="display:none;">Znowu</button>
-        <button class="btn-hard" style="display:none;">Trudne</button>
-        <button class="btn-know" style="display:none;">Wiem!</button>
-        <button class="btn-know" id="btn-master" style="display:none;">Umiem</button>
-        <button class="btn-hard" id="btn-notmaster" style="display:none;">Nie umiem</button>
-        <button class="btn-archive" id="btn-archive" style="display:none;">Archiwum</button>
+    <!-- 3. Wybór lekcji -->
+    <div id="lessonScreen" class="screen">
+        <h2>Nauka – <span id="currentBookName">...</span></h2>
+        <div class="grid" id="lessonGrid"></div>
+        <button class="btn-back" onclick="backToMode()">Powrót</button>
     </div>
 
-    <button class="btn-back" onclick="backToMode()">Zakończ sesję</button>
+    <!-- 4. Fiszki -->
+    <div id="flashcardScreen" class="screen">
+        <h2 id="lessonTitle">Lekcja ...</h2>
+        <div class="flashcard" id="flashcard">
+            <div class="card-inner">
+                <div class="card-front" id="front"></div>
+                <div class="card-back" id="back"></div>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-check">SPRAWDŹ</button>
+            
+            <!-- Przyciski dla trybu NAUKA -->
+            <button class="btn-know" id="btn-learn-master" style="display:none;">Umiem</button>
+            <button class="btn-hard" id="btn-learn-notmaster" style="display:none;">Nie umiem</button>
+            
+            <!-- Przyciski dla trybu POWTÓRKA -->
+            <button class="btn-know" id="btn-master" style="display:none;">Umiem</button>
+            <button class="btn-hard" id="btn-notmaster" style="display:none;">Nie umiem</button>
+            <button class="btn-archive" id="btn-archive" style="display:none;">Archiwum</button>
+        </div>
+
+        <button class="btn-back" onclick="backToMode()">Zakończ sesję</button>
+    </div>
+
+    <!-- 5. Ekran Archiwum -->
+    <div id="archiveScreen" class="screen">
+        <h2>Archiwum słów</h2>
+        <p style="margin-bottom: 30px; font-size: 1.3rem;">Słowa przeniesione z powtórek. Możesz je przywrócić.</p>
+        <div class="archive-list" id="archiveList">
+            <div style="color: #aaa; font-style: italic;">Brak słów w archiwum</div>
+        </div>
+        <button class="btn-back" onclick="backToMode()">Powrót</button>
+    </div>
 </div>
-
-<!-- 5. Ekran Archiwum -->
-<div id="archiveScreen" class="screen">
-    <h2>Archiwum słów</h2>
-    <p style="margin-bottom: 30px; font-size: 1.3rem;">Słowa przeniesione z powtórek. Możesz je przywrócić.</p>
-    <div class="archive-list" id="archiveList">
-        <div style="color: #aaa; font-style: italic;">Brak słów w archiwum</div>
-    </div>
-    <button class="btn-back" onclick="backToMode()">Powrót</button>
-</div></div>
 
 <script>
     const user = localStorage.getItem('biblos_current_user');
@@ -277,8 +266,7 @@ line-height: 1.4;                        /* lepsza czytelność przy dłuższych
     let reviewPool = JSON.parse(localStorage.getItem(REVIEW_KEY)) || [];
     let archivePool = JSON.parse(localStorage.getItem(ARCHIVE_KEY)) || [];
 
-    
-    if (!books["A. Piwowar - Język grecki Nowego Testamentu"]) {
+   if (!books["A. Piwowar - Język grecki Nowego Testamentu"]) {
         books["A. Piwowar - Język grecki Nowego Testamentu"] = {
 "Lekcja 3": [
                 {"greek":"ἀκούω","translit":"akouō","polish":"słyszeć, słuchać, wysłuchiwać (z G lub A)"},
@@ -1786,6 +1774,8 @@ line-height: 1.4;                        /* lepsza czytelność przy dłuższych
         books = JSON.parse(localStorage.getItem(DB_KEY));
     }
 
+    // ===================================================================
+
     let currentBook = null;
     let currentLesson = null;
     let currentWords = [];
@@ -1801,12 +1791,10 @@ line-height: 1.4;                        /* lepsza czytelność przy dłuższych
     function backToApp() {
         window.location.href = 'app.html';
     }
-
     function backToBooks() {
         showScreen('book');
         renderBooks();
     }
-
     function backToMode() {
         showScreen('mode');
         updateReviewCount();
@@ -1839,24 +1827,20 @@ line-height: 1.4;                        /* lepsza czytelność przy dłuższych
             list.innerHTML = '<div style="color: #aaa; font-style: italic;">Brak słów w archiwum</div>';
             return;
         }
-
         list.innerHTML = '';
         archivePool.sort((a, b) => a.greek.localeCompare(b.greek)).forEach(word => {
             const item = document.createElement('div');
             item.className = 'archive-item';
-
             const textDiv = document.createElement('div');
             textDiv.innerHTML = `
                 <div class="archive-greek">${word.greek}</div>
                 <div class="archive-polish">${word.polish}</div>
                 ${word.translit ? `<div style="font-size:1.3rem; color:#777; margin-top:6px;">${word.translit}</div>` : ''}
             `;
-
             const restoreBtn = document.createElement('button');
             restoreBtn.className = 'btn-restore';
             restoreBtn.textContent = 'Przywróć';
             restoreBtn.onclick = () => restoreFromArchive(word);
-
             item.appendChild(textDiv);
             item.appendChild(restoreBtn);
             list.appendChild(item);
@@ -1866,14 +1850,12 @@ line-height: 1.4;                        /* lepsza czytelność przy dłuższych
     function restoreFromArchive(word) {
         archivePool = archivePool.filter(w => !(w.greek === word.greek && w.polish === word.polish));
         localStorage.setItem(ARCHIVE_KEY, JSON.stringify(archivePool));
-
         const exists = reviewPool.some(w => w.greek === word.greek && w.polish === word.polish);
         if (!exists) {
             reviewPool.push(word);
             localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewPool));
             updateReviewCount();
         }
-
         renderArchive();
     }
 
@@ -1884,7 +1866,6 @@ line-height: 1.4;                        /* lepsza czytelność przy dłuższych
             grid.innerHTML = '';
             const lessonKeys = Object.keys(books[currentBook] || {});
             lessonKeys.sort((a, b) => parseInt(a.replace('Lekcja ', '')) - parseInt(b.replace('Lekcja ', '')));
-
             lessonKeys.forEach(lesson => {
                 const div = document.createElement('div');
                 div.className = 'card-btn';
@@ -1892,7 +1873,6 @@ line-height: 1.4;                        /* lepsza czytelność przy dłuższych
                 div.onclick = () => startLearning(lesson);
                 grid.appendChild(div);
             });
-
             showScreen('lesson');
         } else if (mode === 'review') {
             isReviewMode = true;
@@ -1900,11 +1880,9 @@ line-height: 1.4;                        /* lepsza czytelność przy dłuższych
                 alert('Nie masz jeszcze żadnych słów w powtórkach.\nUkończ przynajmniej jedną lekcję.');
                 return;
             }
-
             let selected = [...reviewPool];
             selected.sort(() => 0.5 - Math.random());
             currentWords = selected.slice(0, 10);
-
             currentIndex = 0;
             isRevealed = false;
             document.getElementById('lessonTitle').textContent = 'Powtórka – 10 losowych słów';
@@ -1918,7 +1896,7 @@ line-height: 1.4;                        /* lepsza czytelność przy dłuższych
 
     function startLearning(lesson) {
         isReviewMode = false;
-        currentWords = books[currentBook][lesson] || [];
+        currentWords = [...books[currentBook][lesson] || []]; // kopia
         currentLesson = lesson;
         currentIndex = 0;
         isRevealed = false;
@@ -1933,14 +1911,7 @@ line-height: 1.4;                        /* lepsza czytelność przy dłuższych
                 if (!progress[currentBook]) progress[currentBook] = {};
                 progress[currentBook][currentLesson] = true;
                 localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
-
-                currentWords.forEach(word => {
-                    const exists = reviewPool.some(w => w.greek === word.greek && w.polish === word.polish);
-                    if (!exists) reviewPool.push(word);
-                });
-                localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewPool));
-                updateReviewCount();
-                alert("Gratulacje! Ukończyłeś lekcję!\nSłowa dodane do powtórek.");
+                alert("Gratulacje! Ukończyłeś lekcję!\nWszystkie słowa są już w powtórkach.");
             } else {
                 alert("Koniec powtórki!");
             }
@@ -1949,17 +1920,14 @@ line-height: 1.4;                        /* lepsza czytelność przy dłuższych
         }
 
         const w = currentWords[currentIndex];
-
         document.getElementById('front').innerHTML = `
             <div>${w.greek}</div>
             ${w.translit ? `<div>${w.translit}</div>` : ''}
             <div>Kliknij, aby zobaczyć tłumaczenie</div>
         `;
-
         document.getElementById('back').innerHTML = `
             <div>${w.polish}</div>
         `;
-
         isRevealed = false;
         updateButtons();
     }
@@ -1968,63 +1936,82 @@ line-height: 1.4;                        /* lepsza czytelność przy dłuższych
         document.querySelector('.btn-check').style.display = isRevealed ? 'none' : 'inline-block';
 
         if (isReviewMode) {
-            document.querySelectorAll('.btn-again, .btn-hard, .btn-know').forEach(b => b.style.display = 'none');
             document.getElementById('btn-master').style.display = isRevealed ? 'inline-block' : 'none';
             document.getElementById('btn-notmaster').style.display = isRevealed ? 'inline-block' : 'none';
             document.getElementById('btn-archive').style.display = isRevealed ? 'inline-block' : 'none';
+
+            document.getElementById('btn-learn-master').style.display = 'none';
+            document.getElementById('btn-learn-notmaster').style.display = 'none';
         } else {
-            document.querySelectorAll('.btn-again, .btn-hard, .btn-know').forEach(b => {
-                b.style.display = isRevealed ? 'inline-block' : 'none';
-            });
-            ['btn-master', 'btn-notmaster', 'btn-archive'].forEach(id => {
-                document.getElementById(id).style.display = 'none';
-            });
+            document.getElementById('btn-learn-master').style.display = isRevealed ? 'inline-block' : 'none';
+            document.getElementById('btn-learn-notmaster').style.display = isRevealed ? 'inline-block' : 'none';
+
+            document.getElementById('btn-master').style.display = 'none';
+            document.getElementById('btn-notmaster').style.display = 'none';
+            document.getElementById('btn-archive').style.display = 'none';
         }
     }
 
-    document.getElementById('flashcard').onclick = () => {
+    document.getElementById('flashcard').onclick = flipCard;
+    document.querySelector('.btn-check').onclick = flipCard;
+
+    function flipCard() {
         if (!isRevealed) {
             document.getElementById('flashcard').classList.add('flipped');
             isRevealed = true;
             updateButtons();
         }
-    };
+    }
 
-    document.querySelector('.btn-check').onclick = () => {
-        document.getElementById('flashcard').classList.add('flipped');
-        isRevealed = true;
-        updateButtons();
-    };
+    // === TRYB NAUKA ===
+    function learnMasterCard() {
+        const word = currentWords[currentIndex];
+        const exists = reviewPool.some(w => w.greek === word.greek && w.polish === word.polish);
+        if (!exists) {
+            reviewPool.push(word);
+            localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewPool));
+            updateReviewCount();
+        }
+        nextCardWithoutReturn();
+    }
 
-    function nextCard() {
+    function learnNotMasterCard() {
         const flashcard = document.getElementById('flashcard');
         flashcard.classList.remove('flipped');
+
+        setTimeout(() => {
+            const card = currentWords[currentIndex];
+            currentWords.splice(currentIndex, 1);
+            currentWords.push(card); // na koniec puli
+            currentIndex = Math.min(currentIndex, currentWords.length - 1);
+            showCard();
+        }, 850);
+    }
+
+    function nextCardWithoutReturn() {
+        const flashcard = document.getElementById('flashcard');
+        flashcard.classList.remove('flipped');
+
         setTimeout(() => {
             currentIndex++;
             showCard();
         }, 850);
     }
 
-    function againCard() {
-        const flashcard = document.getElementById('flashcard');
-        flashcard.classList.remove('flipped');
-        setTimeout(() => {
-            currentWords.push(currentWords.splice(currentIndex, 1)[0]);
-            currentIndex++;
-            showCard();
-        }, 850);
-    }
-
+    // === TRYB POWTÓRKA ===
     function masterCard() {
-        nextCard();
+        nextCardWithoutReturn();
     }
 
     function notMasterCard() {
         const flashcard = document.getElementById('flashcard');
         flashcard.classList.remove('flipped');
+
         setTimeout(() => {
-            currentWords.unshift(currentWords.splice(currentIndex, 1)[0]);
-            currentIndex++;
+            const card = currentWords[currentIndex];
+            currentWords.splice(currentIndex, 1);
+            currentWords.unshift(card);
+            currentIndex = 0;
             showCard();
         }, 850);
     }
@@ -2050,9 +2037,9 @@ line-height: 1.4;                        /* lepsza czytelność przy dłuższych
         }, 850);
     }
 
-    document.querySelector('.btn-know').onclick = nextCard;
-    document.querySelector('.btn-hard').onclick = nextCard;
-    document.querySelector('.btn-again').onclick = againCard;
+    // Podpięcie przycisków
+    document.getElementById('btn-learn-master').onclick = learnMasterCard;
+    document.getElementById('btn-learn-notmaster').onclick = learnNotMasterCard;
 
     document.getElementById('btn-master').onclick = masterCard;
     document.getElementById('btn-notmaster').onclick = notMasterCard;
@@ -2061,7 +2048,6 @@ line-height: 1.4;                        /* lepsza czytelność przy dłuższych
     renderBooks();
     updateReviewCount();
 
-    // Rejestracja Service Worker
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js')
