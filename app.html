@@ -83,7 +83,7 @@
             opacity: 0.9;
         }
 
-        /* Nowy przycisk Home */
+        /* Przycisk powrotu */
         .home-btn {
             padding: 16px 40px;
             background: rgba(255,255,255,0.2);
@@ -123,9 +123,9 @@
         </div>
     </div>
 
-    <!-- Nowy przycisk Home -->
+    <!-- Przycisk powrotu – tylko wraca do index.html, bez wylogowywania -->
     <button class="home-btn" id="homeBtn">
-        ← Strona główna / Wyloguj
+        ← Strona główna
     </button>
 </div>
 
@@ -143,11 +143,9 @@
         window.location.href = 'greek.html';
     };
 
-    // Przycisk Home – wraca do index.html i opcjonalnie czyści użytkownika
+    // Przycisk powrotu – tylko przechodzi do strony logowania (index.html)
+    // NIE usuwa użytkownika z localStorage
     document.getElementById('homeBtn').onclick = () => {
-        // Opcjonalnie: wylogowanie (usunięcie bieżącego użytkownika)
-        localStorage.removeItem('biblos_current_user');
-        
         window.location.href = 'index.html';
     };
 </script>
