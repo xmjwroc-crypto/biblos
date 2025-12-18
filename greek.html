@@ -68,6 +68,10 @@
             transform: translateY(-10px);
             box-shadow: 0 20px 40px rgba(0,0,0,0.6);
         }
+        .card-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
 
         .flashcard {
             width: 90vw;
@@ -176,6 +180,42 @@
             font-size: 1.4rem;
             opacity: 0.9;
         }
+
+        /* Styl dla Quizu */
+        .quiz-greek {
+            font-size: clamp(3.5rem, 10vw, 6rem);
+            margin-bottom: 30px;
+            direction: ltr;
+            font-family: "Gentium Plus", "Times New Roman", "SBL Greek", serif !important;
+        }
+        .quiz-options {
+            display: grid;
+            gap: 15px;
+            margin: 40px 0;
+            grid-template-columns: 1fr;
+        }
+        @media (min-width: 600px) {
+            .quiz-options { grid-template-columns: repeat(2, 1fr); }
+        }
+        .quiz-option {
+            padding: 20px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 16px;
+            font-size: 1.6rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .quiz-option:hover { background: rgba(255,255,255,0.25); }
+        .quiz-option.correct { background: var(--success); }
+        .quiz-option.wrong { background: #e74c3c; }
+        .quiz-progress {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+        }
+        .quiz-summary {
+            font-size: 2rem;
+            margin: 40px 0;
+        }
     </style>
 </head>
 <body>
@@ -199,6 +239,7 @@
         <div class="grid">
             <div class="card-btn" onclick="openMode('learn')">Nauka</div>
             <div class="card-btn" onclick="openMode('review')">Powtórka</div>
+            <div class="card-btn" id="quizBtn" onclick="openMode('quiz')">Quiz</div>
             <div class="card-btn" onclick="openMode('archive')">Archiwum</div>
         </div>
         <div class="review-info">
@@ -227,11 +268,9 @@
         <div class="btn-group">
             <button class="btn-check">SPRAWDŹ</button>
             
-            <!-- Przyciski dla trybu NAUKA -->
             <button class="btn-know" id="btn-learn-master" style="display:none;">Umiem</button>
             <button class="btn-hard" id="btn-learn-notmaster" style="display:none;">Nie umiem</button>
             
-            <!-- Przyciski dla trybu POWTÓRKA -->
             <button class="btn-know" id="btn-master" style="display:none;">Umiem</button>
             <button class="btn-hard" id="btn-notmaster" style="display:none;">Nie umiem</button>
             <button class="btn-archive" id="btn-archive" style="display:none;">Archiwum</button>
@@ -248,6 +287,16 @@
             <div style="color: #aaa; font-style: italic;">Brak słów w archiwum</div>
         </div>
         <button class="btn-back" onclick="backToMode()">Powrót</button>
+    </div>
+
+    <!-- 6. Ekran Quiz -->
+    <div id="quizScreen" class="screen">
+        <h2>Quiz – 10 pytań</h2>
+        <div class="quiz-progress" id="quizProgress">Pytanie <span id="quizCurrent">1</span> z 10</div>
+        <div class="quiz-greek" id="quizGreek"></div>
+        <div class="quiz-options" id="quizOptions"></div>
+        <div class="quiz-summary" id="quizSummary" style="display:none;"></div>
+        <button class="btn-back" onclick="backToMode()">Zakończ quiz</button>
     </div>
 </div>
 
@@ -266,7 +315,8 @@
     let reviewPool = JSON.parse(localStorage.getItem(REVIEW_KEY)) || [];
     let archivePool = JSON.parse(localStorage.getItem(ARCHIVE_KEY)) || [];
 
-   if (!books["A. Piwowar - Język grecki Nowego Testamentu"]) {
+    // === Twoje lekcje greckie (pozostały bez zmian) ===
+    if (!books["A. Piwowar - Język grecki Nowego Testamentu"]) {
         books["A. Piwowar - Język grecki Nowego Testamentu"] = {
 "Lekcja 3": [
                 {"greek":"ἀκούω","translit":"akouō","polish":"słyszeć, słuchać, wysłuchiwać (z G lub A)"},
@@ -1783,22 +1833,19 @@
     let isRevealed = false;
     let isReviewMode = false;
 
+    // Zmienne quizu
+    let quizWords = [];
+    let quizIndex = 0;
+    let correctAnswers = 0;
+
     function showScreen(screenName) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(screenName + 'Screen').classList.add('active');
     }
 
-    function backToApp() {
-        window.location.href = 'app.html';
-    }
-    function backToBooks() {
-        showScreen('book');
-        renderBooks();
-    }
-    function backToMode() {
-        showScreen('mode');
-        updateReviewCount();
-    }
+    function backToApp() { window.location.href = 'app.html'; }
+    function backToBooks() { showScreen('book'); renderBooks(); }
+    function backToMode() { showScreen('mode'); updateQuizButton(); }
 
     function renderBooks() {
         const grid = document.getElementById('bookGrid');
@@ -1812,6 +1859,7 @@
                 document.getElementById('bookTitle').textContent = book;
                 document.getElementById('currentBookName').textContent = book;
                 showScreen('mode');
+                updateQuizButton();
             };
             grid.appendChild(div);
         });
@@ -1819,6 +1867,17 @@
 
     function updateReviewCount() {
         document.getElementById('reviewCount').textContent = reviewPool.length;
+    }
+
+    function updateQuizButton() {
+        const btn = document.getElementById('quizBtn');
+        if (reviewPool.length >= 10) {
+            btn.classList.remove('disabled');
+            btn.style.cursor = 'pointer';
+        } else {
+            btn.classList.add('disabled');
+            btn.style.cursor = 'not-allowed';
+        }
     }
 
     function renderArchive() {
@@ -1855,6 +1914,7 @@
             reviewPool.push(word);
             localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewPool));
             updateReviewCount();
+            updateQuizButton();
         }
         renderArchive();
     }
@@ -1891,12 +1951,87 @@
         } else if (mode === 'archive') {
             renderArchive();
             showScreen('archive');
+        } else if (mode === 'quiz') {
+            if (reviewPool.length < 10) {
+                alert('Potrzebujesz co najmniej 10 słów w powtórkach, aby rozpocząć quiz.');
+                return;
+            }
+            startQuiz();
         }
+    }
+
+    function startQuiz() {
+        let poolCopy = [...reviewPool];
+        poolCopy.sort(() => 0.5 - Math.random());
+        quizWords = poolCopy.slice(0, 10);
+
+        quizIndex = 0;
+        correctAnswers = 0;
+
+        document.getElementById('quizSummary').style.display = 'none';
+        showQuizQuestion();
+        showScreen('quiz');
+    }
+
+    function showQuizQuestion() {
+        if (quizIndex >= quizWords.length) {
+            document.getElementById('quizGreek').textContent = '';
+            document.getElementById('quizOptions').innerHTML = '';
+            document.getElementById('quizProgress').textContent = 'Quiz zakończony!';
+            document.getElementById('quizSummary').textContent = `Poprawnych odpowiedzi: ${correctAnswers} / 10`;
+            document.getElementById('quizSummary').style.display = 'block';
+            return;
+        }
+
+        const word = quizWords[quizIndex];
+        document.getElementById('quizCurrent').textContent = quizIndex + 1;
+        document.getElementById('quizGreek').textContent = word.greek;
+
+        let options = [word.polish];
+        let otherWords = reviewPool.filter(w => w.polish !== word.polish);
+        otherWords.sort(() => 0.5 - Math.random());
+        for (let i = 0; i < 3 && i < otherWords.length; i++) {
+            options.push(otherWords[i].polish);
+        }
+
+        options.sort(() => 0.5 - Math.random());
+
+        const container = document.getElementById('quizOptions');
+        container.innerHTML = '';
+
+        options.forEach(opt => {
+            const btn = document.createElement('div');
+            btn.className = 'quiz-option';
+            btn.textContent = opt;
+            btn.onclick = () => selectQuizOption(btn, opt === word.polish);
+            container.appendChild(btn);
+        });
+    }
+
+    function selectQuizOption(element, isCorrect) {
+        document.querySelectorAll('.quiz-option').forEach(el => el.style.pointerEvents = 'none');
+
+        if (isCorrect) {
+            element.classList.add('correct');
+            correctAnswers++;
+        } else {
+            element.classList.add('wrong');
+            document.querySelectorAll('.quiz-option').forEach(el => {
+                if (el.textContent === quizWords[quizIndex].polish) {
+                    el.classList.add('correct');
+                }
+            });
+        }
+
+        setTimeout(() => {
+            quizIndex++;
+            showQuizQuestion();
+        }, 2000);
     }
 
     function startLearning(lesson) {
         isReviewMode = false;
-        currentWords = [...books[currentBook][lesson] || []]; // kopia
+        currentWords = [...books[currentBook][lesson] || []];
         currentLesson = lesson;
         currentIndex = 0;
         isRevealed = false;
@@ -1939,13 +2074,11 @@
             document.getElementById('btn-master').style.display = isRevealed ? 'inline-block' : 'none';
             document.getElementById('btn-notmaster').style.display = isRevealed ? 'inline-block' : 'none';
             document.getElementById('btn-archive').style.display = isRevealed ? 'inline-block' : 'none';
-
             document.getElementById('btn-learn-master').style.display = 'none';
             document.getElementById('btn-learn-notmaster').style.display = 'none';
         } else {
             document.getElementById('btn-learn-master').style.display = isRevealed ? 'inline-block' : 'none';
             document.getElementById('btn-learn-notmaster').style.display = isRevealed ? 'inline-block' : 'none';
-
             document.getElementById('btn-master').style.display = 'none';
             document.getElementById('btn-notmaster').style.display = 'none';
             document.getElementById('btn-archive').style.display = 'none';
@@ -1963,7 +2096,6 @@
         }
     }
 
-    // === TRYB NAUKA ===
     function learnMasterCard() {
         const word = currentWords[currentIndex];
         const exists = reviewPool.some(w => w.greek === word.greek && w.polish === word.polish);
@@ -1971,6 +2103,7 @@
             reviewPool.push(word);
             localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewPool));
             updateReviewCount();
+            updateQuizButton();
         }
         nextCardWithoutReturn();
     }
@@ -1978,11 +2111,10 @@
     function learnNotMasterCard() {
         const flashcard = document.getElementById('flashcard');
         flashcard.classList.remove('flipped');
-
         setTimeout(() => {
             const card = currentWords[currentIndex];
             currentWords.splice(currentIndex, 1);
-            currentWords.push(card); // na koniec puli
+            currentWords.push(card);
             currentIndex = Math.min(currentIndex, currentWords.length - 1);
             showCard();
         }, 850);
@@ -1991,22 +2123,17 @@
     function nextCardWithoutReturn() {
         const flashcard = document.getElementById('flashcard');
         flashcard.classList.remove('flipped');
-
         setTimeout(() => {
             currentIndex++;
             showCard();
         }, 850);
     }
 
-    // === TRYB POWTÓRKA ===
-    function masterCard() {
-        nextCardWithoutReturn();
-    }
+    function masterCard() { nextCardWithoutReturn(); }
 
     function notMasterCard() {
         const flashcard = document.getElementById('flashcard');
         flashcard.classList.remove('flipped');
-
         setTimeout(() => {
             const card = currentWords[currentIndex];
             currentWords.splice(currentIndex, 1);
@@ -2020,33 +2147,30 @@
         const word = currentWords[currentIndex];
         const flashcard = document.getElementById('flashcard');
         flashcard.classList.remove('flipped');
-
         setTimeout(() => {
             reviewPool = reviewPool.filter(w => !(w.greek === word.greek && w.polish === word.polish));
             localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewPool));
-
             const existsInArchive = archivePool.some(w => w.greek === word.greek && w.polish === word.polish);
             if (!existsInArchive) {
                 archivePool.push(word);
                 localStorage.setItem(ARCHIVE_KEY, JSON.stringify(archivePool));
             }
-
             updateReviewCount();
+            updateQuizButton();
             currentIndex++;
             showCard();
         }, 850);
     }
 
-    // Podpięcie przycisków
     document.getElementById('btn-learn-master').onclick = learnMasterCard;
     document.getElementById('btn-learn-notmaster').onclick = learnNotMasterCard;
-
     document.getElementById('btn-master').onclick = masterCard;
     document.getElementById('btn-notmaster').onclick = notMasterCard;
     document.getElementById('btn-archive').onclick = archiveCard;
 
     renderBooks();
     updateReviewCount();
+    updateQuizButton();
 
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
