@@ -20,6 +20,20 @@
             min-height: 100vh;
             padding: 10px;
         }
+	.pronounce-btn {
+    		background: rgba(255,255,255,0.3);
+    		border: none;
+    		border-radius: 50%;
+    		width: 50px;
+    		height: 50px;
+    		font-size: 1.8rem;
+    		cursor: pointer;
+    	transition: 0.3s;
+	}
+	.pronounce-btn:hover {
+    		background: rgba(255,255,255,0.5);
+    		transform: scale(1.1);
+	}
         .container {
             max-width: 1100px;
             margin: 0 auto;
@@ -950,7 +964,7 @@
             document.getElementById('quizHebrew').textContent = '';
             document.getElementById('quizOptions').innerHTML = '';
             document.getElementById('quizProgress').textContent = 'Quiz zakończony!';
-            document.getElementById('quizSummary').textContent = `Poprawnych odpowiedzi: ${correctAnswers} / 10`;
+            document.getElementById('quizSummary').textContent = `Poprawnych odpowiedzi: 	    ${correctAnswers} / 10`;
             document.getElementById('quizSummary').style.display = 'block';
             return;
         }
@@ -1017,6 +1031,18 @@
         showCard();
         showScreen('flashcard');
     }
+function speakWord(text, lang) {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = lang; // 'he-IL' dla hebrajskiego, 'el-GR' dla greckiego
+        utterance.rate = 0.8;  // wolniej dla lepszego zrozumienia
+        utterance.pitch = 1;
+        speechSynthesis.cancel(); // zatrzymaj poprzednie
+        speechSynthesis.speak(utterance);
+    } else {
+        alert('Twoja przeglądarka nie wspiera wymowy audio.');
+    }
+}
 
     function showCard() {
         if (currentIndex >= currentWords.length) {
@@ -1034,10 +1060,13 @@
 
         const w = currentWords[currentIndex];
         document.getElementById('front').innerHTML = `
-            <div>${w.hebrew}</div>
-            ${w.translit ? `<div>${w.translit}</div>` : ''}
-            <div>Kliknij, aby zobaczyć tłumaczenie</div>
-        `;
+    <div style="display:flex; align-items:center; gap:15px;">
+        <button class="pronounce-btn" onclick="speakWord('${w.hebrew || w.greek}', '${currentBook.includes('hebrajski') ? 'he-IL' : 'el-GR'}')">🔊</button>
+        <div>${w.hebrew || w.greek}</div>
+    </div>
+    ${w.translit ? `<div>${w.translit}</div>` : ''}
+    <div>Kliknij fiszkę, aby zobaczyć tłumaczenie</div>
+`;
         document.getElementById('back').innerHTML = `
             <div>${w.polish}</div>
         `;
