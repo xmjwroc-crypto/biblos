@@ -4,89 +4,120 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Biblos – Grecki biblijny</title>
-    <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192.png">
-    <meta name="theme-color" content="#2980b9">
+    <meta name="theme-color" content="#e6f2ff">
     <meta name="mobile-web-app-capable" content="yes">
 
     <style>
-        :root { --bg: #3b1e11; --card: rgba(255,255,255,0.08); --accent: #d35400; --success: #27ae60; --warning: #f39c12; }
+        :root {
+            --bg-gradient: linear-gradient(135deg, #f0f8ff 0%, #e6f2ff 50%, #d0e6ff 100%);
+            --card-bg: rgba(255, 255, 255, 0.92);
+            --accent: #b8860b;
+            --primary: #006699;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --text: #1e3a5f;
+            --shadow: 0 15px 40px rgba(0,0,0,0.12);
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: linear-gradient(135deg, #3b1e11, #5d2e1a, #8b4513);
-            color: #f0e6d2;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text);
             min-height: 100vh;
-            padding: 10px;
+            padding: 15px;
         }
         .container {
             max-width: 1100px;
             margin: 0 auto;
-            background: var(--card);
-            backdrop-filter: blur(15px);
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 28px;
+            box-shadow: var(--shadow);
             overflow: hidden;
         }
         header {
-            background: linear-gradient(90deg, #8b4513, #a0522d);
-            padding: 30px 20px;
+            background: linear-gradient(90deg, var(--primary), #0088cc);
+            padding: 40px 20px;
             text-align: center;
             color: white;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
         }
-        h1 { font-size: 2.5rem; letter-spacing: 4px; }
-        header p { font-size: 1.2rem; }
+        h1 { font-size: 2.8rem; letter-spacing: 6px; text-shadow: 2px 2px 8px rgba(0,0,0,0.3); }
+        header p { font-size: 1.4rem; margin-top: 10px; opacity: 0.95; }
 
-        .screen { display: none; padding: 20px; text-align: center; }
+        .screen { display: none; padding: 30px; text-align: center; }
         .active { display: block !important; }
 
         .grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 20px;
-            margin: 30px 0;
+            gap: 25px;
+            margin: 40px 0;
         }
         @media (min-width: 600px) {
-            .grid {
-                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            }
+            .grid { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
         }
 
         .card-btn {
-            padding: 30px;
-            background: rgba(255,255,255,0.12);
-            border-radius: 20px;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 24px;
             cursor: pointer;
-            font-size: 1.6rem;
-            font-weight: 600;
-            transition: 0.4s;
-            border: 2px solid rgba(255,255,255,0.2);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 3px solid transparent;
         }
         .card-btn:hover {
-            background: rgba(255,255,255,0.25);
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            transform: translateY(-12px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            border-color: var(--accent);
+            background: #f8fcff;
         }
-        .card-btn.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .card-btn .icon {
+            font-size: 3.5rem;
+            display: block;
+            margin-bottom: 15px;
+        }
+        .card-btn.disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .pronounce-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: 0.3s;
+            padding: 8px;
+            border-radius: 12px;
+            z-index: 10;
+        }
+        .pronounce-btn:hover {
+            background: rgba(0,102,153,0.15);
+            transform: scale(1.15);
         }
 
         .flashcard {
             width: 90vw;
-            max-width: 460px;
+            max-width: 480px;
             height: 80vh;
-            max-height: 620px;
-            margin: 20px auto;
-            perspective: 1200px;
+            max-height: 640px;
+            margin: 30px auto;
+            perspective: 1400px;
         }
         .card-inner {
             position: relative;
             width: 100%;
             height: 100%;
             transform-style: preserve-3d;
-            transition: transform 0.8s ease-in-out;
+            transition: transform 0.9s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         }
         .card-front, .card-back {
             position: absolute;
@@ -94,128 +125,208 @@
             height: 100%;
             backface-visibility: hidden;
             background: white;
-            color: #0a1a2f;
-            border-radius: 24px;
-            padding: 20px;
+            color: #1a1a1a;
+            border-radius: 28px;
+            padding: 30px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            box-shadow: var(--shadow);
             font-family: "Gentium Plus", "Times New Roman", "SBL Greek", serif !important;
             direction: ltr;
             text-align: center;
         }
-        .card-back {
-            background: #8b4513;
-            color: white;
-            transform: rotateY(180deg);
-        }
+.card-back {
+    background: linear-gradient(135deg, #f0f8ff, #e6f2ff);
+    color: #003366;
+    transform: rotateY(180deg);
+    direction: ltr;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 30px;  /* trochę więcej paddingu bocznego */
+}
         .flipped .card-inner { transform: rotateY(180deg); }
 
-        .card-front > div:first-child { font-size: clamp(3rem, 10vw, 5.5rem); }
-        .card-front > div:nth-child(2) { font-size: clamp(1.6rem, 5vw, 2.2rem); margin-top: 20px; }
-        .card-front > div:last-child { font-size: clamp(1rem, 3vw, 1.4rem); margin-top: 40px; }
-        .card-back > div { font-size: clamp(2rem, 6vw, 3.8rem); line-height: 1.4; padding: 20px; word-wrap: break-word; }
+        .card-front > div:first-child { font-size: clamp(4.5rem, 14vw, 8.5rem); margin-top: 80px; }
+        .card-front > div:nth-child(2) { font-size: clamp(2rem, 6vw, 3rem); margin-top: 30px; }
+        .card-front > div:last-child { font-size: clamp(1.3rem, 4.5vw, 1.8rem); margin-top: 60px; opacity: 0.8; }
+
+     .card-back > div {
+    font-size: clamp(1.2rem, 6vw, 3.5rem) !important;
+    font-weight: 700;
+    line-height: 1.3;
+    padding: 20px;
+    color: var(--primary);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+}
 
         .btn-group {
             display: flex;
-            gap: 15px;
-            margin-top: 30px;
+            gap: 18px;
+            margin-top: 40px;
             flex-wrap: wrap;
             justify-content: center;
         }
         button {
-            padding: 14px 28px;
+            padding: 16px 32px;
             border: none;
-            border-radius: 20px;
-            font-size: 1.4rem;
+            border-radius: 24px;
+            font-size: 1.5rem;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.3s;
+            transition: all 0.3s ease;
+            min-width: 160px;
         }
         .btn-check {
-            background: #3498db;
+            background: var(--primary);
             color: white;
-            font-size: 1.8rem;
-            padding: 18px 50px;
+            font-size: 2rem;
+            padding: 20px 60px;
+            box-shadow: 0 8px 20px rgba(0,102,153,0.3);
         }
-        .btn-know   { background: var(--success); color: white; }
-        .btn-hard   { background: var(--warning); color: white; }
-        .btn-archive { background: #7f8c8d; color: white; }
-        .btn-restore { background: #27ae60; color: white; padding: 10px 20px; font-size: 1.2rem; }
+        .btn-check:hover { background: #004d80; transform: scale(1.05); }
+        .btn-know { background: var(--success); color: white; }
+        .btn-hard { background: var(--warning); color: white; }
+        .btn-archive { background: #95a5a6; color: white; }
+        .btn-restore { background: var(--success); color: white; padding: 12px 24px; font-size: 1.3rem; }
         .btn-back {
             background: #7f8c8d;
             color: white;
-            margin-top: 60px;
+            margin-top: 70px;
+            padding: 14px 40px;
         }
+        button:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
 
         .review-info {
-            margin-top: 30px;
-            font-size: 1.3rem;
-            opacity: 0.9;
+            margin-top: 35px;
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: 600;
         }
 
-        .archive-list {
-            max-width: 800px;
-            margin: 30px auto;
-            text-align: left;
-        }
+        .archive-list { max-width: 800px; margin: 30px auto; text-align: left; }
         .archive-item {
-            background: rgba(255,255,255,0.1);
-            padding: 18px;
-            margin: 12px 0;
-            border-radius: 16px;
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 1.6rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
         }
-        .archive-greek {
-            direction: ltr;
-            font-size: 2.2rem;
-            margin-bottom: 6px;
-        }
-        .archive-polish {
-            font-size: 1.4rem;
-            opacity: 0.9;
-        }
+        .archive-greek { font-size: 2.4rem; margin-bottom: 8px; }
+        .archive-polish { font-size: 1.5rem; opacity: 0.9; }
 
-        /* Styl dla Quizu */
         .quiz-greek {
-            font-size: clamp(3.5rem, 10vw, 6rem);
-            margin-bottom: 30px;
-            direction: ltr;
+            font-size: clamp(4rem, 12vw, 7rem);
+            margin-bottom: 40px;
             font-family: "Gentium Plus", "Times New Roman", "SBL Greek", serif !important;
         }
-        .quiz-options {
-            display: grid;
-            gap: 15px;
-            margin: 40px 0;
-            grid-template-columns: 1fr;
-        }
-        @media (min-width: 600px) {
-            .quiz-options { grid-template-columns: repeat(2, 1fr); }
-        }
+        .quiz-options { display: grid; gap: 20px; margin: 40px 0; grid-template-columns: 1fr; }
+        @media (min-width: 600px) { .quiz-options { grid-template-columns: repeat(2, 1fr); } }
         .quiz-option {
-            padding: 20px;
-            background: rgba(255,255,255,0.12);
-            border-radius: 16px;
-            font-size: 1.6rem;
+            padding: 25px;
+            background: white;
+            border-radius: 20px;
+            font-size: 1.7rem;
             cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
             transition: 0.3s;
         }
-        .quiz-option:hover { background: rgba(255,255,255,0.25); }
-        .quiz-option.correct { background: var(--success); }
-        .quiz-option.wrong { background: #e74c3c; }
-        .quiz-progress {
-            font-size: 1.4rem;
-            margin-bottom: 20px;
-        }
-        .quiz-summary {
-            font-size: 2rem;
+        .quiz-option:hover { background: #f0f8ff; transform: translateY(-5px); }
+        .quiz-option.correct { background: var(--success); color: white; }
+        .quiz-option.wrong { background: #e74c3c; color: white; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
             margin: 40px 0;
         }
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .stat-value { font-size: 3.2rem; font-weight: bold; color: var(--accent); margin: 10px 0; }
+        .stat-label { font-size: 1.4rem; opacity: 0.9; }
+        .progress-bar { height: 24px; background: #e0e0e0; border-radius: 12px; overflow: hidden; margin: 20px 0; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--success), #2ecc71); width: 0%; transition: width 1.2s ease; }
+
+        /* Tryby zabawy */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            max-width: 900px;
+            margin: 40px auto;
+        }
+        .game-card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            cursor: pointer;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            transition: 0.4s;
+        }
+        .game-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+        .game-card .icon { font-size: 4rem; margin-bottom: 20px; display: block; }
+
+        #matchGame {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            max-width: 600px;
+            margin: 40px auto;
+        }
+        .match-card {
+            aspect-ratio: 1/1;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: 0.4s;
+        }
+        .match-card:hover { transform: scale(1.05); }
+        .match-card.flipped, .match-card.matched {
+            background: #e6f2ff;
+            color: var(--primary);
+        }
+        .match-card.matched { opacity: 0.6; cursor: default; }
+
+        #typingInput {
+            font-size: 2rem;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            margin: 30px auto;
+            border: 3px solid var(--primary);
+            border-radius: 20px;
+            text-align: center;
+        }
+        #typingFeedback { font-size: 2.2rem; margin: 30px 0; min-height: 70px; }
+
+        #timer { font-size: 4rem; font-weight: bold; color: var(--accent); margin: 20px 0; }
+        #speedScore { font-size: 2.8rem; margin: 30px 0; }
+        .big-text { font-size: 2.8rem; margin: 30px 0; }
     </style>
 </head>
 <body>
@@ -223,39 +334,106 @@
 <div class="container">
     <header>
         <h1>GRECKI BIBLIJNY</h1>
-        <p>Witaj, <span id="userName">...</span>!</p>
+        <p>Witaj, <span id="userName">...</span>! 🌟</p>
     </header>
 
-    <!-- 1. Wybór podręcznika -->
     <div id="bookScreen" class="screen active">
         <h2>Wybierz podręcznik</h2>
         <div class="grid" id="bookGrid"></div>
         <button class="btn-back" onclick="backToApp()">Powrót</button>
     </div>
 
-    <!-- 2. Tryb nauki -->
     <div id="modeScreen" class="screen">
         <h2 id="bookTitle">Podręcznik: ...</h2>
         <div class="grid">
-            <div class="card-btn" onclick="openMode('learn')">Nauka</div>
-            <div class="card-btn" onclick="openMode('review')">Powtórka</div>
-            <div class="card-btn" id="quizBtn" onclick="openMode('quiz')">Quiz</div>
-            <div class="card-btn" onclick="openMode('archive')">Archiwum</div>
+            <div class="card-btn" onclick="openMode('learn')">
+                <div class="icon">📚</div>
+                Nauka nowej lekcji
+            </div>
+            <div class="card-btn" onclick="openMode('review')">
+                <div class="icon">🔄</div>
+                Powtórka klasyczna
+            </div>
+            <div class="card-btn" id="quizBtn" onclick="openMode('quiz')">
+                <div class="icon">❓</div>
+                Quiz
+            </div>
+            <div class="card-btn" onclick="openMode('fun')">
+                <div class="icon">🎲</div>
+                Zabawa
+            </div>
+            <div class="card-btn" onclick="openMode('archive')">
+                <div class="icon">📦</div>
+                Archiwum
+            </div>
+            <div class="card-btn" onclick="openMode('stats')">
+                <div class="icon">📊</div>
+                Statystyki
+            </div>
         </div>
         <div class="review-info">
-            Słowa w powtórkach: <strong id="reviewCount">0</strong>
+            Słowa do powtórki dziś: <strong id="reviewCount">0</strong> ✨
         </div>
         <button class="btn-back" onclick="backToBooks()">Powrót</button>
     </div>
 
-    <!-- 3. Wybór lekcji -->
+    <div id="funScreen" class="screen">
+        <h2>Wybierz tryb zabawy 🎲</h2>
+        <div class="game-grid">
+            <div class="game-card" onclick="startMatchGame()">
+                <div class="icon">🧩</div>
+                Dopasuj pary
+            </div>
+            <div class="game-card" onclick="startTypingGame()">
+                <div class="icon">✍️</div>
+                Pisanie tłumaczenia
+            </div>
+            <div class="game-card" onclick="startSpeedRound()">
+                <div class="icon">⚡</div>
+                Szybki strzał
+            </div>
+        </div>
+        <button class="btn-back" onclick="backToMode()">Powrót</button>
+    </div>
+
+    <div id="matchScreen" class="screen">
+        <h2>Dopasuj pary 🧩</h2>
+        <div id="matchGame"></div>
+        <div class="big-text" id="matchResult" style="display:none;"></div>
+        <button class="btn-back" onclick="backToMode()">Zakończ</button>
+    </div>
+
+    <div id="typingScreen" class="screen">
+        <h2>Pisanie tłumaczenia ✍️</h2>
+        <div class="quiz-greek" id="typingWord"></div>
+        <input type="text" id="typingInput" placeholder="Wpisz polskie tłumaczenie..." autocomplete="off">
+        <div id="typingFeedback"></div>
+        <div class="big-text" id="typingScore">Punkty: 0</div>
+        <button class="btn-back" onclick="backToMode()">Zakończ</button>
+    </div>
+
+    <div id="speedScreen" class="screen">
+        <h2>Szybki strzał ⚡</h2>
+        <div id="timer">60</div>
+        <div class="flashcard" id="speedFlashcard">
+            <div class="card-inner">
+                <div class="card-front" id="speedFront"></div>
+            </div>
+        </div>
+        <div class="btn-group">
+            <button class="btn-know" onclick="speedAnswer(true)">Umiem ✅</button>
+            <button class="btn-hard" onclick="speedAnswer(false)">Nie umiem 🔄</button>
+        </div>
+        <div class="big-text" id="speedScore">Punkty: 0</div>
+        <button class="btn-back" onclick="backToMode()">Zakończ</button>
+    </div>
+
     <div id="lessonScreen" class="screen">
         <h2>Nauka – <span id="currentBookName">...</span></h2>
         <div class="grid" id="lessonGrid"></div>
         <button class="btn-back" onclick="backToMode()">Powrót</button>
     </div>
 
-    <!-- 4. Fiszki -->
     <div id="flashcardScreen" class="screen">
         <h2 id="lessonTitle">Lekcja ...</h2>
         <div class="flashcard" id="flashcard">
@@ -267,36 +445,72 @@
 
         <div class="btn-group">
             <button class="btn-check">SPRAWDŹ</button>
-            
-            <button class="btn-know" id="btn-learn-master" style="display:none;">Umiem</button>
-            <button class="btn-hard" id="btn-learn-notmaster" style="display:none;">Nie umiem</button>
-            
-            <button class="btn-know" id="btn-master" style="display:none;">Umiem</button>
-            <button class="btn-hard" id="btn-notmaster" style="display:none;">Nie umiem</button>
-            <button class="btn-archive" id="btn-archive" style="display:none;">Archiwum</button>
+            <button class="btn-know" id="btn-learn-master" style="display:none;">Umiem ✅</button>
+            <button class="btn-hard" id="btn-learn-notmaster" style="display:none;">Nie umiem 🔄</button>
+            <button class="btn-know" id="btn-master" style="display:none;">Umiem ✅</button>
+            <button class="btn-hard" id="btn-notmaster" style="display:none;">Nie umiem 🔄</button>
+            <button class="btn-archive" id="btn-archive" style="display:none;">Archiwum 📦</button>
         </div>
 
         <button class="btn-back" onclick="backToMode()">Zakończ sesję</button>
     </div>
 
-    <!-- 5. Ekran Archiwum -->
     <div id="archiveScreen" class="screen">
-        <h2>Archiwum słów</h2>
-        <p style="margin-bottom: 30px; font-size: 1.3rem;">Słowa przeniesione z powtórek. Możesz je przywrócić.</p>
+        <h2>Archiwum słów 📦</h2>
+        <p style="margin-bottom: 30px; font-size: 1.4rem;">Słowa przeniesione z powtórek. Możesz je przywrócić.</p>
         <div class="archive-list" id="archiveList">
             <div style="color: #aaa; font-style: italic;">Brak słów w archiwum</div>
         </div>
         <button class="btn-back" onclick="backToMode()">Powrót</button>
     </div>
 
-    <!-- 6. Ekran Quiz -->
     <div id="quizScreen" class="screen">
-        <h2>Quiz – 10 pytań</h2>
+        <h2>Quiz – 10 pytań ❓</h2>
         <div class="quiz-progress" id="quizProgress">Pytanie <span id="quizCurrent">1</span> z 10</div>
         <div class="quiz-greek" id="quizGreek"></div>
         <div class="quiz-options" id="quizOptions"></div>
         <div class="quiz-summary" id="quizSummary" style="display:none;"></div>
         <button class="btn-back" onclick="backToMode()">Zakończ quiz</button>
+    </div>
+
+    <div id="statsScreen" class="screen">
+        <h2>Statystyki nauki 📊</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Wszystkie słowa w podręczniku</div>
+                <div class="stat-value" id="statTotalWords">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Ukończone lekcje</div>
+                <div class="stat-value" id="statCompletedLessons">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Słowa opanowane (w powtórkach)</div>
+                <div class="stat-value" id="statMastered">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Słowa w archiwum</div>
+                <div class="stat-value" id="statArchived">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Postęp całego kursu</div>
+                <div class="stat-value" id="statProgressPercent">0%</div>
+                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Sesje powtórek</div>
+                <div class="stat-value" id="statReviewSessions">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Wynik quizów</div>
+                <div class="stat-value" id="statQuizCorrect">0 / 0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Dni aktywnej nauki</div>
+                <div class="stat-value" id="statActiveDays">0</div>
+            </div>
+        </div>
+        <button class="btn-back" onclick="backToMode()">Powrót</button>
     </div>
 </div>
 
@@ -309,14 +523,20 @@
     const PROGRESS_KEY = 'biblos_greek_progress_' + user;
     const REVIEW_KEY = 'biblos_greek_review_' + user;
     const ARCHIVE_KEY = 'biblos_greek_archive_' + user;
+    const STATS_KEY = 'biblos_greek_stats_' + user;
 
     let books = JSON.parse(localStorage.getItem(DB_KEY)) || {};
     let progress = JSON.parse(localStorage.getItem(PROGRESS_KEY)) || {};
     let reviewPool = JSON.parse(localStorage.getItem(REVIEW_KEY)) || [];
     let archivePool = JSON.parse(localStorage.getItem(ARCHIVE_KEY)) || [];
+    let stats = JSON.parse(localStorage.getItem(STATS_KEY)) || {
+        reviewSessions: 0,
+        quizCorrect: 0,
+        quizTotal: 0,
+        activeDates: []
+    };
 
-    // === Twoje lekcje greckie (pozostały bez zmian) ===
-    if (!books["A. Piwowar - Język grecki Nowego Testamentu"]) {
+     if (!books["A. Piwowar - Język grecki Nowego Testamentu"]) {
         books["A. Piwowar - Język grecki Nowego Testamentu"] = {
 "Lekcja 3": [
                 {"greek":"ἀκούω","translit":"akouō","polish":"słyszeć, słuchać, wysłuchiwać (z G lub A)"},
@@ -1824,7 +2044,6 @@
         books = JSON.parse(localStorage.getItem(DB_KEY));
     }
 
-    // ===================================================================
 
     let currentBook = null;
     let currentLesson = null;
@@ -1833,10 +2052,57 @@
     let isRevealed = false;
     let isReviewMode = false;
 
-    // Zmienne quizu
     let quizWords = [];
     let quizIndex = 0;
     let correctAnswers = 0;
+
+    function markTodayActive() {
+        const today = new Date().toISOString().slice(0,10);
+        if (!stats.activeDates.includes(today)) {
+            stats.activeDates.push(today);
+            localStorage.setItem(STATS_KEY, JSON.stringify(stats));
+        }
+    }
+
+    function getDueWords() {
+        const today = new Date().toISOString().slice(0, 10);
+        return reviewPool.filter(word => !word.dueDate || word.dueDate <= today);
+    }
+
+    function scheduleWord(word, quality) {
+        if (!word.reps) word.reps = 0;
+        if (!word.interval) word.interval = 1;
+        if (!word.ease) word.ease = 2.5;
+
+        if (quality < 3) {
+            word.reps = 0;
+            word.interval = 1;
+        } else {
+            word.reps++;
+            if (word.reps === 1) word.interval = 1;
+            else if (word.reps === 2) word.interval = 6;
+            else word.interval = Math.round(word.interval * word.ease);
+
+            word.ease = Math.max(1.3, word.ease + (quality >= 4 ? (quality === 5 ? 0.15 : 0.1) : -0.2));
+        }
+
+        const next = new Date();
+        next.setDate(next.getDate() + word.interval);
+        word.dueDate = next.toISOString().slice(0, 10);
+
+        localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewPool));
+    }
+
+    function addWordToReview(word) {
+        if (!reviewPool.some(w => w.greek === word.greek && w.polish === word.polish)) {
+            word.reps = 0;
+            word.interval = 1;
+            word.ease = 2.5;
+            word.dueDate = new Date().toISOString().slice(0, 10);
+            reviewPool.push(word);
+            localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewPool));
+        }
+    }
 
     function showScreen(screenName) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -1845,7 +2111,7 @@
 
     function backToApp() { window.location.href = 'app.html'; }
     function backToBooks() { showScreen('book'); renderBooks(); }
-    function backToMode() { showScreen('mode'); updateQuizButton(); }
+    function backToMode() { showScreen('mode'); updateReviewCount(); updateQuizButton(); }
 
     function renderBooks() {
         const grid = document.getElementById('bookGrid');
@@ -1859,6 +2125,7 @@
                 document.getElementById('bookTitle').textContent = book;
                 document.getElementById('currentBookName').textContent = book;
                 showScreen('mode');
+                updateReviewCount();
                 updateQuizButton();
             };
             grid.appendChild(div);
@@ -1866,18 +2133,13 @@
     }
 
     function updateReviewCount() {
-        document.getElementById('reviewCount').textContent = reviewPool.length;
+        const due = getDueWords().length;
+        document.getElementById('reviewCount').textContent = due + ' (z ' + reviewPool.length + ')';
     }
 
     function updateQuizButton() {
         const btn = document.getElementById('quizBtn');
-        if (reviewPool.length >= 10) {
-            btn.classList.remove('disabled');
-            btn.style.cursor = 'pointer';
-        } else {
-            btn.classList.add('disabled');
-            btn.style.cursor = 'not-allowed';
-        }
+        btn.classList.toggle('disabled', reviewPool.length < 10);
     }
 
     function renderArchive() {
@@ -1894,29 +2156,47 @@
             textDiv.innerHTML = `
                 <div class="archive-greek">${word.greek}</div>
                 <div class="archive-polish">${word.polish}</div>
-                ${word.translit ? `<div style="font-size:1.3rem; color:#777; margin-top:6px;">${word.translit}</div>` : ''}
+                ${word.translit ? `<div style="font-size:1.4rem; color:#777; margin-top:8px;">${word.translit}</div>` : ''}
             `;
-            const restoreBtn = document.createElement('button');
-            restoreBtn.className = 'btn-restore';
-            restoreBtn.textContent = 'Przywróć';
-            restoreBtn.onclick = () => restoreFromArchive(word);
+            const btn = document.createElement('button');
+            btn.className = 'btn-restore';
+            btn.textContent = 'Przywróć';
+            btn.onclick = () => {
+                archivePool = archivePool.filter(w => !(w.greek === word.greek && w.polish === word.polish));
+                localStorage.setItem(ARCHIVE_KEY, JSON.stringify(archivePool));
+                addWordToReview(word);
+                renderArchive();
+                updateReviewCount();
+            };
             item.appendChild(textDiv);
-            item.appendChild(restoreBtn);
+            item.appendChild(btn);
             list.appendChild(item);
         });
     }
 
-    function restoreFromArchive(word) {
-        archivePool = archivePool.filter(w => !(w.greek === word.greek && w.polish === word.polish));
-        localStorage.setItem(ARCHIVE_KEY, JSON.stringify(archivePool));
-        const exists = reviewPool.some(w => w.greek === word.greek && w.polish === word.polish);
-        if (!exists) {
-            reviewPool.push(word);
-            localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewPool));
-            updateReviewCount();
-            updateQuizButton();
-        }
-        renderArchive();
+    function renderStats() {
+        markTodayActive();
+        const book = books[currentBook] || {};
+        let totalWords = 0;
+        let completed = 0;
+        let totalLessons = Object.keys(book).length;
+
+        Object.values(book).forEach(lesson => totalWords += lesson.length);
+        if (progress[currentBook]) completed = Object.values(progress[currentBook]).filter(v => v).length;
+
+        const percent = totalWords ? Math.round((reviewPool.length / totalWords) * 100) : 0;
+
+        document.getElementById('statTotalWords').textContent = totalWords;
+        document.getElementById('statCompletedLessons').textContent = completed + ' / ' + totalLessons;
+        document.getElementById('statMastered').textContent = reviewPool.length;
+        document.getElementById('statArchived').textContent = archivePool.length;
+        document.getElementById('statProgressPercent').textContent = percent + '%';
+        document.getElementById('progressFill').style.width = percent + '%';
+        document.getElementById('statReviewSessions').textContent = stats.reviewSessions || 0;
+
+        const quizText = stats.quizTotal ? `${stats.quizCorrect} / ${stats.quizTotal} (${Math.round(stats.quizCorrect / stats.quizTotal * 100)}%)` : 'Brak';
+        document.getElementById('statQuizCorrect').textContent = quizText;
+        document.getElementById('statActiveDays').textContent = stats.activeDates.length;
     }
 
     function openMode(mode) {
@@ -1924,50 +2204,52 @@
             isReviewMode = false;
             const grid = document.getElementById('lessonGrid');
             grid.innerHTML = '';
-            const lessonKeys = Object.keys(books[currentBook] || {});
-            lessonKeys.sort((a, b) => parseInt(a.replace('Lekcja ', '')) - parseInt(b.replace('Lekcja ', '')));
-            lessonKeys.forEach(lesson => {
+            const keys = Object.keys(books[currentBook] || {});
+            keys.sort((a,b) => parseInt(a.replace('Lekcja ','')) - parseInt(b.replace('Lekcja ','')));
+            keys.forEach(l => {
                 const div = document.createElement('div');
                 div.className = 'card-btn';
-                div.textContent = lesson;
-                div.onclick = () => startLearning(lesson);
+                div.textContent = l;
+                div.onclick = () => startLearning(l);
                 grid.appendChild(div);
             });
             showScreen('lesson');
         } else if (mode === 'review') {
             isReviewMode = true;
-            if (reviewPool.length === 0) {
-                alert('Nie masz jeszcze żadnych słów w powtórkach.\nUkończ przynajmniej jedną lekcję.');
+            stats.reviewSessions = (stats.reviewSessions || 0) + 1;
+            localStorage.setItem(STATS_KEY, JSON.stringify(stats));
+            const due = getDueWords();
+            if (due.length === 0) {
+                alert('Brak słów do powtórki dziś! Wróć jutro. 🎉');
+                backToMode();
                 return;
             }
-            let selected = [...reviewPool];
-            selected.sort(() => 0.5 - Math.random());
-            currentWords = selected.slice(0, 10);
+            currentWords = due.sort(() => 0.5 - Math.random());
             currentIndex = 0;
             isRevealed = false;
-            document.getElementById('lessonTitle').textContent = 'Powtórka – 10 losowych słów';
+            document.getElementById('lessonTitle').textContent = `Powtórka – ${due.length} słów`;
             showCard();
             showScreen('flashcard');
+        } else if (mode === 'fun') {
+            showScreen('fun');
         } else if (mode === 'archive') {
             renderArchive();
             showScreen('archive');
         } else if (mode === 'quiz') {
-            if (reviewPool.length < 10) {
-                alert('Potrzebujesz co najmniej 10 słów w powtórkach, aby rozpocząć quiz.');
-                return;
-            }
+            if (reviewPool.length < 10) { alert('Za mało słów w powtórkach.'); return; }
             startQuiz();
+        } else if (mode === 'stats') {
+            renderStats();
+            showScreen('stats');
         }
     }
 
     function startQuiz() {
-        let poolCopy = [...reviewPool];
-        poolCopy.sort(() => 0.5 - Math.random());
-        quizWords = poolCopy.slice(0, 10);
-
+        const pool = [...reviewPool];
+        pool.sort(() => 0.5 - Math.random());
+        quizWords = pool.slice(0, 10);
         quizIndex = 0;
         correctAnswers = 0;
-
         document.getElementById('quizSummary').style.display = 'none';
         showQuizQuestion();
         showScreen('quiz');
@@ -1975,63 +2257,52 @@
 
     function showQuizQuestion() {
         if (quizIndex >= quizWords.length) {
+            stats.quizCorrect += correctAnswers;
+            stats.quizTotal += 10;
+            localStorage.setItem(STATS_KEY, JSON.stringify(stats));
             document.getElementById('quizGreek').textContent = '';
             document.getElementById('quizOptions').innerHTML = '';
-            document.getElementById('quizProgress').textContent = 'Quiz zakończony!';
-            document.getElementById('quizSummary').textContent = `Poprawnych odpowiedzi: ${correctAnswers} / 10`;
+            document.getElementById('quizProgress').textContent = 'Zakończono!';
+            document.getElementById('quizSummary').innerHTML = `Poprawnych: ${correctAnswers} / 10`;
             document.getElementById('quizSummary').style.display = 'block';
             return;
         }
-
-        const word = quizWords[quizIndex];
+        const w = quizWords[quizIndex];
         document.getElementById('quizCurrent').textContent = quizIndex + 1;
-        document.getElementById('quizGreek').textContent = word.greek;
+        document.getElementById('quizGreek').textContent = w.greek;
 
-        let options = [word.polish];
-        let otherWords = reviewPool.filter(w => w.polish !== word.polish);
-        otherWords.sort(() => 0.5 - Math.random());
-        for (let i = 0; i < 3 && i < otherWords.length; i++) {
-            options.push(otherWords[i].polish);
-        }
+        let opts = [w.polish];
+        let others = reviewPool.filter(x => x.polish !== w.polish);
+        others.sort(() => 0.5 - Math.random());
+        for (let i = 0; i < 3 && i < others.length; i++) opts.push(others[i].polish);
+        opts.sort(() => 0.5 - Math.random());
 
-        options.sort(() => 0.5 - Math.random());
-
-        const container = document.getElementById('quizOptions');
-        container.innerHTML = '';
-
-        options.forEach(opt => {
+        const cont = document.getElementById('quizOptions');
+        cont.innerHTML = '';
+        opts.forEach(o => {
             const btn = document.createElement('div');
             btn.className = 'quiz-option';
-            btn.textContent = opt;
-            btn.onclick = () => selectQuizOption(btn, opt === word.polish);
-            container.appendChild(btn);
-        });
-    }
-
-    function selectQuizOption(element, isCorrect) {
-        document.querySelectorAll('.quiz-option').forEach(el => el.style.pointerEvents = 'none');
-
-        if (isCorrect) {
-            element.classList.add('correct');
-            correctAnswers++;
-        } else {
-            element.classList.add('wrong');
-            document.querySelectorAll('.quiz-option').forEach(el => {
-                if (el.textContent === quizWords[quizIndex].polish) {
-                    el.classList.add('correct');
+            btn.textContent = o;
+            btn.onclick = () => {
+                document.querySelectorAll('.quiz-option').forEach(el => el.style.pointerEvents = 'none');
+                if (o === w.polish) {
+                    btn.classList.add('correct');
+                    correctAnswers++;
+                } else {
+                    btn.classList.add('wrong');
+                    document.querySelectorAll('.quiz-option').forEach(el => {
+                        if (el.textContent === w.polish) el.classList.add('correct');
+                    });
                 }
-            });
-        }
-
-        setTimeout(() => {
-            quizIndex++;
-            showQuizQuestion();
-        }, 2000);
+                setTimeout(() => { quizIndex++; showQuizQuestion(); }, 2000);
+            };
+            cont.appendChild(btn);
+        });
     }
 
     function startLearning(lesson) {
         isReviewMode = false;
-        currentWords = [...books[currentBook][lesson] || []];
+        currentWords = [...books[currentBook][lesson]];
         currentLesson = lesson;
         currentIndex = 0;
         isRevealed = false;
@@ -2040,13 +2311,23 @@
         showScreen('flashcard');
     }
 
+    function speakWord(text) {
+        if ('speechSynthesis' in window) {
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = 'el-GR';
+            u.rate = 0.8;
+            speechSynthesis.cancel();
+            speechSynthesis.speak(u);
+        }
+    }
+
     function showCard() {
         if (currentIndex >= currentWords.length) {
             if (!isReviewMode) {
                 if (!progress[currentBook]) progress[currentBook] = {};
                 progress[currentBook][currentLesson] = true;
                 localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
-                alert("Gratulacje! Ukończyłeś lekcję!\nWszystkie słowa są już w powtórkach.");
+                alert("Gratulacje! Ukończyłeś lekcję! 🎉");
             } else {
                 alert("Koniec powtórki!");
             }
@@ -2056,117 +2337,208 @@
 
         const w = currentWords[currentIndex];
         document.getElementById('front').innerHTML = `
-            <div>${w.greek}</div>
-            ${w.translit ? `<div>${w.translit}</div>` : ''}
-            <div>Kliknij, aby zobaczyć tłumaczenie</div>
+            <button class="pronounce-btn" onclick="speakWord('${w.greek}')">🔊</button>
+            <div style="font-size: clamp(4.5rem, 14vw, 8.5rem); margin-top: 80px;">${w.greek}</div>
+            ${w.translit ? `<div style="font-size: clamp(2rem, 6vw, 3rem); margin-top: 30px;">${w.translit}</div>` : ''}
+            <div style="margin-top: 60px; font-size: clamp(1.3rem, 4.5vw, 1.8rem); opacity: 0.8;">
+                Kliknij fiszkę, aby zobaczyć tłumaczenie
+            </div>
         `;
-        document.getElementById('back').innerHTML = `
-            <div>${w.polish}</div>
-        `;
+        document.getElementById('back').innerHTML = `<div>${w.polish}</div>`;
         isRevealed = false;
         updateButtons();
     }
 
     function updateButtons() {
         document.querySelector('.btn-check').style.display = isRevealed ? 'none' : 'inline-block';
+        document.getElementById('btn-learn-master').style.display = (!isReviewMode && isRevealed) ? 'inline-block' : 'none';
+        document.getElementById('btn-learn-notmaster').style.display = (!isReviewMode && isRevealed) ? 'inline-block' : 'none';
+        document.getElementById('btn-master').style.display = (isReviewMode && isRevealed) ? 'inline-block' : 'none';
+        document.getElementById('btn-notmaster').style.display = (isReviewMode && isRevealed) ? 'inline-block' : 'none';
+        document.getElementById('btn-archive').style.display = (isReviewMode && isRevealed) ? 'inline-block' : 'none';
+    }
 
-        if (isReviewMode) {
-            document.getElementById('btn-master').style.display = isRevealed ? 'inline-block' : 'none';
-            document.getElementById('btn-notmaster').style.display = isRevealed ? 'inline-block' : 'none';
-            document.getElementById('btn-archive').style.display = isRevealed ? 'inline-block' : 'none';
-            document.getElementById('btn-learn-master').style.display = 'none';
-            document.getElementById('btn-learn-notmaster').style.display = 'none';
-        } else {
-            document.getElementById('btn-learn-master').style.display = isRevealed ? 'inline-block' : 'none';
-            document.getElementById('btn-learn-notmaster').style.display = isRevealed ? 'inline-block' : 'none';
-            document.getElementById('btn-master').style.display = 'none';
-            document.getElementById('btn-notmaster').style.display = 'none';
-            document.getElementById('btn-archive').style.display = 'none';
+    document.getElementById('flashcard').onclick = () => { if (!isRevealed) { document.getElementById('flashcard').classList.add('flipped'); isRevealed = true; updateButtons(); } };
+    document.querySelector('.btn-check').onclick = () => { if (!isRevealed) { document.getElementById('flashcard').classList.add('flipped'); isRevealed = true; updateButtons(); } };
+
+    function nextCard() {
+        document.getElementById('flashcard').classList.remove('flipped');
+        setTimeout(() => { currentIndex++; showCard(); }, 850);
+    }
+
+    document.getElementById('btn-learn-master').onclick = () => { addWordToReview(currentWords[currentIndex]); scheduleWord(currentWords[currentIndex], 5); nextCard(); };
+    document.getElementById('btn-learn-notmaster').onclick = () => { addWordToReview(currentWords[currentIndex]); scheduleWord(currentWords[currentIndex], 2); nextCard(); };
+    document.getElementById('btn-master').onclick = () => { scheduleWord(currentWords[currentIndex], 4); nextCard(); };
+    document.getElementById('btn-notmaster').onclick = () => { scheduleWord(currentWords[currentIndex], 2); nextCard(); };
+    document.getElementById('btn-archive').onclick = () => {
+        const w = currentWords[currentIndex];
+        reviewPool = reviewPool.filter(x => !(x.greek === w.greek && x.polish === w.polish));
+        localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewPool));
+        if (!archivePool.some(x => x.greek === w.greek && x.polish === w.polish)) {
+            archivePool.push(w);
+            localStorage.setItem(ARCHIVE_KEY, JSON.stringify(archivePool));
         }
-    }
+        updateReviewCount();
+        nextCard();
+    };
 
-    document.getElementById('flashcard').onclick = flipCard;
-    document.querySelector('.btn-check').onclick = flipCard;
+    // === TRYB ZABAWY ===
 
-    function flipCard() {
-        if (!isRevealed) {
-            document.getElementById('flashcard').classList.add('flipped');
-            isRevealed = true;
-            updateButtons();
+    function startMatchGame() {
+        const due = getDueWords();
+        if (due.length < 4) {
+            alert('Za mało słów do gry (min. 4).');
+            backToMode();
+            return;
         }
+        const selected = due.sort(() => 0.5 - Math.random()).slice(0, 8);
+        const pairs = [...selected, ...selected];
+        pairs.sort(() => 0.5 - Math.random());
+
+        const game = document.getElementById('matchGame');
+        game.innerHTML = '';
+        let flipped = [];
+        let matched = 0;
+
+        pairs.forEach((word, i) => {
+            const card = document.createElement('div');
+            card.className = 'match-card';
+            card.innerHTML = '?';
+            card.onclick = () => {
+                if (card.classList.contains('flipped') || card.classList.contains('matched') || flipped.length === 2) return;
+                card.classList.add('flipped');
+                card.innerHTML = word.greek + '<br><small>' + word.polish + '</small>';
+                flipped.push({card, word});
+
+                if (flipped.length === 2) {
+                    if (flipped[0].word.greek === flipped[1].word.greek) {
+                        setTimeout(() => {
+                            flipped.forEach(f => f.card.classList.add('matched'));
+                            matched += 2;
+                            if (matched === pairs.length) {
+                                document.getElementById('matchResult').textContent = 'Brawo! Wszystkie pary dopasowane! 🎉';
+                                document.getElementById('matchResult').style.display = 'block';
+                            }
+                            flipped = [];
+                        }, 800);
+                    } else {
+                        setTimeout(() => {
+                            flipped.forEach(f => {
+                                f.card.classList.remove('flipped');
+                                f.card.innerHTML = '?';
+                            });
+                            flipped = [];
+                        }, 1200);
+                    }
+                }
+            };
+            game.appendChild(card);
+        });
+        showScreen('match');
     }
 
-    function learnMasterCard() {
-        const word = currentWords[currentIndex];
-        const exists = reviewPool.some(w => w.greek === word.greek && w.polish === word.polish);
-        if (!exists) {
-            reviewPool.push(word);
-            localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewPool));
-            updateReviewCount();
-            updateQuizButton();
+    function startTypingGame() {
+        const due = getDueWords();
+        if (due.length === 0) {
+            alert('Brak słów do gry.');
+            backToMode();
+            return;
         }
-        nextCardWithoutReturn();
-    }
+        let words = due.sort(() => 0.5 - Math.random());
+        let index = 0;
+        let score = 0;
 
-    function learnNotMasterCard() {
-        const flashcard = document.getElementById('flashcard');
-        flashcard.classList.remove('flipped');
-        setTimeout(() => {
-            const card = currentWords[currentIndex];
-            currentWords.splice(currentIndex, 1);
-            currentWords.push(card);
-            currentIndex = Math.min(currentIndex, currentWords.length - 1);
-            showCard();
-        }, 850);
-    }
-
-    function nextCardWithoutReturn() {
-        const flashcard = document.getElementById('flashcard');
-        flashcard.classList.remove('flipped');
-        setTimeout(() => {
-            currentIndex++;
-            showCard();
-        }, 850);
-    }
-
-    function masterCard() { nextCardWithoutReturn(); }
-
-    function notMasterCard() {
-        const flashcard = document.getElementById('flashcard');
-        flashcard.classList.remove('flipped');
-        setTimeout(() => {
-            const card = currentWords[currentIndex];
-            currentWords.splice(currentIndex, 1);
-            currentWords.unshift(card);
-            currentIndex = 0;
-            showCard();
-        }, 850);
-    }
-
-    function archiveCard() {
-        const word = currentWords[currentIndex];
-        const flashcard = document.getElementById('flashcard');
-        flashcard.classList.remove('flipped');
-        setTimeout(() => {
-            reviewPool = reviewPool.filter(w => !(w.greek === word.greek && w.polish === word.polish));
-            localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewPool));
-            const existsInArchive = archivePool.some(w => w.greek === word.greek && w.polish === word.polish);
-            if (!existsInArchive) {
-                archivePool.push(word);
-                localStorage.setItem(ARCHIVE_KEY, JSON.stringify(archivePool));
+        function nextWord() {
+            if (index >= words.length) {
+                document.getElementById('typingFeedback').textContent = `Koniec! Twój wynik: ${score} pkt 🎉`;
+                return;
             }
-            updateReviewCount();
-            updateQuizButton();
-            currentIndex++;
-            showCard();
-        }, 850);
+            const w = words[index];
+            document.getElementById('typingWord').textContent = w.greek;
+            document.getElementById('typingInput').value = '';
+            document.getElementById('typingInput').focus();
+            document.getElementById('typingFeedback').textContent = '';
+        }
+
+        document.getElementById('typingInput').onkeydown = (e) => {
+            if (e.key === 'Enter') {
+                const input = document.getElementById('typingInput').value.trim().toLowerCase();
+                const correct = words[index].polish.toLowerCase();
+                if (input === correct) {
+                    document.getElementById('typingFeedback').innerHTML = 'Brawo! ✅';
+                    document.getElementById('typingFeedback').style.color = '#27ae60';
+                    score += 10;
+                    scheduleWord(words[index], 5);
+                } else {
+                    document.getElementById('typingFeedback').innerHTML = `Niepoprawne. Poprawne: ${words[index].polish} ❌`;
+                    document.getElementById('typingFeedback').style.color = '#e74c3c';
+                    scheduleWord(words[index], 2);
+                }
+                document.getElementById('typingScore').textContent = 'Punkty: ' + score;
+                index++;
+                setTimeout(nextWord, 1500);
+            }
+        };
+
+        document.getElementById('typingScore').textContent = 'Punkty: 0';
+        nextWord();
+        showScreen('typing');
     }
 
-    document.getElementById('btn-learn-master').onclick = learnMasterCard;
-    document.getElementById('btn-learn-notmaster').onclick = learnNotMasterCard;
-    document.getElementById('btn-master').onclick = masterCard;
-    document.getElementById('btn-notmaster').onclick = notMasterCard;
-    document.getElementById('btn-archive').onclick = archiveCard;
+    function startSpeedRound() {
+        const due = getDueWords();
+        if (due.length === 0) {
+            alert('Brak słów do gry.');
+            backToMode();
+            return;
+        }
+        let words = due.sort(() => 0.5 - Math.random());
+        let index = 0;
+        let timeLeft = 60;
+        let score = 0;
+        let timerInterval;
+
+        function showWord() {
+            if (index >= words.length || timeLeft <= 0) endGame();
+            const w = words[index];
+            document.getElementById('speedFront').innerHTML = `
+                <button class="pronounce-btn" onclick="speakWord('${w.greek}')">🔊</button>
+                <div style="font-size: clamp(4rem, 12vw, 7rem); margin-top: 80px;">${w.greek}</div>
+            `;
+        }
+
+        function tick() {
+            timeLeft--;
+            document.getElementById('timer').textContent = timeLeft;
+            if (timeLeft <= 0) endGame();
+        }
+
+        function endGame() {
+            clearInterval(timerInterval);
+            document.getElementById('speedFront').innerHTML = '<div style="font-size: 3rem;">Koniec! 🎉</div>';
+            document.getElementById('speedScore').textContent = `Wynik: ${score} pkt`;
+            document.querySelectorAll('#speedScreen button:not(.btn-back)').forEach(b => b.disabled = true);
+        }
+
+        window.speedAnswer = (correct) => {
+            if (correct) {
+                score += 10;
+                timeLeft += 2;
+                scheduleWord(words[index], 5);
+            } else {
+                scheduleWord(words[index], 2);
+            }
+            document.getElementById('speedScore').textContent = `Punkty: ${score}`;
+            index++;
+            showWord();
+        };
+
+        timerInterval = setInterval(tick, 1000);
+        document.getElementById('timer').textContent = timeLeft;
+        document.getElementById('speedScore').textContent = 'Punkty: 0';
+        showWord();
+        showScreen('speed');
+    }
 
     renderBooks();
     updateReviewCount();
@@ -2175,8 +2547,8 @@
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('Service Worker zarejestrowany!', reg))
-                .catch(err => console.log('Błąd rejestracji SW:', err));
+                .then(r => console.log('SW OK', r))
+                .catch(e => console.log('SW error', e));
         });
     }
 </script>
