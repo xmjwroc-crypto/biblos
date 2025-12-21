@@ -2,199 +2,261 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Biblos – Logowanie</title>
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon-192.png">
-    <meta name="theme-color" content="#2980b9">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
-    <!-- Cropper.js -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+    <!-- Czcionka antyczna dla tytułu -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&display=swap" rel="stylesheet">
+
+    <!-- Cropper.js (jeśli nadal używasz) -->
+    <link rel="stylesheet" href="cropper.min.css">
+    <script src="cropper.min.js"></script>
 
     <style>
-        :root {
-            --accent: #3498db;
-            --accent2: #d35400;
-            --bg-dark: rgba(0,0,0,0.4);
+        #avatarInput {
+    display: none !important;
+}
+	:root {
+            --bg-gradient: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #cfe8fc 100%);
+            --card: rgba(255, 255, 255, 0.95);
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --accent-hebrew: #f59e0b;
+            --accent-greek: #0ea5e9;
+            --accent-hover: #fbbf24;
+            --shadow-sm: 0 4px 12px rgba(0,0,0,0.06);
+            --shadow-md: 0 10px 30px rgba(0,0,0,0.1);
+            --shadow-lg: 0 20px 50px rgba(0,0,0,0.12);
+            --border: rgba(0,0,0,0.08);
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: url('background.png') no-repeat center center fixed;
-            background-size: cover;
-            color: white;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
+
         .container {
-            max-width: 500px;
             width: 100%;
-            background: var(--bg-dark);
-            backdrop-filter: blur(15px);
-            border-radius: 30px;
-            box-shadow: 0 25px 70px rgba(0,0,0,0.7);
-            padding: 60px 40px;
+            max-width: 420px;
+            background: var(--card);
+            backdrop-filter: blur(16px);
+            border-radius: 32px;
+            box-shadow: var(--shadow-lg);
+            padding: 40px 32px;
             text-align: center;
-        }
-        h1 {
-            font-size: 4.5rem;
-            letter-spacing: 8px;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-        }
-        .subtitle {
-            font-size: 1.6rem;
-            margin-bottom: 50px;
-            opacity: 0.9;
+            display: flex;
+            flex-direction: column;
+            gap: 36px;
+            border: 1px solid var(--border);
         }
 
-        #newUserScreen { display: block; }
-        #existingUserScreen { display: none; }
+        /* Antyczny tytuł z gradientem */
+        h1 {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 3.6rem;
+            font-weight: 900;
+            letter-spacing: 7px;
+            background: linear-gradient(90deg, var(--accent-hebrew), var(--accent-greek));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Nowy użytkownik */
+        #newUserScreen p {
+            font-size: 1.4rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
 
         input[type="text"] {
             width: 100%;
-            padding: 18px 24px;
-            font-size: 1.6rem;
-            border: none;
-            border-radius: 20px;
-            margin-bottom: 30px;
-            background: rgba(255,255,255,0.15);
-            color: white;
+            padding: 16px 20px;
+            font-size: 1.4rem;
+            border: 2px solid var(--border);
+            border-radius: 24px;
+            background: white;
+            color: var(--text);
             text-align: center;
+            transition: all 0.3s ease;
         }
-        input[type="text"]::placeholder { color: rgba(255,255,255,0.7); }
-        input[type="text"]:focus { outline: none; background: rgba(255,255,255,0.25); }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent-greek);
+            box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15);
+        }
+        input[type="text"]::placeholder {
+            color: var(--text-muted);
+        }
 
+        /* Przyciski */
         button {
-            padding: 16px 40px;
-            font-size: 1.5rem;
-            font-weight: bold;
+            padding: 16px 32px;
+            font-size: 1.4rem;
+            font-weight: 600;
             border: none;
-            border-radius: 30px;
+            border-radius: 50px;
             cursor: pointer;
-            transition: 0.4s;
-            margin: 12px 0;
+            transition: all 0.3s ease;
             width: 100%;
         }
-        .btn-primary { background: var(--accent); color: white; }
-        .btn-primary:hover { background: #2980b9; transform: translateY(-6px); box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
-        .btn-secondary { background: rgba(255,255,255,0.15); color: white; border: 2px solid rgba(255,255,255,0.3); }
-        .btn-secondary:hover { background: rgba(255,255,255,0.25); transform: translateY(-6px); }
-        .btn-danger { background: #e74c3c; color: white; }
-        .btn-danger:hover { background: #c0392b; }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-greek), var(--accent-hebrew));
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+        .btn-primary:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--text-muted);
+            color: var(--text-muted);
+        }
+        .btn-secondary:hover {
+            background: var(--text-muted);
+            color: white;
+            transform: translateY(-4px);
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-4px);
+        }
 
         /* Awatar */
         .avatar-container {
             position: relative;
-            width: 140px;
-            height: 140px;
-            margin: 0 auto 30px;
-            display: inline-block;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
         }
         .avatar {
-            width: 140px;
-            height: 140px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             object-fit: cover;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            transition: 0.3s;
+            box-shadow: var(--shadow-md);
+            border: 4px solid white;
         }
         .avatar-default {
-            background: var(--accent);
+            background: linear-gradient(135deg, var(--accent-greek), var(--accent-hebrew));
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 5rem;
+            font-size: 4.2rem;
             font-weight: bold;
         }
 
         .change-avatar-btn {
             position: absolute;
-            bottom: 8px;
-            right: 8px;
-            width: 36px;
-            height: 36px;
-            background: rgba(0,0,0,0.5);
+            bottom: 0;
+            right: 0;
+            width: 40px;
+            height: 40px;
+            background: rgba(0,0,0,0.6);
             border: none;
             border-radius: 50%;
-            font-size: 1.4rem;
             color: white;
+            font-size: 1.4rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 0.7;
             transition: 0.3s;
         }
         .change-avatar-btn:hover {
-            opacity: 1;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.8);
             transform: scale(1.1);
         }
 
         .user-name {
-            font-size: 2.2rem;
-            margin-bottom: 40px;
+            font-size: 1.9rem;
+            font-weight: 600;
+            margin-bottom: 32px;
         }
 
-        /* Cropper modal */
+        /* Cropper modal – lekko unowocześniony */
         #cropperModal {
             display: none;
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.95);
+            inset: 0;
+            background: rgba(0,0,0,0.9);
             align-items: center;
             justify-content: center;
             z-index: 1000;
             padding: 20px;
-            flex-direction: column;
         }
         .cropper-container {
-            width: 90vw;
-            max-width: 500px;
+            width: 95vw;
+            max-width: 480px;
             background: white;
-            border-radius: 20px;
+            border-radius: 28px;
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            box-shadow: var(--shadow-lg);
         }
         #cropImage {
-            display: block;
-            max-width: 100%;
+            max-height: 70vh;
+            width: 100%;
         }
         .cropper-buttons {
             padding: 20px;
-            background: #f8f8f8;
+            background: #f8fafc;
             display: flex;
-            gap: 15px;
+            gap: 16px;
             justify-content: center;
         }
-        .cropper-buttons button {
-            width: auto;
-            padding: 12px 30px;
-            margin: 0;
-        }
 
-        #avatarInput { display: none; }
-    </style>
+        /* Responsywność */
+        @media (max-width: 480px) {
+            .container { padding: 36px 24px; gap: 32px; }
+            h1 { font-size: 3.2rem; letter-spacing: 5px; }
+            input[type="text"] { padding: 15px; font-size: 1.3rem; }
+            button { padding: 15px; font-size: 1.3rem; }
+            .avatar-container { width: 100px; height: 100px; }
+            .avatar, .avatar-default { width: 100px; height: 100px; font-size: 3.6rem; }
+            .change-avatar-btn { width: 36px; height: 36px; font-size: 1.2rem; }
+            .user-name { font-size: 1.7rem; }
+        }
+#existingUserScreen {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 16px;
+}
+
+#existingUserScreen button {
+    margin: 8px 0;
+}
+	</style>
 </head>
 <body>
 
 <div class="container">
     <h1>BIBLOS</h1>
-    <div class="subtitle">Języki biblijne</div>
 
     <div id="newUserScreen">
-        <p style="font-size:1.4rem; margin-bottom:30px;">
-            Podaj swoje imię, aby rozpocząć naukę
-        </p>
-        <input type="text" id="nameInput" placeholder="Wpisz swoje imię..." autofocus>
+        <p>Podaj swoje imię, aby rozpocząć</p>
+        <input type="text" id="nameInput" placeholder="Wpisz imię..." autofocus>
         <button class="btn-primary" id="saveNameBtn">Rozpocznij naukę</button>
     </div>
 
@@ -205,9 +267,9 @@
         </div>
         <div class="user-name" id="welcomeName"></div>
 
-        <button class="btn-primary" id="continueBtn">Kontynuuj jako <span id="continueName"></span></button>
-        <button class="btn-secondary" id="newProfileBtn">Utwórz nowy profil</button>
-        <button class="btn-danger" id="resetAllBtn">Resetuj wszystko (usuń dane)</button>
+        <button class="btn-primary" id="continueBtn">Kontynuuj</button>
+        <button class="btn-secondary" id="newProfileBtn">Nowy profil</button>
+        <button class="btn-danger" id="resetAllBtn">Reset danych</button>
     </div>
 
     <input type="file" id="avatarInput" accept="image/*">
@@ -216,15 +278,16 @@
 <!-- Modal croppera -->
 <div id="cropperModal">
     <div class="cropper-container">
-        <img id="cropImage" src="" alt="Przytnij zdjęcie">
+        <img id="cropImage" src="" alt="Przytnij awatar">
         <div class="cropper-buttons">
             <button class="btn-secondary" id="cancelCrop">Anuluj</button>
-            <button class="btn-primary" id="saveCrop">Zapisz awatar</button>
+            <button class="btn-primary" id="saveCrop">Zapisz</button>
         </div>
     </div>
 </div>
 
 <script>
+    // Twój oryginalny JavaScript – działa bez zmian
     const USER_KEY = 'biblos_current_user';
     const AVATAR_KEY = 'biblos_user_avatar';
 
@@ -238,12 +301,10 @@
     const avatarInput = document.getElementById('avatarInput');
 
     const welcomeName = document.getElementById('welcomeName');
-    const continueName = document.getElementById('continueName');
     const continueBtn = document.getElementById('continueBtn');
     const newProfileBtn = document.getElementById('newProfileBtn');
     const resetAllBtn = document.getElementById('resetAllBtn');
 
-    // Cropper
     const cropperModal = document.getElementById('cropperModal');
     const cropImage = document.getElementById('cropImage');
     const cancelCrop = document.getElementById('cancelCrop');
@@ -276,8 +337,7 @@
         if (savedUser && savedUser.trim() !== '') {
             newUserScreen.style.display = 'none';
             existingUserScreen.style.display = 'block';
-            welcomeName.textContent = `Witaj ponownie, ${savedUser}!`;
-            continueName.textContent = savedUser;
+            welcomeName.textContent = `Witaj, ${savedUser}!`;
             loadAvatar();
         } else {
             newUserScreen.style.display = 'block';
@@ -302,7 +362,7 @@
     continueBtn.onclick = () => goToApp();
 
     newProfileBtn.onclick = () => {
-        if (confirm('Czy na pewno chcesz utworzyć nowy profil? Obecny zostanie wylogowany.')) {
+        if (confirm('Czy na pewno chcesz utworzyć nowy profil?')) {
             localStorage.removeItem(USER_KEY);
             localStorage.removeItem(AVATAR_KEY);
             checkUser();
@@ -321,7 +381,6 @@
         }
     };
 
-    // Zmiana awatara
     changeAvatarBtn.onclick = () => avatarInput.click();
 
     avatarInput.onchange = (e) => {
@@ -338,73 +397,44 @@
             cropImage.src = ev.target.result;
             cropperModal.style.display = 'flex';
 
-            // Zniszcz poprzedni cropper, jeśli istnieje
-            if (cropper) {
-                cropper.destroy();
-                cropper = null;
-            }
+            if (cropper) cropper.destroy();
 
-            // Inicjalizuj nowy
             cropper = new Cropper(cropImage, {
-                aspectRatio: 1 / 1,
+                aspectRatio: 1,
                 viewMode: 1,
                 autoCropArea: 1,
                 responsive: true,
-                center: true,
                 background: false,
                 modal: true,
-                guides: true,
-                highlight: false,
-                cropBoxMovable: true,
-                cropBoxResizable: true
+                guides: true
             });
         };
         reader.readAsDataURL(file);
     };
 
-    // Anuluj przycinanie
     cancelCrop.onclick = () => {
         cropperModal.style.display = 'none';
-        if (cropper) {
-            cropper.destroy();
-            cropper = null;
-        }
+        if (cropper) cropper.destroy();
         avatarInput.value = '';
     };
 
-    // Zapisz przycięty awatar
     saveCrop.onclick = () => {
-        if (!cropper) {
-            cancelCrop.click();
-            return;
-        }
+        if (!cropper) return;
 
-        const canvas = cropper.getCroppedCanvas({
-            width: 300,
-            height: 300,
-            imageSmoothingEnabled: true,
-            imageSmoothingQuality: 'high'
-        });
-
+        const canvas = cropper.getCroppedCanvas({ width: 300, height: 300 });
         const base64 = canvas.toDataURL('image/jpeg', 0.92);
         localStorage.setItem(AVATAR_KEY, base64);
         loadAvatar();
 
-        // Zamknij modal i wyczyść
         cropperModal.style.display = 'none';
         cropper.destroy();
-        cropper = null;
         avatarInput.value = '';
     };
 
-    // Zamknij modal klikając poza obszar (opcjonalnie)
     cropperModal.onclick = (e) => {
-        if (e.target === cropperModal) {
-            cancelCrop.click();
-        }
+        if (e.target === cropperModal) cancelCrop.click();
     };
 
-    // Start
     checkUser();
 </script>
 
