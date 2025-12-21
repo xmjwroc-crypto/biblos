@@ -2,160 +2,212 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Biblos – Menu główne</title>
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#e0f2fe">
 
-    <!-- Ikony dla Androida -->
-    <link rel="apple-touch-icon" href="icon-192.png">
-    <meta name="theme-color" content="#2980b9">
+    <!-- Antyczna, elegancka czcionka dla tytułu -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&display=swap" rel="stylesheet">
 
-    <!-- Pełny ekran na Androidzie -->
-    <meta name="mobile-web-app-capable" content="yes">   
     <style>
-        :root { --accent: #3498db; --accent2: #d35400; }
+        :root {
+            --bg-gradient: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #cfe8fc 100%);
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --accent-hebrew: #f59e0b;
+            --accent-greek: #0ea5e9;
+            --accent-hover: #fbbf24;
+            --shadow-sm: 0 4px 12px rgba(0,0,0,0.06);
+            --shadow-md: 0 10px 30px rgba(0,0,0,0.1);
+            --shadow-lg: 0 20px 50px rgba(0,0,0,0.12);
+            --border: rgba(0,0,0,0.08);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background: url('background.png') no-repeat center center fixed;
-            background-size: cover;
-            color: white;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text);
             min-height: 100vh;
-            padding: 20px;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
+
         .container {
-            max-width: 800px;
             width: 100%;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-            overflow: hidden;
+            max-width: 420px;
+            background: var(--card);
+            border-radius: 32px;
+            box-shadow: var(--shadow-lg);
+            padding: 40px 32px;
             text-align: center;
-            padding: 60px 40px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            gap: 32px;
+            border: 1px solid var(--border);
         }
-        header {
-            margin-bottom: 50px;
-        }
-        h1 { font-size: 4.5rem; letter-spacing: 6px; text-transform: uppercase; }
 
-        .welcome {
-            font-size: 2rem;
-            margin-bottom: 60px;
+        h1 {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 3.4rem;
+            font-weight: 900;
+            letter-spacing: 6px;
+            background: linear-gradient(90deg, var(--accent-hebrew), var(--accent-greek));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-            margin-bottom: 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
         }
+
         .card-btn {
-            padding: 50px;
-            background: rgba(255,255,255,0.15);
-            border-radius: 24px;
+            padding: 30px 28px;
+            background: linear-gradient(135deg, #ffffff, #f8fbff);
+            border-radius: 32px;
             cursor: pointer;
-            font-size: 1.5rem;
-            font-weight: 700;
-            transition: 0.4s;
+            transition: all 0.35s ease;
             border: 3px solid transparent;
-            backdrop-filter: blur(5px);
-        }
-        .card-btn:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-20px);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-        }
-        .hebrew { border-color: var(--accent2); }
-        .greek { border-color: var(--accent); }
-
-        .card-btn p {
-            font-size: 1.4rem;
-            margin-top: 20px;
-            opacity: 0.9;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
         }
 
-        /* Przycisk powrotu */
+        .card-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.7), rgba(255,255,255,0.2));
+            opacity: 0;
+            transition: opacity 0.35s;
+        }
+
+        .card-btn:hover::before {
+            opacity: 1;
+        }
+
+        .card-btn:hover,
+        .card-btn:active {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-btn h2 {
+            font-size: 1.7rem;
+            margin: 16px 0 0;
+            font-weight: 700;
+        }
+
+        .icon {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 8px;
+        }
+
+        .hebrew { border-color: var(--accent-hebrew); }
+        .hebrew:hover { border-color: var(--accent-hover); box-shadow: 0 20px 50px rgba(245, 158, 11, 0.25); }
+        .greek { border-color: var(--accent-greek); }
+        .greek:hover { border-color: var(--accent-hover); box-shadow: 0 20px 50px rgba(14, 165, 233, 0.25); }
+
         .home-btn {
-            padding: 16px 40px;
-            background: rgba(255,255,255,0.2);
-            border: 2px solid rgba(255,255,255,0.4);
-            border-radius: 30px;
-            font-size: 1.4rem;
-            font-weight: bold;
+            padding: 14px 44px;
+            background: transparent;
+            border: 2px solid var(--text-muted);
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-muted);
             cursor: pointer;
-            transition: 0.4s;
+            transition: all 0.3s ease;
             align-self: center;
         }
+
         .home-btn:hover {
-            background: rgba(255,255,255,0.35);
-            transform: translateY(-8px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+            background: var(--text-muted);
+            color: white;
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 32px 24px; gap: 28px; }
+            h1 { font-size: 3rem; letter-spacing: 5px; }
+            .card-btn { padding: 26px 20px; }
+            .card-btn h2 { font-size: 1.6rem; }
+            .icon { width: 80px; height: 80px; }
+        }
+
+        @media (min-width: 768px) {
+            .container { max-width: 700px; padding: 64px 48px; gap: 48px; }
+            h1 { font-size: 4.8rem; }
+            .grid { flex-direction: row; gap: 36px; }
+            .card-btn { padding: 48px 36px; }
+            .icon { width: 120px; height: 120px; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header>
-        <h1>BIBLOS</h1>
-    </header>
-
-    <div class="welcome">
-        Witaj, <span id="userName">Gość</span>!
-    </div>
+    <h1>BIBLOS</h1>
 
     <div class="grid">
+        <!-- Hebrajski – ת (Taw) -->
         <div class="card-btn hebrew" id="hebrewBtn">
-            Język hebrajski 
+            <svg class="icon" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#fbbf24"/>
+                        <stop offset="100%" stop-color="#f59e0b"/>
+                    </linearGradient>
+                </defs>
+                <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle"
+                      font-size="180" font-weight="bold" fill="url(#goldGrad)" font-family="David, serif">
+                    ת
+                </text>
+            </svg>
+            <h2>Język hebrajski</h2>
         </div>
 
+        <!-- Grecki – Α (Alfa) -->
         <div class="card-btn greek" id="greekBtn">
-            Język grecki NT
+            <svg class="icon" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="turquoiseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#7dd3fc"/>
+                        <stop offset="100%" stop-color="#0ea5e9"/>
+                    </linearGradient>
+                </defs>
+                <text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle"
+                      font-size="180" font-weight="bold" fill="url(#turquoiseGrad)" font-family="serif">
+                    Α
+                </text>
+            </svg>
+            <h2>Język grecki NT</h2>
         </div>
     </div>
 
-    <!-- Przycisk powrotu – tylko wraca do index.html, bez wylogowywania -->
     <button class="home-btn" id="homeBtn">
         ← Strona główna
     </button>
 </div>
 
 <script>
-    // Wyświetlanie imienia użytkownika
-    const currentUser = localStorage.getItem('biblos_current_user') || 'Gość';
-    document.getElementById('userName').textContent = currentUser;
-
-    // Przyciski do języków
-    document.getElementById('hebrewBtn').onclick = () => {
-        window.location.href = 'hebrew.html';
-    };
-
-    document.getElementById('greekBtn').onclick = () => {
-        window.location.href = 'greek.html';
-    };
-
-    // Przycisk powrotu – tylko przechodzi do strony logowania (index.html)
-    // NIE usuwa użytkownika z localStorage
-    document.getElementById('homeBtn').onclick = () => {
-        window.location.href = 'index.html';
-    };
+    // Przypisanie akcji do przycisków – teraz działa bez błędu
+    document.getElementById('hebrewBtn').onclick = () => window.location.href = 'hebrew.html';
+    document.getElementById('greekBtn').onclick = () => window.location.href = 'greek.html';
+    document.getElementById('homeBtn').onclick = () => window.location.href = 'index.html';
 </script>
 
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js');
-    });
-  }
-</script>
 </body>
 </html>
