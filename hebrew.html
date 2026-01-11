@@ -4,246 +4,252 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Biblos – Hebrajski biblijny</title>
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#f5e6d3">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #f5f2eb 0%, #e8dcd1 50%, #d6c9b8 100%);
+            --card-bg: rgba(255, 255, 255, 0.92);
+            --accent: #b8860b;
+            --primary: #2c5f7d;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --text: #2c3e50;
+            --shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text);
+            min-height: 100vh;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        header {
+            background: linear-gradient(90deg, var(--primary), #3e7a9e);
+            padding: 8px 15px;   
+            text-align: center;
+            color: white;
+        }
+        h1 { font-size: 1.5rem; letter-spacing: 2px; }
 
-<style>
-    :root {
-        --bg-gradient: linear-gradient(135deg, #f5f2eb 0%, #e8dcd1 50%, #d6c9b8 100%);
-        --card-bg: rgba(255, 255, 255, 0.92);
-        --accent: #b8860b;
-        --primary: #2c5f7d;
-        --success: #27ae60;
-        --warning: #f39c12;
-        --text: #2c3e50;
-        --shadow: 0 10px 30px rgba(0,0,0,0.15);
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-        font-family: 'Segoe UI', Tahoma, sans-serif;
-        background: var(--bg-gradient);
-        background-attachment: fixed;
-        color: var(--text);
-        min-height: 100vh;
-        padding: 10px;
-        display: flex;
-        flex-direction: column;
-    }
-    .container {
-        width: 100%;
-        max-width: 500px;
-        margin: 0 auto;
-        background: var(--card-bg);
-        backdrop-filter: blur(15px);
-        border-radius: 20px;
-        box-shadow: var(--shadow);
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-    }
-    header {
-        background: linear-gradient(90deg, var(--primary), #3e7a9e);
-        padding: 8px 15px;   
-        text-align: center;
-        color: white;
-    }
-    h1 { 
-        font-size: 1.5rem;    
-        letter-spacing: 2px;   
-    }
+        .screen { display: none; padding: 20px 15px; text-align: center; flex: 1; flex-direction: column; }
+        .screen.active { display: flex !important; }
 
-    .screen {
-        display: none;
-        padding: 20px 15px;
-        text-align: center;
-        flex-direction: column;
-        flex: 1;
-    }
-    .screen.active {
-        display: flex !important;
-    }
+        .grid { display: flex; flex-direction: column; gap: 16px; margin: 20px 0; flex: 1; }
 
-    .grid {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        margin: 20px 0;
-        flex: 1;
-    }
+        .card-btn {
+            padding: 24px 16px;
+            background: white;
+            border-radius: 18px;
+            cursor: pointer;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border: 2px solid transparent;
+        }
+        .card-btn:hover, .card-btn:active {
+            transform: translateY(-8px);
+            box-shadow: 0 18px 40px rgba(0,0,0,0.2);
+            border-color: var(--accent);
+            background: #fffdf7;
+        }
+        .card-btn .icon { font-size: 2.8rem; display: block; margin-bottom: 10px; }
+        .card-btn.disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .card-btn {
-        padding: 24px 16px;
-        background: white;
-        border-radius: 18px;
-        cursor: pointer;
-        font-size: 1.4rem;
-        font-weight: 700;
-        color: var(--primary);
-        transition: all 0.3s ease;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        border: 2px solid transparent;
-    }
-    .card-btn:hover, .card-btn:active {
-        transform: translateY(-8px);
-        box-shadow: 0 18px 40px rgba(0,0,0,0.2);
-        border-color: var(--accent);
-        background: #fffdf7;
-    }
-    
-    .card-btn .icon {
-        font-size: 2.8rem;
-        display: block;
-        margin-bottom: 10px;
-    }
-    .card-btn.disabled { opacity: 0.5; cursor: not-allowed; }
+        .pronounce-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: transparent;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 10px;
+        }
+        .pronounce-btn:hover { background: rgba(44,95,125,0.15); }
 
-    .pronounce-btn {
-        position: absolute;
-        top: 12px;
-        right: 12px;
-        background: transparent;
-        border: none;
-        font-size: 1.8rem;
-        cursor: pointer;
-        padding: 6px;
-        border-radius: 10px;
-    }
-    .pronounce-btn:hover { background: rgba(44,95,125,0.15); }
+        .flashcard {
+            width: 90vw;
+            max-width: 420px;
+            height: 40vh;
+            max-height: 420px;
+            margin: 20px auto;
+            perspective: 1200px;
+            align-self: center;
+        }
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            background: white;
+            color: #1a1a1a;
+            border-radius: 20px;
+            padding: 20px 20px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            box-shadow: var(--shadow);
+            font-family: "Cardo", "SBL Hebrew", "David", "Ezra SIL", serif !important;
+            direction: rtl;
+            text-align: center;
+        }
+        .card-back {
+            background: linear-gradient(135deg, #f0e6d2, #e0d4c0);
+            color: #3e2723;
+            transform: rotateY(180deg);
+            direction: ltr;
+        }
+        .flipped .card-inner { transform: rotateY(180deg); }
 
-    .flashcard {
-        width: 90vw;
-        max-width: 420px;
-        height: 40vh;
-        max-height: 420px;
-        margin: 20px auto;
-        perspective: 1200px;
-        align-self: center;
-    }
-    .card-inner {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        transform-style: preserve-3d;
-        transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-    }
-    .card-front, .card-back {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        backface-visibility: hidden;
-        background: white;
-        color: #1a1a1a;
-        border-radius: 20px;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        box-shadow: var(--shadow);
-        font-family: "Cardo", "SBL Hebrew", "David", "Ezra SIL", serif !important;
-        direction: rtl;
-        text-align: center;
-    }
-    .card-back {
-        background: linear-gradient(135deg, #f0e6d2, #e0d4c0);
-        color: #3e2723;
-        transform: rotateY(180deg);
-        direction: ltr;
-    }
-    .flipped .card-inner { transform: rotateY(180deg); }
+        .card-front > div:first-of-type {
+            font-size: clamp(2.8rem, 9.5vw, 5rem);   /* większy hebrajski */
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
 
-    .card-front > div:first-child { font-size: clamp(3.8rem, 12vw, 7rem); margin-top: 60px; }
-    .card-front > div:nth-child(2) { font-size: clamp(1.6rem, 5vw, 2.4rem); margin-top: 20px; }
-    .card-front > div:last-child { font-size: clamp(1.1rem, 3.8vw, 1.5rem); margin-top: 40px; opacity: 0.8; }
+       .card-front .hebrew-translit {
+            font-size: clamp(2.6rem, 6vw, 4rem) !important;  /* bardzo duża transliteracja */
+            margin-top: 10px;
+            opacity: 0.9;
+            font-style: italic;           
+            color: #2c5f7d;               
+        }
+        
+        .card-back > div { font-size: clamp(3rem, 10vw, 6rem) !important; font-weight: 700; padding: 20px; margin: auto 0; color: var(--primary); }
 
-    .card-back > div {
-        font-size: clamp(1.5rem, 6vw, 4rem) !important;
-        font-weight: 700;
-        padding: 15px;
-        color: var(--primary);
-    }
+        .btn-group { display: flex; flex-direction: column; gap: 10px; margin: 20px 0 30px 0; align-items: center; }
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 130px;
+        }
+        .btn-check { background: var(--primary); color: white; font-size: 1.5rem; padding: 14px 44px; }
+        .btn-know { background: var(--success); color: white; }
+        .btn-hard { background: var(--warning); color: white; }
+        .btn-archive { background: #95a5a6; color: white; }
+        .btn-back { background: #7f8c8d; color: white; padding: 11px 32px; font-size: 1.15rem; }
+        button:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
 
-    .btn-group {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin: 20px 0 30px 0;
-        align-items: center;
-    }
-    button {
-        padding: 12px 24px;
-        border: none;
-        border-radius: 20px;
-        font-size: 1.25rem;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        min-width: 130px;
-    }
-    .btn-check {
-        background: var(--primary);
-        color: white;
-        font-size: 1.5rem;
-        padding: 14px 44px;
-    }
-    .btn-know { background: var(--success); color: white; }
-    .btn-hard { background: var(--warning); color: white; }
-    .btn-archive { background: #95a5a6; color: white; }
-    .btn-restore { background: var(--success); color: white; padding: 10px 20px; font-size: 1.2rem; }
-    .btn-back {
-        background: #7f8c8d;
-        color: white;
-        padding: 11px 32px;     
-        font-size: 1.15rem;     
-    }
-    button:hover, button:active { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+        .review-info { margin: 15px 0; font-size: 1.3rem; color: var(--primary); font-weight: 600; }
 
-    .review-info {
-        margin: 15px 0;
-        font-size: 1.3rem;
-        color: var(--primary);
-        font-weight: 600;
-    }
+        .intro-text { font-size: 1.4rem; line-height: 1.8; padding: 20px; text-align: left; background: white; border-radius: 18px; box-shadow: 0 6px 16px rgba(0,0,0,0.08); margin: 20px 0; flex: 1; overflow-y: auto; }
 
-    .archive-list { max-width: 100%; margin: 20px 0; }
-    .archive-item {
-        background: white;
-        padding: 16px;
-        margin: 12px 0;
-        border-radius: 16px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        box-shadow: 0 6px 16px rgba(0,0,0,0.08);
-        gap: 8px;
-    }
-    .archive-hebrew { direction: rtl; font-size: 2.2rem; }
-    .archive-polish { font-size: 1.4rem; opacity: 0.9; }
+        .intro-btn {
+            background: linear-gradient(135deg, #ffffff, #f0f8ff) !important;
+            border: 2px solid var(--primary) !important;
+            font-size: 1.5rem !important;
+            padding: 20px !important;
+        }
 
-    .quiz-hebrew {
-        font-size: clamp(3.5rem, 11vw, 6rem);
-        margin-bottom: 30px;
-        direction: rtl;
-        font-family: "Cardo", "SBL Hebrew", "David", "Ezra SIL", serif !important;
-    }
-    .quiz-options { display: flex; flex-direction: column; gap: 14px; margin: 20px 0; }
+        .big-text { font-size: 1.8rem; font-weight: bold; margin: 20px 0; color: var(--primary); }
+        .quiz-hebrew { font-size: clamp(4rem, 12vw, 7rem); margin: 40px 0; font-weight: bold; }
+        .quiz-option {
+            padding: 16px;
+            margin: 10px 0;
+            background: white;
+            border-radius: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .quiz-option:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .quiz-option.correct { background: #d5f5e3; border: 3px solid var(--success); }
+        .quiz-option.wrong { background: #fadbd8; border: 3px solid #e74c3c; }
+#completionModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 1000;
+}
 
-    .quiz-option {
-        padding: 18px;
-        background: white;
-        border-radius: 16px;
-        font-size: 1.4rem;
-        cursor: pointer;
-        box-shadow: 0 6px 16px rgba(0,0,0,0.08);
-        transition: 0.3s;
-    }
-    .quiz-option:hover { background: #f0f8ff; transform: translateY(-4px); }
-    .quiz-option.correct { background: var(--success); color: white; }
-    .quiz-option.wrong { background: #e74c3c; color: white; }
+#completionModal.show {
+    display: block;
+}
 
+.modal-overlay {
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(8px);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 24px;
+    padding: 30px 20px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    max-width: 90%;
+    animation: scaleIn 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.modal-icon {
+    font-size: 4.5rem;
+    margin-bottom: 10px;
+}
+
+.modal-content h3 {
+    font-size: 1.8rem;
+    color: var(--primary);
+    margin: 10px 0;
+}
+
+.modal-content p {
+    color: #444;
+    margin: 8px 0;
+}
+
+.modal-btn {
+    margin-top: 20px;
+    background: var(--success);
+    min-width: 160px;
+    padding: 14px 30px !important;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0.7); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
     .stats-grid {
         display: flex;
         flex-direction: column;
@@ -258,125 +264,47 @@
         box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         text-align: center;
     }
-    .stat-value { font-size: 2.4rem; font-weight: bold; color: var(--accent); margin: 8px 0; }
-    .stat-label { font-size: 1.2rem; opacity: 0.9; }
-    .progress-bar { height: 20px; background: #e0e0e0; border-radius: 10px; overflow: hidden; margin: 15px 0; }
-    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--success), #2ecc71); width: 0%; transition: width 1.2s ease; }
-
-    .game-grid {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        margin: 20px 0;
-        flex: 1;
+    .stat-value { 
+        font-size: 2.4rem; 
+        font-weight: bold; 
+        color: var(--accent); 
+        margin: 8px 0; 
     }
-    .game-card {
-        background: white;
-        border-radius: 18px;
-        padding: 28px 16px;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        cursor: pointer;
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--primary);
-        transition: 0.3s;
+    .stat-label { 
+        font-size: 1.2rem; 
+        opacity: 0.9; 
     }
-    .game-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
-    .game-card .icon { font-size: 3.5rem; margin-bottom: 12px; display: block; }
-
-    #matchGame {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
-        max-width: 100%;
-        margin: 20px auto;
-        flex: 1;
+    .progress-bar { 
+        height: 20px; 
+        background: #e0e0e0; 
+        border-radius: 10px; 
+        overflow: hidden; 
+        margin: 15px 0; 
     }
-    .match-card {
-        aspect-ratio: 1/1;
-        background: white;
-        border-radius: 16px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.6rem;
-        cursor: pointer;
-        box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-        transition: 0.3s;
-        padding: 8px;
-        text-align: center;
+    .progress-fill { 
+        height: 100%; 
+        background: linear-gradient(90deg, var(--success), #2ecc71); 
+        width: 0%; 
+        transition: width 1.2s ease; 
     }
-    .match-card:hover { transform: scale(1.05); }
-    .match-card.flipped, .match-card.matched { background: #e6f2ff; color: var(--primary); }
-    .match-card.matched { opacity: 0.6; cursor: default; }
-
-    #typingInput {
-        font-size: 1.6rem;
-        padding: 16px;
-        width: 90%;
-        max-width: 420px;
-        margin: 20px auto;
-        border: 3px solid var(--primary);
-        border-radius: 16px;
-        text-align: center;
-    }
-    #typingFeedback { font-size: 1.8rem; margin: 20px 0; min-height: 50px; }
-
-    #timer { font-size: 3.5rem; font-weight: bold; color: var(--accent); margin: 15px 0; }
-    #speedScore { font-size: 2.2rem; margin: 20px 0; }
-    .big-text { font-size: 2rem; margin: 20px 0; }
 
     @media (min-width: 768px) {
-        .grid, .game-grid, .quiz-options, .stats-grid { flex-direction: row; flex-wrap: wrap; justify-content: center; }
-        .btn-group { flex-direction: row; }
-        .flashcard { height: 70vh; max-height: 640px; }
-        h1 { font-size: 3rem; }
-        .archive-item { flex-direction: row; justify-content: space-between; align-items: center; }
+        .stats-grid { 
+            flex-direction: row; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+        }
+        .stat-card {
+            flex: 1;
+            min-width: 280px;
+            max-width: 360px;
+        }
     }
-
-    /* Przycisk Powrót wyżej */
-    #bookScreen .btn-back,
-    #lessonScreen .btn-back {
-        margin-top: 10px !important;
-        margin-bottom: 10px !important;
-    }
-
-    /* Lepszy kontrast przycisków tylko w tych ekranach */
-    #bookScreen .card-btn,
-    #lessonScreen .card-btn {
-        background: linear-gradient(135deg, #ffffff, #f8f9fa) !important;
-        border: 1px solid #e0e0e0 !important;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.12) !important;
- 	padding: 12px 32px !important;     /* mniejszy padding pionowy */
-    	height: fit-content !important;
-    	line-height: 1.4 !important;
-    	display: inline-block !important;
-    	width: fit-content !important;
-    	min-width: 220px !important;
-    	margin: 10px auto !important;
-    }
-
-    /* Ładny efekt hover/active tylko w tych ekranach */
-    #bookScreen .card-btn:hover,
-    #bookScreen .card-btn:active,
-    #lessonScreen .card-btn:hover,
-    #lessonScreen .card-btn:active {
-        transform: translateY(-6px) !important;
-        box-shadow: 0 18px 40px rgba(0,0,0,0.22) !important;
-        border-color: var(--accent) !important;
-        background: linear-gradient(135deg, #fffdf7, #f5f2eb) !important;
-    }
-
-
-</style>
+    </style>
 </head>
 <body>
-
 <div class="container">
-    <header>
-        <h1>HEBRAJSKI BIBLIJNY</h1>
-    </header>
+    <header><h1>HEBRAJSKI BIBLIJNY</h1></header>
 
     <div id="bookScreen" class="screen active">
         <h2>Wybierz podręcznik</h2>
@@ -387,92 +315,356 @@
     <div id="modeScreen" class="screen">
         <h2 id="bookTitle">Podręcznik: ...</h2>
         <div class="grid">
-            <div class="card-btn" onclick="openMode('learn')">
-                <div class="icon">📚</div>
-                Nauka nowej lekcji
-            </div>
-            <div class="card-btn" onclick="openMode('review')">
-                <div class="icon">🔄</div>
-                Powtórka klasyczna
-            </div>
-            <div class="card-btn" id="quizBtn" onclick="openMode('quiz')">
-                <div class="icon">❓</div>
-                Quiz
-            </div>
-            <div class="card-btn" onclick="openMode('fun')">
-                <div class="icon">🎲</div>
-                Zabawa
-            </div>
-            <div class="card-btn" onclick="openMode('archive')">
-                <div class="icon">📦</div>
-                Archiwum
-            </div>
-            <div class="card-btn" onclick="openMode('stats')">
-                <div class="icon">📊</div>
-                Statystyki
-            </div>
+            <div class="card-btn" onclick="openMode('learn')"><div class="icon">📚</div>Nauka nowej lekcji</div>
+            <div class="card-btn" onclick="openMode('review')"><div class="icon">🔄</div>Powtórka klasyczna</div>
+            <div class="card-btn" id="quizBtn" onclick="openMode('quiz')"><div class="icon">❓</div>Quiz</div>
+            <div class="card-btn" onclick="openMode('archive')"><div class="icon">📦</div>Archiwum</div>
+            <div class="card-btn" onclick="openMode('stats')"><div class="icon">📊</div>Statystyki</div>
         </div>
         <div class="review-info">
-            Słowa do powtórki dziś: <strong id="reviewCount">0</strong> ✨
+            Słowa przerobione (do powtórek i quizu): <strong id="reviewCount">0</strong> ✨
         </div>
         <button class="btn-back" onclick="backToBooks()">Powrót</button>
     </div>
 
-    <div id="funScreen" class="screen">
-        <h2>Wybierz tryb zabawy 🎲</h2>
-        <div class="game-grid">
-            <div class="game-card" onclick="startMatchGame()">
-                <div class="icon">🧩</div>
-                Dopasuj pary
-            </div>
-            <div class="game-card" onclick="startTypingGame()">
-                <div class="icon">✍️</div>
-                Pisanie tłumaczenia
-            </div>
-            <div class="game-card" onclick="startSpeedRound()">
-                <div class="icon">⚡</div>
-                Szybki strzał
-            </div>
-        </div>
-        <button class="btn-back" onclick="backToMode()">Powrót</button>
-    </div>
-
-    <div id="matchScreen" class="screen">
-        <h2>Dopasuj pary 🧩</h2>
-        <div id="matchGame"></div>
-        <div class="big-text" id="matchResult" style="display:none;"></div>
-        <button class="btn-back" onclick="backToMode()">Zakończ</button>
-    </div>
-
-    <div id="typingScreen" class="screen">
-        <h2>Pisanie tłumaczenia ✍️</h2>
-        <div class="quiz-hebrew" id="typingWord"></div>
-        <input type="text" id="typingInput" placeholder="Wpisz polskie tłumaczenie..." autocomplete="off">
-        <div id="typingFeedback"></div>
-        <div class="big-text" id="typingScore">Punkty: 0</div>
-        <button class="btn-back" onclick="backToMode()">Zakończ</button>
-    </div>
-
-    <div id="speedScreen" class="screen">
-        <h2>Szybki strzał ⚡</h2>
-        <div id="timer">60</div>
-        <div class="flashcard" id="speedFlashcard">
-            <div class="card-inner">
-                <div class="card-front" id="speedFront"></div>
-            </div>
-        </div>
-        <div class="btn-group">
-            <button class="btn-know" onclick="speedAnswer(true)">Umiem ✅</button>
-            <button class="btn-hard" onclick="speedAnswer(false)">Nie umiem 🔄</button>
-        </div>
-        <div class="big-text" id="speedScore">Punkty: 0</div>
-        <button class="btn-back" onclick="backToMode()">Zakończ</button>
-    </div>
-
     <div id="lessonScreen" class="screen">
         <h2>Nauka – <span id="currentBookName">...</span></h2>
+        <div style="margin: 20px 0;">
+            <div class="card-btn intro-btn" onclick="showScreen('introMenu')">
+                <div class="icon">📖</div>Wprowadzenie do alfabetu hebrajskiego
+            </div>
+        </div>
         <div class="grid" id="lessonGrid"></div>
         <button class="btn-back" onclick="backToMode()">Powrót</button>
+    </div>
+
+    <div id="introMenuScreen" class="screen">
+        <h2>Wprowadzenie do alfabetu hebrajskiego</h2>
+        <div class="grid">
+            <div class="card-btn" onclick="showScreen('introText')"><div class="icon">📜</div>Wprowadzenie</div>
+            <div class="card-btn" onclick="startAlphabetLearn()"><div class="icon">🔤</div>Alfabet</div>
+            <div class="card-btn" onclick="startVowelsLearn()"><div class="icon">🔡</div>Samogłoski (niqqud)</div>
+            <div class="card-btn" onclick="startAlphabetPractice()"><div class="icon">✍️</div>Ćwiczenia</div>
+        </div>
+        <button class="btn-back" onclick="backToLessons()">Powrót</button>
+    </div>
+
+    <div id="introTextScreen" class="screen">
+        <h2>Wprowadzenie</h2>
+        <div class="intro-text">
+           <section class="hebrew-lesson">
+
+<style>
+.hebrew-lesson {
+  max-width: 960px;
+  margin: 3rem auto;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #222;
+  line-height: 1.75;
+}
+
+.hebrew-lesson h1 {
+  font-size: 2.2rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 3px solid #e2e6ea;
+  padding-bottom: 0.5rem;
+}
+
+.hebrew-lesson h2 {
+  font-size: 1.6rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  color: #243a5e;
+}
+
+.hebrew-lesson p {
+  margin: 1rem 0;
+  text-align: justify;
+}
+
+.hebrew-lesson table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+}
+
+.hebrew-lesson th,
+.hebrew-lesson td {
+  border: 1px solid #dcdfe3;
+  padding: 0.6rem 0.8rem;
+}
+
+.hebrew-lesson th {
+  background-color: #f2f5f8;
+  font-weight: 600;
+}
+
+.hebrew-lesson tr:nth-child(even) td {
+  background-color: #fafbfc;
+}
+
+.hebrew-lesson strong {
+  color: #243a5e;
+}
+
+.example {
+  background: #f5f7fa;
+  border-left: 4px solid #3f6fb6;
+  padding: 1rem 1.2rem;
+  margin: 1.5rem 0;
+}
+</style>
+
+<h1>Wprowadzenie do fonetyki języka hebrajskiego biblijnego</h1>
+
+<p>
+Nauka języka hebrajskiego biblijnego rozpoczyna się od zapoznania się z jego zapisem
+i zasadami czytania. W tej lekcji omawiamy podstawowe elementy fonetyki:
+alfabet, samogłoski, sylaby oraz znaki pomocnicze, które ułatwiają poprawne czytanie tekstu.
+</p>
+
+<h2>Alfabet hebrajski</h2>
+
+<p>
+Alfabet hebrajski składa się z <strong>22 liter</strong> i zapisywany jest
+<strong>od prawej do lewej</strong>. Litery zapisują przede wszystkim spółgłoski.
+Samogłoski dodawane są w postaci znaków diakrytycznych.
+</p>
+<table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+        <thead>
+            <tr style="background-color: #f2f2f2;">
+                <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Litera</th>
+                <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Nazwa</th>
+                <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Wymowa (PL)</th>
+                <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Uwagi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 1.2em;"><strong>א</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Alef</td><td style="border: 1px solid #ddd; padding: 8px;">(niema)</td><td style="border: 1px solid #ddd; padding: 8px;">Stop krtaniowy</td></tr>
+            <tr><td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 1.2em;"><strong>ב</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Bet</td><td style="border: 1px solid #ddd; padding: 8px;"><strong>b</strong> lub <strong>w</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Z kropką = <b>b</b>, bez = <b>w</b></td></tr>
+            <tr><td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 1.2em;"><strong>ג</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Gimel</td><td style="border: 1px solid #ddd; padding: 8px;"><strong>g</strong></td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>
+            <tr><td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 1.2em;"><strong>ד</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Dalet</td><td style="border: 1px solid #ddd; padding: 8px;"><strong>d</strong></td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>
+            <tr><td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 1.2em;"><strong>ה</strong></td><td style="border: 1px solid #ddd; padding: 8px;">He</td><td style="border: 1px solid #ddd; padding: 8px;"><strong>h</strong></td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>
+            <tr><td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 1.2em;"><strong>ו</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Waw</td><td style="border: 1px solid #ddd; padding: 8px;"><strong>w</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Jak polskie „woda”</td></tr>
+            <tr><td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 1.2em;"><strong>ז</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Zajin</td><td style="border: 1px solid #ddd; padding: 8px;"><strong>z</strong></td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>
+            <tr><td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 1.2em;"><strong>ח</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Het</td><td style="border: 1px solid #ddd; padding: 8px;"><strong>ch</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Twarde, gardłowe „ch”</td></tr>
+            <tr><td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 1.2em;"><strong>ט</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Tet</td><td style="border: 1px solid #ddd; padding: 8px;"><strong>t</strong></td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>
+            <tr><td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 1.2em;"><strong>י</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Jod</td><td style="border: 1px solid #ddd; padding: 8px;"><strong>j</strong></td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>
+            <tr><td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 1.2em;"><strong>כ</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Kaf</td><td style="border: 1px solid #ddd; padding: 8px;"><strong>k</strong> lub <strong>ch</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Z kropką = <b>k</b>, bez = <b>ch</b></td></tr>
+            <tr><td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 1.2em;"><strong>ל</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Lamed</td><td style="border: 1px solid #ddd; padding: 8px;"><strong>l</strong></td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>
+            <tr><td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 1.2em;"><strong>מ</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Mem</td><td style="border: 1px solid #ddd; padding: 8px;"><strong>m</strong></td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>
+            <tr><td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 1.2em;"><strong>נ</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Nun</td><td style="border: 1px solid #ddd; padding: 8px;"><strong>n</strong></td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>
+            <tr><td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 1.2em;"><strong>ס</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Samech</td><td style="border: 1px solid #ddd; padding: 8px;"><strong>s</strong></td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>
+            <tr><td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 1.2em;"><strong>ע</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Ajin</td><td style="border: 1px solid #ddd; padding: 8px;">(niema)</td><td style="border: 1px solid #ddd; padding: 8px;">Głęboki dźwięk gardłowy</td></tr>
+            <tr><td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 1.2em;"><strong>פ</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Pe</td><td style="border: 1px solid #ddd; padding: 8px;"><strong>p</strong> lub <strong>f</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Z kropką = <b>p</b>, bez = <b>f</b></td></tr>
+            <tr><td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 1.2em;"><strong>צ</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Cadi</td><td style="border: 1px solid #ddd; padding: 8px;"><strong>c</strong></td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>
+            <tr><td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 1.2em;"><strong>ק</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Qof</td><td style="border: 1px solid #ddd; padding: 8px;"><strong>k</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Tylnojęzykowe</td></tr>
+            <tr><td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 1.2em;"><strong>ר</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Resz</td><td style="border: 1px solid #ddd; padding: 8px;"><strong>r</strong></td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>
+            <tr><td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 1.2em;"><strong>ש</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Szin/Sin</td><td style="border: 1px solid #ddd; padding: 8px;"><strong>sz</strong> / <strong>s</strong></td><td style="border: 1px solid #ddd; padding: 8px;">שׁ = <b>sz</b>, שׂ = <b>s</b></td></tr>
+            <tr><td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 1.2em;"><strong>ת</strong></td><td style="border: 1px solid #ddd; padding: 8px;">Taw</td><td style="border: 1px solid #ddd; padding: 8px;"><strong>t</strong></td><td style="border: 1px solid #ddd; padding: 8px;"></td></tr>
+        </tbody>
+    </table><!-- alfabet tabela – bez zmian -->
+
+<h2>Mater lectionis</h2>
+
+<p>
+W języku hebrajskim niektóre litery spółgłoskowe mogą pełnić dodatkową funkcję
+<strong>nośników samogłoski</strong>. Zjawisko to nazywa się
+<strong>mater lectionis</strong> („matka czytania”).
+</p>
+
+<p>
+Najczęściej w tej roli występują litery:
+<strong>ו (waw)</strong> oraz <strong>י (jod)</strong>.
+Pomagają one czytelnikowi rozpoznać samogłoskę, zwłaszcza w tekstach,
+w których zapis samogłoskowy jest uproszczony.
+</p>
+
+<div class="example">
+<strong>Przykłady:</strong><br>
+קוֹל <em>qol</em> – głos (ו jako nośnik <em>o</em>)<br>
+בֵּית <em>beit</em> – dom (י jako nośnik <em>e</em>)
+</div>
+<h2>Spółgłoski BeGaDKePaT i dagesz</h2>
+
+<p>
+Sześć liter alfabetu hebrajskiego:
+<strong>ב ג ד כ פ ת</strong> tworzy grupę nazywaną
+<strong>BeGaDKePaT</strong>. Litery te mogą być wymawiane na dwa sposoby:
+<strong>twardo</strong> lub <strong>miękko</strong>.
+</p>
+
+<p>
+O tym, jak dana litera jest czytana, decyduje znak zwany
+<strong>dagesz</strong>, czyli mała kropka umieszczona wewnątrz litery.
+</p>
+
+<table>
+<thead>
+<tr>
+<th>Litera</th>
+<th>Z dageszem</th>
+<th>Bez dageszu</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>ב</td><td>b</td><td>w</td></tr>
+<tr><td>כ</td><td>k</td><td>ch</td></tr>
+<tr><td>פ</td><td>p</td><td>f</td></tr>
+</tbody>
+</table>
+
+<p>
+W praktyce różnica słyszalna jest przede wszystkim w literach
+<strong>bet, kaf i pe</strong>. Pozostałe litery z tej grupy
+(gimel, dalet, taw) zachowują podobną wymowę niezależnie od dageszu.
+</p>
+
+<h3>Dagesz lene i dagesz forte</h3>
+
+<p>
+W hebrajskim rozróżnia się dwa rodzaje dageszu:
+</p>
+
+<p>
+<strong>Dagesz lene</strong> (słaby) wpływa na wymowę liter BeGaDKePaT
+i występuje zazwyczaj na początku sylaby.
+</p>
+
+<p>
+<strong>Dagesz forte</strong> (mocny) oznacza
+<strong>podwojenie spółgłoski</strong>. W czytaniu odczuwalne jest to jako
+krótkie „zatrzymanie” głosu.
+</p>
+
+<p>
+Dagesz forte <strong>nie występuje</strong> w literach:
+<strong>א ה ח ע ר</strong>.
+</p>
+
+<div class="example">
+<strong>Przykład:</strong><br>
+מִלָּה <em>millā</em> – słowo (podwojone ל)
+</div>
+
+<h2>Samogłoski i ich zapis przy spółgłosce</h2>
+
+<p>
+Samogłoski w hebrajskim zapisywane są <strong>przy spółgłosce</strong>.
+Dla ułatwienia w poniższej tabeli pokazano je na przykładzie litery
+<strong>bet (ב)</strong>, aby było jasne, gdzie samogłoska pojawia się w tekście.
+</p>
+
+<table>
+<thead>
+<tr>
+<th>Znak</th>
+<th>Nazwa</th>
+<th>Przykład</th>
+<th>Czytamy</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>ַ</td><td>patach</td><td>בַ</td><td>ba</td></tr>
+<tr><td>ָ</td><td>qames</td><td>בָ</td><td>ba / bo</td></tr>
+<tr><td>ִ</td><td>chireq</td><td>בִ</td><td>bi</td></tr>
+<tr><td>ֶ</td><td>segol</td><td>בֶ</td><td>be</td></tr>
+<tr><td>ֵ</td><td>cere</td><td>בֵ</td><td>be</td></tr>
+<tr><td>ֹ</td><td>cholem</td><td>בֹ</td><td>bo</td></tr>
+<tr><td>ֻ</td><td>qubuc</td><td>בֻ</td><td>bu</td></tr>
+<tr><td>וּ</td><td>szureq</td><td>בוּ</td><td>bu</td></tr>
+</tbody>
+</table>
+
+<h2>Sylaby otwarte i zamknięte</h2>
+
+<p>
+Hebrajskie wyrazy dzielą się na sylaby. Sylaba może być
+<strong>otwarta</strong> lub <strong>zamknięta</strong>.
+</p>
+
+<p>
+<strong>Sylaba otwarta</strong> kończy się samogłoską i bardzo często zawiera
+<strong>samogłoskę długą</strong>, np. cere lub cholem.
+</p>
+
+<div class="example">
+בָּא <em>ba</em><br>
+קוֹ <em>qo</em>
+</div>
+
+<p>
+<strong>Sylaba zamknięta</strong> kończy się spółgłoską i zazwyczaj zawiera
+<strong>samogłoskę krótką</strong>, np. patach lub segol.
+</p>
+
+<div class="example">
+מֶלֶךְ <em>me | lekh</em><br>
+בַּר <em>bar</em>
+</div>
+
+<h2>Meteg</h2>
+
+<p>
+<strong>Meteg</strong> to mała pionowa kreska umieszczona obok samogłoski.
+Wskazuje ona, że samogłoska powinna być czytana wyraźnie i nie ulega redukcji.
+</p>
+
+<p>
+Szczególnie ważny jest <strong>qames z meteg</strong>, który jednoznacznie
+czytamy jako <strong>a</strong>, a nie <strong>o</strong>.
+</p>
+
+<div class="example">
+כָּֽתַב <em>katav</em> – pisał
+</div>
+
+<h2>Maqqef</h2>
+
+<p>
+<strong>Maqqef (־)</strong> to krótka kreska łącząca dwa wyrazy.
+Powoduje ona, że czyta się je razem jako jedną jednostkę akcentową.
+</p>
+
+<div class="example">
+כָּל־הָאָרֶץ <em>kol-ha’arec</em><br>
+„cała ziemia”
+</div>
+
+</section>
+
+        </div>
+        <button class="btn-back" onclick="showScreen('introMenu')">Powrót</button>
+    </div>
+
+    <div id="alphabetLearnScreen" class="screen">
+        <h2>Nauka alfabetu</h2>
+        <div class="flashcard" id="alphabetFlashcard"><div class="card-inner"><div class="card-front" id="alphabetFront"></div></div></div>
+        <div class="btn-group" style="flex-direction: row; justify-content: space-between; margin: 30px 0;">
+            <button class="btn-hard" onclick="prevLetter()">⬅️ Wstecz</button>
+            <button class="btn-know" onclick="nextLetter()">Dalej ➡️</button>
+        </div>
+        <button class="btn-back" onclick="showScreen('introMenu')">Powrót</button>
+    </div>
+
+    <div id="vowelsLearnScreen" class="screen">
+        <h2>Nauka samogłosek</h2>
+        <div class="flashcard" id="vowelsFlashcard"><div class="card-inner"><div class="card-front" id="vowelsFront"></div></div></div>
+        <div class="btn-group" style="flex-direction: row; justify-content: space-between; margin: 30px 0;">
+            <button class="btn-hard" onclick="prevVowel()">⬅️ Wstecz</button>
+            <button class="btn-know" onclick="nextVowel()">Dalej ➡️</button>
+        </div>
+        <button class="btn-back" onclick="showScreen('introMenu')">Powrót</button>
+    </div>
+
+    <div id="alphabetPracticeScreen" class="screen">
+        <h2>Ćwiczenia – wpisz polską wymowę słówka</h2>
+        <div class="quiz-hebrew" id="practiceWord"></div>
+        <input type="text" id="practiceInput" placeholder="Wpisz wymowę po polsku (np. szalom)" autocomplete="off">
+        <div id="practiceFeedback"></div>
+        <div class="big-text">Poprawne: <span id="practiceCorrect">0</span> / <span id="practiceTotal">0</span></div>
+        <button class="btn-back" onclick="showScreen('introMenu')">Powrót</button>
     </div>
 
     <div id="flashcardScreen" class="screen">
@@ -483,7 +675,6 @@
                 <div class="card-back" id="back"></div>
             </div>
         </div>
-
         <div class="btn-group">
             <button class="btn-check">SPRAWDŹ</button>
             <button class="btn-know" id="btn-learn-master" style="display:none;">Umiem ✅</button>
@@ -492,16 +683,12 @@
             <button class="btn-hard" id="btn-notmaster" style="display:none;">Nie umiem 🔄</button>
             <button class="btn-archive" id="btn-archive" style="display:none;">Archiwum 📦</button>
         </div>
-
         <button class="btn-back" onclick="backToMode()">Zakończ sesję</button>
     </div>
 
     <div id="archiveScreen" class="screen">
         <h2>Archiwum słów 📦</h2>
-        <p style="margin-bottom: 20px; font-size: 1.3rem;">Słowa przeniesione z powtórek. Możesz je przywrócić.</p>
-        <div class="archive-list" id="archiveList">
-            <div style="color: #aaa; font-style: italic;">Brak słów w archiwum</div>
-        </div>
+        <div class="archive-list" id="archiveList"></div>
         <button class="btn-back" onclick="backToMode()">Powrót</button>
     </div>
 
@@ -514,51 +701,48 @@
         <button class="btn-back" onclick="backToMode()">Zakończ quiz</button>
     </div>
 
-    <div id="statsScreen" class="screen">
-        <h2>Statystyki nauki 📊</h2>
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-label">Wszystkie słowa w podręczniku</div>
-                <div class="stat-value" id="statTotalWords">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Ukończone lekcje</div>
-                <div class="stat-value" id="statCompletedLessons">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Słowa opanowane (w powtórkach)</div>
-                <div class="stat-value" id="statMastered">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Słowa w archiwum</div>
-                <div class="stat-value" id="statArchived">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Postęp całego kursu</div>
-                <div class="stat-value" id="statProgressPercent">0%</div>
-                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Sesje powtórek</div>
-                <div class="stat-value" id="statReviewSessions">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Wynik quizów</div>
-                <div class="stat-value" id="statQuizCorrect">0 / 0</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Dni aktywnej nauki</div>
-                <div class="stat-value" id="statActiveDays">0</div>
-            </div>
+   <div id="statsScreen" class="screen">
+    <h2>Statystyki nauki 📊</h2>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-label">Wszystkie słowa w podręczniku</div>
+            <div class="stat-value" id="statTotalWords">0</div>
         </div>
-        <button class="btn-back" onclick="backToMode()">Powrót</button>
+        <div class="stat-card">
+            <div class="stat-label">Ukończone lekcje</div>
+            <div class="stat-value" id="statCompletedLessons">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Słowa przerobione (w powtórkach)</div>
+            <div class="stat-value" id="statMastered">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Słowa w archiwum</div>
+            <div class="stat-value" id="statArchived">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Postęp całego kursu</div>
+            <div class="stat-value" id="statProgressPercent">0%</div>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Sesje powtórek</div>
+            <div class="stat-value" id="statReviewSessions">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Wynik quizów</div>
+            <div class="stat-value" id="statQuizCorrect">0 / 0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Dni aktywnej nauki</div>
+            <div class="stat-value" id="statActiveDays">0</div>
+        </div>
     </div>
+    <button class="btn-back" onclick="backToMode()">Powrót</button>
 </div>
-
+</div>
 <script>
-    const user = localStorage.getItem('biblos_current_user');
-    if (!user) window.location.href = 'index.html';
-
+    const user = localStorage.getItem('biblos_current_user') || 'default';
     const DB_KEY = 'biblos_hebrew_lessons';
     const PROGRESS_KEY = 'biblos_hebrew_progress_' + user;
     const REVIEW_KEY = 'biblos_hebrew_review_' + user;
@@ -566,494 +750,571 @@
     const STATS_KEY = 'biblos_hebrew_stats_' + user;
 
     let books = JSON.parse(localStorage.getItem(DB_KEY)) || {};
-    let progress = JSON.parse(localStorage.getItem(PROGRESS_KEY)) || {};
+	let progress = JSON.parse(localStorage.getItem(PROGRESS_KEY)) || {};
     let reviewPool = JSON.parse(localStorage.getItem(REVIEW_KEY)) || [];
     let archivePool = JSON.parse(localStorage.getItem(ARCHIVE_KEY)) || [];
-    let stats = JSON.parse(localStorage.getItem(STATS_KEY)) || {
-        reviewSessions: 0,
-        quizCorrect: 0,
-        quizTotal: 0,
-        activeDates: []
-    };
+let stats = JSON.parse(localStorage.getItem(STATS_KEY)) || {
+    reviewSessions: 0,
+    quizCorrect: 0,
+    quizTotal: 0,
+    activeDates: []
+};
+
+function markTodayActive() {
+    const today = new Date().toISOString().slice(0,10);
+    if (!stats.activeDates.includes(today)) {
+        stats.activeDates.push(today);
+        localStorage.setItem(STATS_KEY, JSON.stringify(stats));
+    }
+}
+
+function renderStats() {
+    markTodayActive();
+    const book = books[currentBook] || {};
+    let totalWords = 0;
+    let completed = 0;
+    let totalLessons = Object.keys(book).length;
+
+    Object.values(book).forEach(lesson => totalWords += lesson.length);
+    if (progress[currentBook]) {
+        completed = Object.keys(progress[currentBook]).filter(key => progress[currentBook][key]).length;
+    }
+
+    const percent = totalWords ? Math.round((reviewPool.length / totalWords) * 100) : 0;
+
+    document.getElementById('statTotalWords').textContent = totalWords;
+    document.getElementById('statCompletedLessons').textContent = completed + ' / ' + totalLessons;
+    document.getElementById('statMastered').textContent = reviewPool.length;
+    document.getElementById('statArchived').textContent = archivePool.length;
+    document.getElementById('statProgressPercent').textContent = percent + '%';
+    document.getElementById('progressFill').style.width = percent + '%';
+    document.getElementById('statReviewSessions').textContent = stats.reviewSessions || 0;
+
+    const quizText = stats.quizTotal ? `${stats.quizCorrect} / ${stats.quizTotal} (${Math.round(stats.quizCorrect / stats.quizTotal * 100)}%)` : 'Brak';
+    document.getElementById('statQuizCorrect').textContent = quizText;
+    document.getElementById('statActiveDays').textContent = stats.activeDates.length;
+}
 
     if (!books["T. Lambdin – Wprowadzenie do hebrajskiego biblijnego"]) {
-        books ["T. Lambdin – Wprowadzenie do hebrajskiego biblijnego"] = {
-            "Lekcja 1": [
-                {"hebrew":"אָדָם","translit":"ʾādām","polish":"człowiek"},
-                {"hebrew":"אֵל","translit":"ʾēl","polish":"Bóg"},
-                {"hebrew":"אֵם","translit":"ʾēm","polish":"matka"},
-                {"hebrew":"בַּיִת","translit":"bayit","polish":"dom"},
-                {"hebrew":"דָּבָר","translit":"dābār","polish":"słowo, rzecz"},
-                {"hebrew":"יוֹם","translit":"yôm","polish":"dzień"},
-                {"hebrew":"לֵב","translit":"lēb","polish":"serce"},
-                {"hebrew":"מֶלֶךְ","translit":"melek","polish":"król"},
-                {"hebrew":"נָשִׁים","translit":"nāšîm","polish":"kobiety"},
-                {"hebrew":"עַם","translit":"ʿam","polish":"lud"},
-                {"hebrew":"שָׁמַיִם","translit":"šāmayim","polish":"niebo"}
-            ],
-           "Lekcja 2": [
-                {"hebrew":"בָּרָא","translit":"bārāʾ","polish":"tworzyć"},
-                {"hebrew":"דָּבַר","translit":"dābar","polish":"mówić"},
-                {"hebrew":"גָּדַל","translit":"gādal","polish":"być wielkim"},
-                {"hebrew":"יָדַע","translit":"yādaʿ","polish":"znać"},
-                {"hebrew":"כָּתַב","translit":"kātab","polish":"pisać"},
-                {"hebrew":"לָמַד","translit":"lāmad","polish":"uczyć się"},
-                {"hebrew":"שָׁמַר","translit":"šāmar","polish":"strzec"},
-                {"hebrew":"קָרָא","translit":"qārāʾ","polish":"wołać, czytać"},
-                {"hebrew":"רָאָה","translit":"rāʾâ","polish":"widzieć"},
-                {"hebrew":"שָׁמַע","translit":"šāmaʿ","polish":"słyszeć"}
-            ],
-            "Lekcja 3": [
-                {"hebrew":"גָּדוֹל","translit":"gādôl","polish":"wielki"},
-                {"hebrew":"טוֹב","translit":"ṭôb","polish":"dobry"},
-                {"hebrew":"קָטֹן","translit":"qāṭôn","polish":"mały"},
-                {"hebrew":"רַב","translit":"rab","polish":"wiele"},
-                {"hebrew":"אַתָּה","translit":"ʾattâ","polish":"ty (m.)"},
-                {"hebrew":"אַתְּ","translit":"ʾatt","polish":"ty (f.)"},
-                {"hebrew":"הוּא","translit":"hûʾ","polish":"on"},
-                {"hebrew":"הִיא","translit":"hîʾ","polish":"ona"},
-                {"hebrew":"אֲנִי","translit":"ʾănî","polish":"ja"},
-                {"hebrew":"אֲנַחְנוּ","translit":"ʾănaḥnû","polish":"my"},
-                {"hebrew":"אֵלֶּה","translit":"ʾēlleh","polish":"te"},
-                {"hebrew":"אֵת","translit":"ʾēt","polish":"znacznik dopełnienia"}
-            ],
- "Lekcja 4": [
-                {"hebrew":"בָּנָה","translit":"bānâ","polish":"budować"},
-                {"hebrew":"גָּלָה","translit":"gālâ","polish":"odsłaniać"},
-                {"hebrew":"חָיָה","translit":"ḥāyâ","polish":"żyć"},
-                {"hebrew":"סָבַל","translit":"sābal","polish":"nieść"},
-                {"hebrew":"פָּתַח","translit":"pātaḥ","polish":"otwierać"},
-                {"hebrew":"קָטַל","translit":"qāṭal","polish":"zabijać"},
-                {"hebrew":"רָחַם","translit":"rāḥam","polish":"litować się"},
-                {"hebrew":"שָׁלַח","translit":"šālaḥ","polish":"wysyłać"}
-            ],
-            "Lekcja 5": [
-                {"hebrew":"זָהָב","translit":"zāhāb","polish":"złoto"},
-                {"hebrew":"חָכְמָה","translit":"ḥokmâ","polish":"mądrość"},
-                {"hebrew":"כֶּסֶף","translit":"kesep","polish":"srebro"},
-                {"hebrew":"עֲבוֹדָה","translit":"ʿăbôdâ","polish":"praca, służba"},
-                {"hebrew":"שָׁלוֹם","translit":"šālôm","polish":"pokój"},
-                {"hebrew":"תּוֹרָה","translit":"tôrâ","polish":"prawo, nauka"}
-            ],
-            "Lekcja 6": [
-                {"hebrew":"אַב","translit":"ʾab","polish":"ojciec"},
-                {"hebrew":"אֵם","translit":"ʾēm","polish":"matka"},
-                {"hebrew":"אָח","translit":"ʾāḥ","polish":"brat"},
-                {"hebrew":"בֵּן","translit":"bēn","polish":"syn"},
-                {"hebrew":"בַּת","translit":"bat","polish":"córka"},
-                {"hebrew":"יָד","translit":"yād","polish":"ręka"},
-                {"hebrew":"כֹּל","translit":"kōl","polish":"wszystko"},
-                {"hebrew":"לַיְלָה","translit":"laylâ","polish":"noc"},
-                {"hebrew":"מַיִם","translit":"mayim","polish":"woda"},
-                {"hebrew":"שֵׁם","translit":"šēm","polish":"imię"}
-            ],
-            "Lekcja 7": [
-                {"hebrew":"אֶחָד","translit":"ʾeḥād","polish":"jeden"},
-                {"hebrew":"שְׁנַיִם","translit":"šənayim","polish":"dwa"},
-                {"hebrew":"שָׁלוֹשָׁה","translit":"šālôšâ","polish":"trzy"},
-                {"hebrew":"אַרְבַּע","translit":"ʾarbaʿ","polish":"cztery"},
-                {"hebrew":"חֲמִשָּׁה","translit":"ḥămiššâ","polish":"pięć"},
-                {"hebrew":"שֵׁשָׁה","translit":"šēšâ","polish":"sześć"},
-                {"hebrew":"שִׁבְעָה","translit":"šibʿâ","polish":"siedem"},
-                {"hebrew":"שְׁמוֹנָה","translit":"šəmônâ","polish":"osiem"},
-                {"hebrew":"תִּשְׁעָה","translit":"tišʿâ","polish":"dziewięć"},
-                {"hebrew":"עֶשֶׂר","translit":"ʿeśer","polish":"dziesięć"}
-            ],
-            "Lekcja 8": [
-                {"hebrew":"בְּרֵאשִׁית","translit":"bərēʾšît","polish":"na początku"},
-                {"hebrew":"גַּן","translit":"gan","polish":"ogród"},
-                {"hebrew":"עֵדֶן","translit":"ʿēden","polish":"Eden"},
-                {"hebrew":"עֵץ","translit":"ʿēṣ","polish":"drzewo"},
-                {"hebrew":"חַיָּה","translit":"ḥayyâ","polish":"zwierzę"},
-                {"hebrew":"אָדָם","translit":"ʾādām","polish":"Adam"},
-                {"hebrew":"חַוָּה","translit":"ḥawwâ","polish":"Eva"}
-            ],
-            "Lekcja 9": [
-                {"hebrew":"קַיִן","translit":"qayin","polish":"Kain"},
-                {"hebrew":"הֶבֶל","translit":"hebel","polish":"Abel"},
-                {"hebrew":"נֹחַ","translit":"nōaḥ","polish":"Noe"},
-                {"hebrew":"אַבְרָהָם","translit":"ʾabrāhām","polish":"Abraham"},
-                {"hebrew":"יִצְחָק","translit":"yiṣḥāq","polish":"Izaak"},
-                {"hebrew":"יַעֲקֹב","translit":"yaʿăqōb","polish":"Jakub"}
-            ],
-            "Lekcja 10": [
-                {"hebrew":"יוֹסֵף","translit":"yôsēp","polish":"Józef"},
-                {"hebrew":"מִצְרַיִם","translit":"miṣrayim","polish":"Egipt"},
-                {"hebrew":"מֹשֶׁה","translit":"mōšeh","polish":"Mojżesz"},
-                {"hebrew":"אַהֲרֹן","translit":"ʾahărōn","polish":"Aaron"},
-                {"hebrew":"יִשְׂרָאֵל","translit":"yiśrāʾēl","polish":"Izrael"}
-            ],
-             "Lekcja 11": [
-          {"hebrew":"אַחֲרֵי","translit":"ʾaḥărē","polish":"po"},
-          {"hebrew":"בְּטֶרֶם","translit":"bəṭerem","polish":"przed"},
-          {"hebrew":"בַּיּוֹם","translit":"bayyôm","polish":"w dniu"},
-          {"hebrew":"בְּלִי","translit":"bəlî","polish":"bez"},
-          {"hebrew":"בְּעוֹד","translit":"bəʿôd","polish":"jeszcze"},
-          {"hebrew":"גַּם","translit":"gam","polish":"też"},
-          {"hebrew":"הֲלֹא","translit":"hălōʾ","polish":"czyż nie"},
-          {"hebrew":"כִּי","translit":"kî","polish":"bo, że"},
-          {"hebrew":"לְמַעַן","translit":"ləmaʿan","polish":"dla"},
-          {"hebrew":"פֶּן","translit":"pen","polish":"aby nie"}
-        ],
-        "Lekcja 12": [
-          {"hebrew":"הִנֵּה","translit":"hinnēh","polish":"oto"},
-          {"hebrew":"הֵן","translit":"hēn","polish":"jeśli"},
-          {"hebrew":"אִם","translit":"ʾim","polish":"jeśli"},
-          {"hebrew":"לוּ","translit":"lû","polish":"oby"},
-          {"hebrew":"אוּלַי","translit":"ʾûlay","polish":"być może"},
-          {"hebrew":"עַתָּה","translit":"ʿattâ","polish":"teraz"},
-          {"hebrew":"אָז","translit":"ʾāz","polish":"wtedy"},
-          {"hebrew":"עוֹד","translit":"ʿôd","polish":"jeszcze"},
-          {"hebrew":"יֶשׁ","translit":"yēš","polish":"jest (istnieje)"},
-          {"hebrew":"אֵין","translit":"ʾên","polish":"nie ma"}
-        ],
-        "Lekcja 13": [
-          {"hebrew":"שָׁם","translit":"šām","polish":"tam"},
-          {"hebrew":"פֹּה","translit":"pōh","polish":"tu"},
-          {"hebrew":"שָׁמָּה","translit":"šāmmâ","polish":"tam (dokąd)"},
-          {"hebrew":"פֹּה","translit":"pōh","polish":"tu (dokąd)"},
-          {"hebrew":"מֵאַיִן","translit":"mēʾayin","polish":"skąd"},
-          {"hebrew":"אָנָה","translit":"ʾānâ","polish":"dokąd"},
-          {"hebrew":"אֵיפֹה","translit":"ʾêp̄ô","polish":"gdzie"},
-          {"hebrew":"מָה","translit":"mâ","polish":"co"},
-          {"hebrew":"מִי","translit":"mî","polish":"kto"},
-          {"hebrew":"לָמָּה","translit":"lāmmâ","polish":"dlaczego"}
-        ],
-        "Lekcja 14": [
-          {"hebrew":"הַר","translit":"har","polish":"góra"},
-          {"hebrew":"מִדְבָּר","translit":"midbār","polish":"pustynia"},
-          {"hebrew":"נַחַל","translit":"naḥal","polish":"strumień"},
-          {"hebrew":"יָם","translit":"yām","polish":"morze"},
-          {"hebrew":"אֶרֶץ","translit":"ʾereṣ","polish":"ziemia"},
-          {"hebrew":"שָׁמַיִם","translit":"šāmayim","polish":"niebo"},
-          {"hebrew":"אֲדָמָה","translit":"ʾăḏāmâ","polish":"ziemia, grunt"}
-        ],
-        "Lekcja 15": [
-          {"hebrew":"עִיר","translit":"ʿîr","polish":"miasto"},
-          {"hebrew":"כְּפָר","translit":"kəpār","polish":"wieś"},
-          {"hebrew":"מִקְדָּשׁ","translit":"miqdāš","polish":"świątynia"},
-          {"hebrew":"בֵּית הַמִּקְדָּשׁ","translit":"bêt hammiqdāš","polish":"Świątynia (w Jerozolimie)"},
-          {"hebrew":"מִזְבֵּחַ","translit":"mizbēaḥ","polish":"ołtarz"}
-        ],
-        "Lekcja 16": [
-          {"hebrew":"כֹּהֵן","translit":"kōhēn","polish":"kapłan"},
-          {"hebrew":"נָבִיא","translit":"nābîʾ","polish":"prorok"},
-          {"hebrew":"שׁוֹפֵט","translit":"šôp̄ēṭ","polish":"sędzia"},
-          {"hebrew":"נָשִׂיא","translit":"nāśîʾ","polish":"książę, przywódca"},
-          {"hebrew":"רוֹעֶה","translit":"rōʿeh","polish":"pasterz"}
-        ],
-        "Lekcja 17": [
-          {"hebrew":"חֶסֶד","translit":"ḥesed","polish":"łaska, miłość"},
-          {"hebrew":"אֱמֶת","translit":"ʾĕmet","polish":"prawda"},
-          {"hebrew":"צֶדֶק","translit":"ṣedeq","polish":"sprawiedliwość"},
-          {"hebrew":"מִשְׁפָּט","translit":"mišpāṭ","polish":"sąd, prawo"},
-          {"hebrew":"חָכְמָה","translit":"ḥokmâ","polish":"mądrość"},
-          {"hebrew":"בִּינָה","translit":"bînâ","polish":"rozum"},
-          {"hebrew":"דַּעַת","translit":"daʿat","polish":"wiedza"}
-        ],
-        "Lekcja 18": [
-          {"hebrew":"רוּחַ","translit":"rûaḥ","polish":"duch, wiatr"},
-          {"hebrew":"נֶפֶשׁ","translit":"nepeš","polish":"dusza, życie"},
-          {"hebrew":"לֵבָב","translit":"lēbāb","polish":"serce (umysł)"},
-          {"hebrew":"בָּשָׂר","translit":"bāśār","polish":"ciało"},
-          {"hebrew":"דָּם","translit":"dām","polish":"krew"}
-        ],
-        "Lekcja 19": [
-          {"hebrew":"קָדוֹשׁ","translit":"qādôš","polish":"święty"},
-          {"hebrew":"טָהוֹר","translit":"ṭāhôr","polish":"czysty"},
-          {"hebrew":"טָמֵא","translit":"ṭāmēʾ","polish":"nieczysty"},
-          {"hebrew":"חָטָא","translit":"ḥāṭāʾ","polish":"grzeszyć"},
-          {"hebrew":"עָוֹן","translit":"ʿāwôn","polish":"wina"},
-          {"hebrew":"פֶּשַׁע","translit":"pešaʿ","polish":"bunt"}
-        ],
-        "Lekcja 20": [
-          {"hebrew":"יָרֵא","translit":"yārēʾ","polish":"bać się"},
-          {"hebrew":"אָהַב","translit":"ʾāhab","polish":"kochać"},
-          {"hebrew":"שָׂנֵא","translit":"śānēʾ","polish":"nienawidzić"},
-          {"hebrew":"בָּחַר","translit":"bāḥar","polish":"wybierać"},
-          {"hebrew":"קָרַב","translit":"qārab","polish":"zbliżać się"},
-          {"hebrew":"יָשַׁב","translit":"yāšab","polish":"mieszkać"},
-          {"hebrew":"עָמַד","translit":"ʿāmad","polish":"stać"},
-          {"hebrew":"יָלַךְ","translit":"yālak","polish":"iść"},
-          {"hebrew":"שָׁכַב","translit":"šākab","polish":"leżeć"},
-          {"hebrew":"קוּם","translit":"qûm","polish":"powstać"}
-        ],
-        "Lekcja 21": [
-          {"hebrew":"שָׁמַע","translit":"šāmaʿ","polish":"słyszeć"},
-          {"hebrew":"רָאָה","translit":"rāʾâ","polish":"widzieć"},
-          {"hebrew":"יָדַע","translit":"yādaʿ","polish":"znać"},
-          {"hebrew":"זָכַר","translit":"zākar","polish":"pamiętać"},
-          {"hebrew":"שָׁכַח","translit":"šākaḥ","polish":"zapominać"},
-          {"hebrew":"חָלַב","translit":"ḥābab","polish":"kochać"},
-          {"hebrew":"שָׂנֵא","translit":"śānēʾ","polish":"nienawidzić"},
-          {"hebrew":"יָרֵא","translit":"yārēʾ","polish":"bać się"},
-          {"hebrew":"קָרָא","translit":"qārāʾ","polish":"wołać, czytać"},
-          {"hebrew":"עָנָה","translit":"ʿānâ","polish":"odpowiadać"}
-        ],
-        "Lekcja 22": [
-          {"hebrew":"בָּא","translit":"bāʾ","polish":"przyjść, wejść"},
-          {"hebrew":"יָצָא","translit":"yāṣāʾ","polish":"wyjść"},
-          {"hebrew":"עָלָה","translit":"ʿālâ","polish":"wstąpić"},
-          {"hebrew":"יָרַד","translit":"yārad","polish":"zejść"},
-          {"hebrew":"הָלַךְ","translit":"hālaḵ","polish":"iść, chodzić"},
-          {"hebrew":"שׁוּב","translit":"šûb","polish":"wrócić"},
-          {"hebrew":"נָסַע","translit":"nāsaʿ","polish":"podróżować"},
-          {"hebrew":"בּוֹא","translit":"bôʾ","polish":"wejść"},
-          {"hebrew":"יָשַׁב","translit":"yāšab","polish":"mieszkać, siedzieć"},
-          {"hebrew":"שָׁכַב","translit":"šākab","polish":"leżeć"}
-        ],
-        "Lekcja 23": [
-          {"hebrew":"קוּם","translit":"qûm","polish":"powstać"},
-          {"hebrew":"נָפַל","translit":"nāpal","polish":"upaść"},
-          {"hebrew":"מוּת","translit":"mût","polish":"umrzeć"},
-          {"hebrew":"חָיָה","translit":"ḥāyâ","polish":"żyć"},
-          {"hebrew":"יָלַד","translit":"yālad","polish":"rodzić"},
-          {"hebrew":"זָקֵן","translit":"zāqēn","polish":"być starym"},
-          {"hebrew":"נַעַר","translit":"naʿar","polish":"być młodym"},
-          {"hebrew":"גָּדַל","translit":"gādal","polish":"być wielkim"},
-          {"hebrew":"קָטַן","translit":"qāṭan","polish":"być małym"}
-        ],
-        "Lekcja 24": [
-          {"hebrew":"אָכַל","translit":"ʾākal","polish":"jeść"},
-          {"hebrew":"שָׁתָה","translit":"šātâ","polish":"pić"},
-          {"hebrew":"לָבַשׁ","translit":"lābaš","polish":"ubierać się"},
-          {"hebrew":"פָּשַׁט","translit":"pāšaṭ","polish":"rozbierać się"},
-          {"hebrew":"רָחַץ","translit":"rāḥaṣ","polish":"myć się"},
-          {"hebrew":"קָבַר","translit":"qābar","polish":"pogrzebać"},
-          {"hebrew":"שָׁכַב","translit":"šākab","polish":"spać"},
-          {"hebrew":"יָשֵׁן","translit":"yāšēn","polish":"spać"}
-        ],
-        "Lekcja 25": [
-          {"hebrew":"שׁוּב","translit":"šûb","polish":"wrócić (qal)"},
-          {"hebrew":"הֵשִׁיב","translit":"hēšîb","polish":"odpowiedzieć, zwrócić (hifil)"},
-          {"hebrew":"הוֹשִׁיב","translit":"hôšîb","polish":"posadzić (hifil)"},
-          {"hebrew":"הוֹלִיד","translit":"hôlîd","polish":"spłodzić (hifil)"},
-          {"hebrew":"הִגִּיד","translit":"higgîd","polish":"opowiedzieć (hifil)"},
-          {"hebrew":"הִרְבָּה","translit":"hirbâ","polish":"pomnożyć (hifil)"},
-          {"hebrew":"הִשְׁלִיךְ","translit":"hišlîk","polish":"rzucić (hifil)"}
-        ],
-        "Lekcja 26": [
-          {"hebrew":"נִשְׁבַּר","translit":"nišbar","polish":"zostać złamany (nifal)"},
-          {"hebrew":"נִרְאָה","translit":"nirʾâ","polish":"zostać widzianym (nifal)"},
-          {"hebrew":"נִשְׁמַע","translit":"nišmaʿ","polish":"zostać usłyszanym (nifal)"},
-          {"hebrew":"נִלְקַח","translit":"nilqaḥ","polish":"zostać wziętym (nifal)"},
-          {"hebrew":"נִמְצָא","translit":"nimṣāʾ","polish":"zostać znalezionym (nifal)"}
-        ],
-        "Lekcja 27": [
-          {"hebrew":"הִתְפַּלֵּל","translit":"hitpallēl","polish":"modlić się (hitpael)"},
-          {"hebrew":"הִתְהַלֵּךְ","translit":"hithallēk","polish":"chodzić (hitpael)"},
-          {"hebrew":"הִתְנַבֵּא","translit":"hitnabbēʾ","polish":"prorokować (hitpael)"},
-          {"hebrew":"הִתְקַדֵּשׁ","translit":"hitqaddēš","polish":"uświęcić się (hitpael)"}
-        ],
-        "Lekcja 28": [
-          {"hebrew":"מָלַךְ","translit":"mālak","polish":"panować"},
-          {"hebrew":"שָׁפַט","translit":"šāpaṭ","polish":"sądzić"},
-          {"hebrew":"נָגַד","translit":"nāgad","polish":"opowiadać"},
-          {"hebrew":"עָבַד","translit":"ʿābad","polish":"służyć"},
-          {"hebrew":"קָדַשׁ","translit":"qādaš","polish":"uświęcić"},
-          {"hebrew":"טִמֵּא","translit":"ṭimmēʾ","polish":"uczynić nieczystym"}
-        ],
-        "Lekcja 29": [
-          {"hebrew":"הוֹצִיא","translit":"hôṣîʾ","polish":"wyprowadzić"},
-          {"hebrew":"הֵבִיא","translit":"hēbîʾ","polish":"przynieść"},
-          {"hebrew":"הֶעֱלָה","translit":"heʿĕlâ","polish":"wprowadzić"},
-          {"hebrew":"הוֹרִיד","translit":"hôrîd","polish":"sprowadzić"},
-          {"hebrew":"הִנִּיחַ","translit":"hinnîaḥ","polish":"położyć"},
-          {"hebrew":"הִשְׁאִיר","translit":"hišʾîr","polish":"pozostawić"}
-        ],
-        "Lekcja 30": [
-          {"hebrew":"נִלְחַם","translit":"nilḥam","polish":"walczyć (nifal)"},
-          {"hebrew":"נִשְׁמַר","translit":"nišmar","polish":"być strzeżonym (nifal)"},
-          {"hebrew":"הִתְנַדֵּב","translit":"hitnaddēb","polish":"zgłosić się dobrowolnie (hitpael)"},
-          {"hebrew":"הִתְקַרֵב","translit":"hitqārēb","polish":"zbliżyć się (hitpael)"},
-          {"hebrew":"הִתְקַדֵּשׁ","translit":"hitqaddēš","polish":"uświęcić się (hitpael)"}
-        ],
-        "Lekcja 31": [
-          {"hebrew":"שָׁמַרְתִּי","translit":"šāmartî","polish":"ja strzegłem"},
-          {"hebrew":"שָׁמַרְתָּ","translit":"šāmartā","polish":"ty (m.) strzegłeś"},
-          {"hebrew":"שָׁמַרְתְּ","translit":"šāmart","polish":"ty (f.) strzegłaś"},
-          {"hebrew":"שָׁמַר","translit":"šāmar","polish":"on strzegł"},
-          {"hebrew":"שָׁמְרָה","translit":"šāmərâ","polish":"ona strzegła"},
-          {"hebrew":"שָׁמַרְנוּ","translit":"šāmarnû","polish":"my strzegliśmy"},
-          {"hebrew":"שְׁמַרְתֶּם","translit":"šəmartem","polish":"wy (m.) strzegliście"},
-          {"hebrew":"שְׁמַרְתֶן","translit":"šəmarten","polish":"wy (f.) strzegłyście"},
-          {"hebrew":"שָׁמְרוּ","translit":"šāmərû","polish":"oni strzegli"}
-        ],
-        "Lekcja 32": [
-          {"hebrew":"אָהַבְתִּי","translit":"ʾāhabtî","polish":"kochałem"},
-          {"hebrew":"קָטַלְתִּי","translit":"qāṭaltî","polish":"zabiłem"},
-          {"hebrew":"בָּנִיתִי","translit":"bānîtî","polish":"budowałem"},
-          {"hebrew":"שָׁלַחְתִּי","translit":"šālaḥtî","polish":"wysłałem"},
-          {"hebrew":"רָאִיתִי","translit":"rāʾîtî","polish":"widziałem"},
-          {"hebrew":"שָׁמַעְתִּי","translit":"šāmaʿtî","polish":"słyszałem"}
-        ],
-        "Lekcja 33": [
-          {"hebrew":"נָתַתִּי","translit":"nātattî","polish":"dałem"},
-          {"hebrew":"קַמְתִּי","translit":"qamtî","polish":"powstałem"},
-          {"hebrew":"מַצְתִּי","translit":"māṣāʾtî","polish":"znalazłem"},
-          {"hebrew":"לָקַחְתִּי","translit":"lāqaḥtî","polish":"wziąłem"},
-          {"hebrew":"בָּאתִי","translit":"bāʾtî","polish":"przyszedłem"}
-        ],
-        "Lekcja 34": [
-          {"hebrew":"הָיִיתִי","translit":"hāyîtî","polish":"byłem"},
-          {"hebrew":"הָיִיתָ","translit":"hāyîtā","polish":"byłeś (m.)"},
-          {"hebrew":"הָיִית","translit":"hāyît","polish":"byłeś (f.)"},
-          {"hebrew":"הָיָה","translit":"hāyâ","polish":"był"},
-          {"hebrew":"הָיְתָה","translit":"hāyətâ","polish":"była"},
-          {"hebrew":"הָיִינוּ","translit":"hāyînû","polish":"byliśmy"}
-        ],
-        "Lekcja 35": [
-          {"hebrew":"אֶתְמוּל","translit":"ʾetmôl","polish":"wczoraj"},
-          {"hebrew":"מָחָר","translit":"māḥār","polish":"jutro"},
-          {"hebrew":"הַיּוֹם","translit":"hayyôm","polish":"dzisiaj"},
-          {"hebrew":"הַלַּיְלָה","translit":"hallaylâ","polish":"nocą"},
-          {"hebrew":"בַּבֹּקֶר","translit":"babbōqer","polish":"rano"},
-          {"hebrew":"בָּעֶרֶב","translit":"bāʿereb","polish":"wieczorem"}
-        ],
-        "Lekcja 36": [
-          {"hebrew":"כֹּה","translit":"kōh","polish":"tak, w ten sposób"},
-          {"hebrew":"כֵּן","translit":"kēn","polish":"tak (odpowiedź)"},
-          {"hebrew":"לָכֵן","translit":"lākēn","polish":"dlatego"},
-          {"hebrew":"אָכֵן","translit":"ʾākēn","polish":"zaiste"},
-          {"hebrew":"אַף","translit":"ʾap","polish":"nawet, też"},
-          {"hebrew":"רַק","translit":"raq","polish":"tylko"}
-        ],
-        "Lekcja 37": [
-          {"hebrew":"עַל־כֵּן","translit":"ʿal-kēn","polish":"dlatego"},
-          {"hebrew":"עַל־זֹאת","translit":"ʿal-zōʾt","polish":"dlatego"},
-          {"hebrew":"בַּעֲבוּר","translit":"baʿăbûr","polish":"ze względu na"},
-          {"hebrew":"לְמַעַן","translit":"ləmaʿan","polish":"dla, aby"},
-          {"hebrew":"לְבִלְתִּי","translit":"ləbiltî","polish":"aby nie"}
-        ],
-        "Lekcja 38": [
-          {"hebrew":"בְּתוֹךְ","translit":"bətôk","polish":"pośród"},
-          {"hebrew":"אֶל־תּוֹךְ","translit":"ʾel-tôk","polish":"do środka"},
-          {"hebrew":"מִתַּחַת","translit":"mittaḥat","polish":"spod"},
-          {"hebrew":"מֵעַל","translit":"mēʿal","polish":"ponad"},
-          {"hebrew":"מֵאָחוֹר","translit":"mēʾāḥôr","polish":"zza"}
-        ],
-        "Lekcja 39": [
-          {"hebrew":"בֵּין","translit":"bên","polish":"między"},
-          {"hebrew":"אַחַר","translit":"ʾaḥar","polish":"po, za"},
-          {"hebrew":"לִפְנֵי","translit":"lip̄nê","polish":"przed (czas/przestrzeń)"},
-          {"hebrew":"אַחֲרֵי","translit":"ʾaḥărē","polish":"po (czas)"},
-          {"hebrew":"עַד","translit":"ʿad","polish":"aż, do"},
-          {"hebrew":"עַד־עוֹלָם","translit":"ʿad-ʿôlām","polish":"na wieki"}
-        ],
-        "Lekcja 40": [
-          {"hebrew":"יְהוָה","translit":"YHWH","polish":"Pan (Tetragram)"},
-          {"hebrew":"יְהוִה","translit":"yəhwih","polish":"Pan (forma wokalizowana)"},
-          {"hebrew":"אֲדֹנָי","translit":"ʾăḏōnāy","polish":"Pan, mój Pan"},
-          {"hebrew":"אֱלֹהִים","translit":"ʾĕlōhîm","polish":"Bóg, bogowie"},
-          {"hebrew":"אֱלוֹהַּ","translit":"ʾĕlōah","polish":"Bóg"},
-          {"hebrew":"אֵל שַׁדַּי","translit":"ʾēl šadday","polish":"Bóg Wszechmocny"},
-          {"hebrew":"יְהוָה צְבָאוֹת","translit":"YHWH ṣəbāʾôt","polish":"Pan Zastępów"}
-        ],
-        "Lekcja 41": [
-          {"hebrew":"שָׁלוֹשׁ","translit":"šālôš","polish":"trzy (f.)"},
-          {"hebrew":"אַרְבַּע","translit":"ʾarbaʿ","polish":"cztery (m./f.)"},
-          {"hebrew":"שְׁמוֹנֶה","translit":"šəmôneh","polish":"osiem (f.)"},
-          {"hebrew":"עֶשְׂרִים","translit":"ʿeśrîm","polish":"dwadzieścia"},
-          {"hebrew":"שְׁלוֹשִׁים","translit":"šəlôšîm","polish":"trzydzieści"},
-          {"hebrew":"אַרְבָּעִים","translit":"ʾarbāʿîm","polish":"czterdzieści"}
-        ],
-        "Lekcja 42": [
-          {"hebrew":"מֵאָה","translit":"mēʾâ","polish":"sto"},
-          {"hebrew":"אֶלֶף","translit":"ʾelep","polish":"tysiąc"},
-          {"hebrew":"רִבּוֹא","translit":"ribbôʾ","polish":"dziesięć tysięcy"},
-          {"hebrew":"רִבּוֹא רִבּוֹת","translit":"ribbôʾ ribbôt","polish":"miliony"}
-        ],
-        "Lekcja 43": [
-          {"hebrew":"כֹּה אָמַר יְהוָה","translit":"kōh ʾāmar YHWH","polish":"tak mówi Pan"},
-          {"hebrew":"נְאֻם יְהוָה","translit":"nəʾum YHWH","polish":"wyrocznia Pana"},
-          {"hebrew":"כִּי־טוֹב יְהוָה","translit":"kî-ṭôb YHWH","polish":"bo dobry jest Pan"}
-        ],
-        "Lekcja 44": [
-          {"hebrew":"הַלְלוּ יָהּ","translit":"halləlû yāh","polish":"chwalcie Pana"},
-          {"hebrew":"בָּרוּךְ יְהוָה","translit":"bārûk YHWH","polish":"błogosławiony Pan"},
-          {"hebrew":"הוֹדוּ לַיהוָה","translit":"hôdû laYHWH","polish":"dziękujcie Panu"}
-        ],
-        "Lekcja 45": [
-          {"hebrew":"שִׁיר","translit":"šîr","polish":"pieśń"},
-          {"hebrew":"מִזְמוֹר","translit":"mizmôr","polish":"psalm"},
-          {"hebrew":"תְּהִלָּה","translit":"təhillâ","polish":"chwała"},
-          {"hebrew":"תּוֹדָה","translit":"tôdâ","polish":"dziękczynienie"}
-        ],
-        "Lekcja 46": [
-          {"hebrew":"נֵצַח","translit":"neṣaḥ","polish":"zwycięstwo"},
-          {"hebrew":"תִּקְוָה","translit":"tiqwâ","polish":"nadzieja"},
-          {"hebrew":"אֱמוּנָה","translit":"ʾĕmûnâ","polish":"wierność"},
-          {"hebrew":"גְּאֻלָּה","translit":"gəʾullâ","polish":"odkupienie"}
-        ],
-        "Lekcja 47": [
-          {"hebrew":"חָטָא","translit":"ḥāṭāʾ","polish":"grzeszyć"},
-          {"hebrew":"עָוֹן","translit":"ʿāwôn","polish":"wina"},
-          {"hebrew":"פֶּשַׁע","translit":"pešaʿ","polish":"bunt"},
-          {"hebrew":"סָלַח","translit":"sālaḥ","polish":"przebaczyć"},
-          {"hebrew":"כִּפֵּר","translit":"kippēr","polish":"odkupić"}
-        ],
-        "Lekcja 48": [
-          {"hebrew":"קָרְבָּן","translit":"qorbān","polish":"ofiara"},
-          {"hebrew":"עֹלָה","translit":"ʿōlâ","polish":"całopalenie"},
-          {"hebrew":"חַטָּאת","translit":"ḥaṭṭāʾt","polish":"ofiara za grzech"},
-          {"hebrew":"אָשָׁם","translit":"ʾāšām","polish":"ofiara za winę"}
-        ],
-        "Lekcja 49": [
-          {"hebrew":"נָבִיא","translit":"nābîʾ","polish":"prorok"},
-          {"hebrew":"כֹּהֵן","translit":"kōhēn","polish":"kapłan"},
-          {"hebrew":"לֵוִי","translit":"lēwî","polish":"Lewita"},
-          {"hebrew":"עֶבֶד יְהוָה","translit":"ʿebed YHWH","polish":"sługa Pana"}
-        ],
-        "Lekcja 50": [
-          {"hebrew":"בְּרִית","translit":"bərît","polish":"przymierze"},
-          {"hebrew":"חֹק","translit":"ḥōq","polish":"ustawa"},
-          {"hebrew":"מִצְוָה","translit":"miṣwâ","polish":"przykazanie"},
-          {"hebrew":"תּוֹרָה","translit":"tôrâ","polish":"prawo"}
-        ],
-        "Lekcja 51": [
-          {"hebrew":"קָדוֹשׁ","translit":"qādôš","polish":"święty"},
-          {"hebrew":"טָהוֹר","translit":"ṭāhôr","polish":"czysty"},
-          {"hebrew":"טָמֵא","translit":"ṭāmēʾ","polish":"nieczysty"},
-          {"hebrew":"חֹל","translit":"ḥōl","polish":"świecki"}
-        ],
-        "Lekcja 52": [
-          {"hebrew":"שָׁמַיִם","translit":"šāmayim","polish":"niebo"},
-          {"hebrew":"אֶרֶץ","translit":"ʾereṣ","polish":"ziemia"},
-          {"hebrew":"יָם","translit":"yām","polish":"morze"},
-          {"hebrew":"הַר","translit":"har","polish":"góra"},
-          {"hebrew":"מִדְבָּר","translit":"midbār","polish":"pustynia"}
-        ],
-        "Lekcja 53": [
-          {"hebrew":"שֶׁמֶשׁ","translit":"šemeš","polish":"słońce"},
-          {"hebrew":"יָרֵחַ","translit":"yārēaḥ","polish":"księżyc"},
-          {"hebrew":"כּוֹכָב","translit":"kôkāb","polish":"gwiazda"},
-          {"hebrew":"רוּחַ","translit":"rûaḥ","polish":"wiatr"}
-        ],
-        "Lekcja 54": [
-          {"hebrew":"אֵשׁ","translit":"ʾēš","polish":"ogień"},
-          {"hebrew":"מַיִם","translit":"mayim","polish":"woda"},
-          {"hebrew":"אֲדָמָה","translit":"ʾăḏāmâ","polish":"ziemia"},
-          {"hebrew":"שָׁמַיִם וָאָרֶץ","translit":"šāmayim wāʾāreṣ","polish":"niebo i ziemia"}
-        ],
+        books["T. Lambdin – Wprowadzenie do hebrajskiego biblijnego"] = {
 
-           "Lekcja 55": [
-                {"hebrew":"קָדוֹשׁ","translit":"qādôš","polish":"święty"},
-                {"hebrew":"צַדִּיק","translit":"ṣaddîq","polish":"sprawiedliwy"},
-                {"hebrew":"חָטָא","translit":"ḥāṭāʾ","polish":"grzeszyć"},
-                {"hebrew":"נָבִיא","translit":"nābîʾ","polish":"prorok"},
-                {"hebrew":"מַלְאָךְ","translit":"malʾāk","polish":"anioł"},
-                {"hebrew":"גּוֹי","translit":"gôy","polish":"naród pogański"},
-                {"hebrew":"חֹק","translit":"ḥōq","polish":"ustawa"},
-                {"hebrew":"מִשְׁפָּט","translit":"mišpāṭ","polish":"sąd, prawo"},
-                {"hebrew":"רָעָה","translit":"rāʿâ","polish":"zło"},
-                {"hebrew":"טוֹבָה","translit":"ṭôbâ","polish":"dobro"}
-            ]
+    "Lekcja 1": [
+      {"hebrew": "נַעַר", "translit": "na‘ar", "polish": "chłopiec, młodzieniec, sługa"},
+      {"hebrew": "זָקֵן", "translit": "zāqēn", "polish": "stary, starzec"},
+      {"hebrew": "בַּיִת", "translit": "bayit", "polish": "dom"},
+      {"hebrew": "נָהָר", "translit": "nāhār", "polish": "rzeka"},
+      {"hebrew": "שָׂדֶה", "translit": "śādeh", "polish": "pole"},
+      {"hebrew": "דֶּרֶךְ", "translit": "derek", "polish": "droga, ścieżka"},
+      {"hebrew": "עַל", "translit": "‘al", "polish": "na, nad, przeciwko"},
+      {"hebrew": "בְּ", "translit": "be", "polish": "w, przy pomocy"},
+      {"hebrew": "אֵצֶל", "translit": "’ēṣel", "polish": "obok, blisko"},
+      {"hebrew": "שָׁם", "translit": "šām", "polish": "tam"},
+      {"hebrew": "אַיֵּה", "translit": "’ayyēh", "polish": "gdzie?"},
+      {"hebrew": "וְ", "translit": "we", "polish": "i"}
+    ],
+    "Lekcja 2": [
+      {"hebrew": "אִישׁ", "translit": "’îš", "polish": "mężczyzna, mąż"},
+      {"hebrew": "אִשָּׁה", "translit": "’iššāh", "polish": "kobieta, żona"},
+      {"hebrew": "יֶלֶד", "translit": "yeled", "polish": "dziecko, chłopiec"},
+      {"hebrew": "הֵיכָל", "translit": "hêkāl", "polish": "pałac, świątynia"},
+      {"hebrew": "מֶלֶךְ", "translit": "melek", "polish": "król"},
+      {"hebrew": "עִיר", "translit": "‘îr", "polish": "miasto"},
+      {"hebrew": "מִי", "translit": "mî", "polish": "kto?"},
+      {"hebrew": "טּוֹב", "translit": "ṭôb", "polish": "dobry"},
+      {"hebrew": "רַע", "translit": "ra‘", "polish": "zły"},
+      {"hebrew": "גָּדוֹל", "translit": "gādôl", "polish": "wielki, duży"},
+      {"hebrew": "קָטֹן", "translit": "qāṭōn", "polish": "mały"},
+      {"hebrew": "יָפֶה", "translit": "yāpeh", "polish": "piękny"},
+      {"hebrew": "מְאֹד", "translit": "me’ōd", "polish": "bardzo"}
+    ],
+    "Lekcja 3": [
+      {"hebrew": "הַ", "translit": "ha-", "polish": "rodzajnik określony (ten, ta, to)"},
+      {"hebrew": "אֶרֶץ", "translit": "’ereṣ", "polish": "ziemia, kraj (ż.)"},
+      {"hebrew": "הַר", "translit": "har", "polish": "góra"},
+      {"hebrew": "עָם", "translit": "‘ām", "polish": "lud, naród"},
+      {"hebrew": "גַּן", "translit": "gan", "polish": "ogród"},
+      {"hebrew": "צַדִּיק", "translit": "ṣaddîq", "polish": "sprawiedliwy"},
+      {"hebrew": "רָשָׁע", "translit": "rāšā‘", "polish": "niegodziwy, bezbożny"},
+      {"hebrew": "חָכָם", "translit": "ḥākām", "polish": "mądry"},
+      {"hebrew": "קָשֶׁה", "translit": "qāšeh", "polish": "trudny, twardy"},
+      {"hebrew": "יָקָר", "translit": "yāqār", "polish": "cenny, drogi"}
+    ],
+    "Lekcja 4": [
+      {"hebrew": "הָיָה", "translit": "hāyāh", "polish": "był (on był)"},
+      {"hebrew": "עָשָׂה", "translit": "‘āśāh", "polish": "robił, czynił"},
+      {"hebrew": "רָאָה", "translit": "rā’āh", "polish": "widział"},
+      {"hebrew": "אמר", "translit": "’āmar", "polish": "powiedział"},
+      {"hebrew": "הלך", "translit": "hālak", "polish": "szedł, chodził"},
+      {"hebrew": "נתן", "translit": "nātan", "polish": "dał"},
+      {"hebrew": "אֶל", "translit": "’el", "polish": "do, ku"},
+      {"hebrew": "לְ", "translit": "le-", "polish": "dla, do (oznacza też cel lub posiadanie)"},
+      {"hebrew": "בְּעֵינֵי", "translit": "be‘ênê", "polish": "w oczach (kogoś), według (czyjejś opinii)"}
+    ],
+    "Lekcja 5": [
+      {"hebrew": "עֶבֶד", "translit": "‘ebed", "polish": "sługa, niewolnik"},
+      {"hebrew": "עֲבוֹדָה", "translit": "‘abōdāh", "polish": "praca, służba"},
+      {"hebrew": "אֲדָמָה", "translit": "’ădāmāh", "polish": "ziemia, rola"},
+      {"hebrew": "אָדוֹן", "translit": "’ādōn", "polish": "pan"},
+      {"hebrew": "אֵת / אֶת־", "translit": "’et", "polish": "partykuła biernika (nie tłumaczy się)"},
+      {"hebrew": "אֶת / אֵת", "translit": "’et", "polish": "z (kimś/czymś)"},
+      {"hebrew": "עִם", "translit": "‘im", "polish": "z (kimś/czymś)"},
+      {"hebrew": "לִפְנֵי", "translit": "lipnê", "polish": "przed"}
+    ],
+    "Lekcja 6": [
+      {"hebrew": "יָשַׁב", "translit": "yāšab", "polish": "siedział, mieszkał"},
+      {"hebrew": "עָמַד", "translit": "‘āmad", "polish": "stał"},
+      {"hebrew": "שָׁמַר", "translit": "šāmar", "polish": "strzegł, zachowywał"},
+      {"hebrew": "מָצָא", "translit": "māṣā’", "polish": "znalazł"},
+      {"hebrew": "דָּבָר", "translit": "dābār", "polish": "słowo, rzecz, sprawa"},
+      {"hebrew": "רָעָב", "translit": "rā‘āb", "polish": "głód"},
+      {"hebrew": "רָעָה", "translit": "rā‘āh", "polish": "zło, nieszczęście"},
+      {"hebrew": "מִן", "translit": "min", "polish": "z, od (przyimek)"},
+      {"hebrew": "כִּי", "translit": "kî", "polish": "bo, ponieważ, że, gdy"}
+    ],
+    "Lekcja 7": [
+      {"hebrew": "כָּתַב", "translit": "kātab", "polish": "pisał"},
+      {"hebrew": "זָכַר", "translit": "zākar", "polish": "pamiętał"},
+      {"hebrew": "שָׁלַח", "translit": "šālaḥ", "polish": "posłał, wysłał"},
+      {"hebrew": "כֹּהֵן", "translit": "kōhēn", "polish": "kapłan"},
+      {"hebrew": "מִלְחָמָה", "translit": "milḥāmāh", "polish": "wojna, bitwa"},
+      {"hebrew": "מַחֲנֶה", "translit": "maḥăneh", "polish": "obóz"},
+      {"hebrew": "מַלְאָךְ", "translit": "mal’āk", "polish": "posłaniec, anioł"},
+      {"hebrew": "מִשְׁפָּט", "translit": "mišpāṭ", "polish": "sąd, wyrok, prawo"},
+      {"hebrew": "צָבָא", "translit": "ṣābā’", "polish": "wojsko, zastęp"}
+    ],
+    "Lekcja 8": [
+      {"hebrew": "יָרַד", "translit": "yārad", "polish": "zszedł, zstąpił"},
+      {"hebrew": "יָצָא", "translit": "yāṣā’", "polish": "wyszedł"},
+      {"hebrew": "נָפַל", "translit": "nāpal", "polish": "upadł"},
+      {"hebrew": "נָשָׂא", "translit": "nāśā’", "polish": "podniósł, nosił, wziął"},
+      {"hebrew": "נָגַשׁ", "translit": "nāgaš", "polish": "zbliżył się"},
+      {"hebrew": "שָׁפַט", "translit": "šāpaṭ", "polish": "sądził"},
+      {"hebrew": "שָׁמַע", "translit": "šāma‘", "polish": "słyszał, słuchał"},
+      {"hebrew": "אֵשׁ", "translit": "’ēš", "polish": "ogień (ż.)"},
+      {"hebrew": "מַיִם", "translit": "mayim", "polish": "woda"},
+      {"hebrew": "שָׁמַיִם", "translit": "šāmayim", "polish": "niebiosa"}
+    ],
+    "Lekcja 9": [
+      {"hebrew": "קָרָא", "translit": "qārā’", "polish": "wołał, czytał, nazywał"},
+      {"hebrew": "יָדַע", "translit": "yāda‘", "polish": "wiedział, poznał"},
+      {"hebrew": "אָכַל", "translit": "’ākal", "polish": "jadł"},
+      {"hebrew": "עָבַר", "translit": "‘ābar", "polish": "przechodził, przekraczał"},
+      {"hebrew": "עָלָה", "translit": "‘ālāh", "polish": "wstępował, szedł w górę"},
+      {"hebrew": "שָׁבַר", "translit": "šābar", "polish": "rozbił, kruszył"},
+      {"hebrew": "מִצְוָה", "translit": "miṣwāh", "polish": "przykazanie"},
+      {"hebrew": "חַטָּאת", "translit": "ḥaṭṭā’t", "polish": "grzech, ofiara za grzech"},
+      {"hebrew": "חֹק", "translit": "ḥōq", "polish": "ustawa, przepis"},
+      {"hebrew": "מִשְׁפָּחָה", "translit": "mišpāḥāh", "polish": "rodzina, ród"}
+    ],
+    "Lekcja 10": [
+      {"hebrew": "לָקַח", "translit": "lāqaḥ", "polish": "wziął, zabrał"},
+      {"hebrew": "מָלַךְ", "translit": "mālāk", "polish": "królował, panował"},
+      {"hebrew": "עָבַד", "translit": "‘ābad", "polish": "służył, pracował, uprawiał"},
+      {"hebrew": "בָּחַר", "translit": "bāḥar", "polish": "wybrał"},
+      {"hebrew": "קָבַר", "translit": "qābar", "polish": "pogrzebał"},
+      {"hebrew": "שָׁכַב", "translit": "šākab", "polish": "położył się, leżał"},
+      {"hebrew": "שָׂרַף", "translit": "śārap", "polish": "spalił"},
+      {"hebrew": "דָּם", "translit": "dām", "polish": "krew"},
+      {"hebrew": "פַּר", "translit": "par", "polish": "młody byk, cielec"}
+    ],
+    "Lekcja 11": [
+      {"hebrew": "יָכֹל", "translit": "yākōl", "polish": "mógł, zdołał"},
+      {"hebrew": "מָלֵא", "translit": "mālē’", "polish": "był pełny, napełnił"},
+      {"hebrew": "קָרֵב", "translit": "qārēb", "polish": "zbliżył się"},
+      {"hebrew": "קָטֹן", "translit": "qāṭōn", "polish": "był mały, był nieznaczący"},
+      {"hebrew": "שָׁכַח", "translit": "šākaḥ", "polish": "zapomniał"},
+      {"hebrew": "כָּבֵד", "translit": "kābēd", "polish": "był ciężki, był poważny"},
+      {"hebrew": "זֶה", "translit": "zeh", "polish": "ten (zaimek wskazujący m.)"},
+      {"hebrew": "זֹאת", "translit": "zō’t", "polish": "ta (zaimek wskazujący ż.)"},
+      {"hebrew": "אֵלֶּה", "translit": "’ēlleh", "polish": "ci, te"},
+      {"hebrew": "הוּא", "translit": "hû’", "polish": "on / tamten"},
+      {"hebrew": "הִיא", "translit": "hî’", "polish": "ona / tamta"}
+    ],
+    "Lekcja 12": [
+      {"hebrew": "מָוֶת", "translit": "māwet", "polish": "śmierć"},
+      {"hebrew": "עֵת", "translit": "‘ēt", "polish": "czas, pora (ż.)"},
+      {"hebrew": "עַתָּה", "translit": "‘attāh", "polish": "teraz"},
+      {"hebrew": "אֲנִי / אָנֹכִי", "translit": "’ănî / ’ānōkî", "polish": "ja"},
+      {"hebrew": "אַתָּה", "translit": "’attāh", "polish": "ty (m.)"},
+      {"hebrew": "אַתְּ", "translit": "’at", "polish": "ty (ż.)"},
+      {"hebrew": "הוּא", "translit": "hû’", "polish": "on"},
+      {"hebrew": "הִיא", "translit": "hî’", "polish": "ona"},
+      {"hebrew": "אֲנַחְנוּ", "translit": "’ănaḥnû", "polish": "my"},
+      {"hebrew": "אַתֶּם", "translit": "’attem", "polish": "wy (m.)"},
+      {"hebrew": "אַתֶּן", "translit": "’atten", "polish": "wy (ż.)"},
+      {"hebrew": "הֵם / הֵמָּה", "translit": "hēm / hēmmāh", "polish": "oni"},
+      {"hebrew": "הֵן / הֵנָּה", "translit": "hēn / hēnnāh", "polish": "one"}
+    ],
+    "Lekcja 13": [
+      {"hebrew": "אָב", "translit": "’āb", "polish": "ojciec, przodek"},
+      {"hebrew": "אָח", "translit": "’āḥ", "polish": "brat"},
+      {"hebrew": "אָחוֹת", "translit": "’āḥôt", "polish": "siostra"},
+      {"hebrew": "בֵּן", "translit": "bēn", "polish": "syn"},
+      {"hebrew": "בַּת", "translit": "bat", "polish": "córka"},
+      {"hebrew": "אֵם", "translit": "’ēm", "polish": "matka"},
+      {"hebrew": "שֵׁם", "translit": "šēm", "polish": "imię"},
+      {"hebrew": "רֹאשׁ", "translit": "rō’š", "polish": "głowa, szczyt, początek"},
+      {"hebrew": "אִם", "translit": "’im", "polish": "jeśli, jeżeli"}
+    ],
+    "Lekcja 14": [
+      {"hebrew": "אֶחָד", "translit": "’eḥād", "polish": "jeden"},
+      {"hebrew": "מֵאָה", "translit": "mē’āh", "polish": "sto"},
+      {"hebrew": "אֶלֶף", "translit": "’elep", "polish": "tysiąc"},
+      {"hebrew": "גַּם", "translit": "gam", "polish": "także, również"},
+      {"hebrew": "עוֹד", "translit": "‘ôd", "polish": "jeszcze, nadal"},
+      {"hebrew": "תַּחַת", "translit": "taḥat", "polish": "pod, zamiast"}
+    ],
+    "Lekcja 15": [
+      {"hebrew": "דָּבָר", "translit": "dābār", "polish": "słowo (forma constructa: dēbar)"},
+      {"hebrew": "מֶלֶךְ", "translit": "melek", "polish": "król (forma constructa: melek)"},
+      {"hebrew": "סֵפֶר", "translit": "sēper", "polish": "księga, zwój"},
+      {"hebrew": "עֶבֶד", "translit": "‘ebed", "polish": "sługa (forma constructa: ‘ebed)"},
+      {"hebrew": "חוֹמָה", "translit": "ḥômāh", "polish": "mur"},
+      {"hebrew": "זָהָב", "translit": "zāhāb", "polish": "złoto"},
+      {"hebrew": "יִשְׂרָאֵל", "translit": "yiśrā’ēl", "polish": "Izrael"}
+    ],
+    "Lekcja 16": [
+      {"hebrew": "מִזְבֵּחַ", "translit": "mizbēaḥ", "polish": "ołtarz"},
+      {"hebrew": "מִנְחָה", "translit": "minḥāh", "polish": "dar, ofiara z pokarmów"},
+      {"hebrew": "תּוֹרָה", "translit": "tôrāh", "polish": "prawo, pouczenie, Tora"},
+      {"hebrew": "יָד", "translit": "yād", "polish": "ręka (ż.)"},
+      {"hebrew": "יוֹם", "translit": "yôm", "polish": "dzień"},
+      {"hebrew": "לַיְלָה", "translit": "laylāh", "polish": "noc (m.)"},
+      {"hebrew": "מָקוֹם", "translit": "māqôm", "polish": "miejsce"},
+      {"hebrew": "עַיִן", "translit": "‘ayin", "polish": "oko, źródło (ż.)"}
+    ],
+    "Lekcja 17": [
+      {"hebrew": "בְּרִית", "translit": "berît", "polish": "przymierze"},
+      {"hebrew": "כָּרַת", "translit": "kārat", "polish": "ciął, wyciął (w idiomie: zawrzeć przymierze)"},
+      {"hebrew": "עָזַב", "translit": "‘āzab", "polish": "opuścił, zostawił"},
+      {"hebrew": "קָטַל", "translit": "qāṭal", "polish": "zabił"},
+      {"hebrew": "שָׁבַת", "translit": "šābat", "polish": "odpoczywał, przestał pracować"},
+      {"hebrew": "אֲרוֹן", "translit": "’ărôn", "polish": "skrzynia, arka"},
+      {"hebrew": "מִצְרַיִם", "translit": "miṣrayim", "polish": "Egipt"}
+    ],
+    "Lekcja 18": [
+      {"hebrew": "לֶחֶם", "translit": "leḥem", "polish": "chleb, pokarm"},
+      {"hebrew": "בָּשָׂר", "translit": "bāśār", "polish": "ciało"},
+      {"hebrew": "נֶפֶשׁ", "translit": "nepeš", "polish": "dusza, życie, osoba (ż.)"},
+      {"hebrew": "חַי", "translit": "ḥay", "polish": "żywy"},
+      {"hebrew": "חַיִּים", "translit": "ḥayyîm", "polish": "życie"},
+      {"hebrew": "חָטָא", "translit": "ḥāṭā’", "polish": "zgrzeszył"},
+      {"hebrew": "חַטָּאת", "translit": "ḥaṭṭā’t", "polish": "grzech"},
+      {"hebrew": "נָבִיא", "translit": "nābî’", "polish": "prorok"},
+      {"hebrew": "רֶגֶל", "translit": "regel", "polish": "noga, stopa (ż.)"}
+    ],
+    "Lekcja 22": [
+      {"hebrew": "מִשְׁכָּן", "translit": "miškān", "polish": "przybytek, tabernakulum"},
+      {"hebrew": "נָבִיא", "translit": "nābî’", "polish": "prorok"},
+      {"hebrew": "נְבִיאָה", "translit": "nebî’āh", "polish": "prorokini"},
+      {"hebrew": "צֶדֶק", "translit": "ṣedeq", "polish": "sprawiedliwość, prawość"},
+      {"hebrew": "צְדָקָה", "translit": "ṣedāqāh", "polish": "sprawiedliwość, jałmużna"},
+      {"hebrew": "שָׁלַם", "translit": "šālam", "polish": "być kompletnym, odpłacić, zawrzeć pokój"},
+      {"hebrew": "שֵׁנִי", "translit": "šēnî", "polish": "drugi"}
+    ],
+    "Lekcja 23": [
+      {"hebrew": "אָהֵב / אָהַב", "translit": "’āhēb / ’āhab", "polish": "kochać, miłować"},
+      {"hebrew": "נָטָה", "translit": "nāṭāh", "polish": "rozciągnąć, nachylić, rozbić (namiot)"},
+      {"hebrew": "נָסַע", "translit": "nāsa‘", "polish": "wyruszyć, podróżować"},
+      {"hebrew": "עָזַר", "translit": "‘āzar", "polish": "pomagać"},
+      {"hebrew": "חֲצִי", "translit": "ḥăṣî", "polish": "połowa"},
+      {"hebrew": "מַחֲצִית", "translit": "maḥăṣît", "polish": "połowa, środek"},
+      {"hebrew": "רָחָב", "translit": "rāḥāb", "polish": "szeroki"}
+    ],
+    "Lekcja 24": [
+      {"hebrew": "אָסַף", "translit": "’āsap", "polish": "zbierać, zgromadzić"},
+      {"hebrew": "חָשַׁב", "translit": "ḥāšab", "polish": "myśleć, uważać, liczyć"},
+      {"hebrew": "יָרֵא", "translit": "yārē’", "polish": "bać się, lękać się"},
+      {"hebrew": "יָרַשׁ", "translit": "yāraš", "polish": "dziedziczyć, wziąć w posiadanie"},
+      {"hebrew": "שָׁכַן", "translit": "šākan", "polish": "mieszkać, spoczywać"},
+      {"hebrew": "בְּרָכָה", "translit": "berākāh", "polish": "błogosławieństwo"},
+      {"hebrew": "מִנְחָה", "translit": "minḥāh", "polish": "dar, ofiara bezkrwawa"}
+    ],
+    "Lekcja 25": [
+      {"hebrew": "בָּנָה", "translit": "bānāh", "polish": "budować"},
+      {"hebrew": "כָּלָה", "translit": "kālāh", "polish": "skończyć się, dopełnić się, zniknąć"},
+      {"hebrew": "עָנָה", "translit": "‘ānāh", "polish": "odpowiadać"},
+      {"hebrew": "לָמָּה / לָמָה", "translit": "lāmmāh / lāmah", "polish": "dlaczego?"},
+      {"hebrew": "מִנְהָג", "translit": "minhāg", "polish": "zwyczaj"},
+      {"hebrew": "עָנִי", "translit": "‘ānî", "polish": "ubogi, biedny, pokorny"}
+    ],
+    "Lekcja 26": [
+      {"hebrew": "חָטָא", "translit": "ḥāṭā’", "polish": "grzeszyć, chybić celu"},
+      {"hebrew": "מָלָא", "translit": "mālā’", "polish": "być pełnym, napełniać"},
+      {"hebrew": "מָצָא", "translit": "māṣā’", "polish": "znajdować"},
+      {"hebrew": "קָרָא", "translit": "qārā’", "polish": "wołać, nazywać, czytać"},
+      {"hebrew": "חַטָּאת", "translit": "ḥaṭṭā’t", "polish": "grzech, ofiara przebłagalna"},
+      {"hebrew": "מַלְאָךְ", "translit": "mal’āk", "polish": "posłaniec, anioł"}
+    ],
+    "Lekcja 27": [
+      {"hebrew": "בָּרוּךְ", "translit": "bārûk", "polish": "błogosławiony"},
+      {"hebrew": "אָרוּר", "translit": "’ārûr", "polish": "przeklęty"},
+      {"hebrew": "גָּלוּי", "translit": "gālûy", "polish": "odkryty, jawny"},
+      {"hebrew": "זָכוּר", "translit": "zākûr", "polish": "pamiętny, wspominany"},
+      {"hebrew": "כָּתוּב", "translit": "kātûb", "polish": "napisany"},
+      {"hebrew": "עָשׂוּי", "translit": "‘āśûy", "polish": "uczyniony, zrobiony"},
+      {"hebrew": "פָּקוּד", "translit": "pāqûd", "polish": "nawiedzony, policzony"}
+    ],
+    "Lekcja 28": [
+      {"hebrew": "לָחַם", "translit": "lāḥam", "polish": "walczyć (zazwyczaj w Nifal)"},
+      {"hebrew": "מָלַט", "translit": "mālaṭ", "polish": "ratować się, uciekać"},
+      {"hebrew": "סָתַר", "translit": "sātar", "polish": "ukrywać się"},
+      {"hebrew": "קָדַשׁ", "translit": "qādaš", "polish": "być świętym"},
+      {"hebrew": "שָׁאַר", "translit": "šā’ar", "polish": "pozostawać"},
+      {"hebrew": "שָׁבַע", "translit": "šāba‘", "polish": "przysięgać"},
+      {"hebrew": "שָׁמַד", "translit": "šāmad", "polish": "być zgładzonym, zniszczonym"}
+    ],
+    "Lekcja 29": [
+      {"hebrew": "גָּלָה", "translit": "gālāh", "polish": "odkrywać, iść na wygnanie"},
+      {"hebrew": "זָבַח", "translit": "zābaḥ", "polish": "składać ofiarę"},
+      {"hebrew": "חָלַל", "translit": "ḥālal", "polish": "bezcześcić, profanować"},
+      {"hebrew": "כָּפַר", "translit": "kāpar", "polish": "przebłagać, zadośćuczynić"},
+      {"hebrew": "לָמַד", "translit": "lāmad", "polish": "uczyć się"},
+      {"hebrew": "קִטֵּר", "translit": "qiṭṭēr", "polish": "spalać ofiarę, kadzić"},
+      {"hebrew": "הִלֵּל", "translit": "hillēl", "polish": "chwalić"}
+    ],
+    "Lekcja 30": [
+      {"hebrew": "אָבַד", "translit": "’ābad", "polish": "zginąć, błądzić"},
+      {"hebrew": "אָמַן", "translit": "’āman", "polish": "być wiernym, ufać"},
+      {"hebrew": "בּוֹשׁ", "translit": "bôš", "polish": "wstydzić się"},
+      {"hebrew": "חָיָה", "translit": "ḥāyāh", "polish": "żyć"},
+      {"hebrew": "יָטַב", "translit": "yāṭab", "polish": "być dobrym"},
+      {"hebrew": "נָגַד", "translit": "nāgad", "polish": "oznajmiać, opowiadać"},
+      {"hebrew": "יָרָה", "translit": "yārāh", "polish": "rzucać, pouczać"}
+    ],
+    "Lekcja 31": [
+      {"hebrew": "אֹהֶל", "translit": "’ōhel", "polish": "namiot"},
+      {"hebrew": "מוֹעֵד", "translit": "mô‘ēd", "polish": "wyznaczony czas, spotkanie, zgromadzenie"},
+      {"hebrew": "אֹהֶל מוֹעֵד", "translit": "’ōhel mô‘ēd", "polish": "Namiot Spotkania"},
+      {"hebrew": "אֵשׁ", "translit": "’ēš", "polish": "ogień (ż.)"},
+      {"hebrew": "הִקְרִיב", "translit": "hiqrîb", "polish": "ofiarować, składać ofiarę (Hifil)"},
+      {"hebrew": "הִשְׁמִיד", "translit": "hišmîd", "polish": "wyniszczyć, zgładzić"},
+      {"hebrew": "הִשְׁלִיךְ", "translit": "hišlîk", "polish": "rzucić, porzucić"}
+    ],
+    "Lekcja 32": [
+      {"hebrew": "חָלָה", "translit": "ḥālāh", "polish": "być chorym, osłabionym"},
+      {"hebrew": "חָנָה", "translit": "ḥānāh", "polish": "rozbić obóz"},
+      {"hebrew": "חָרָה", "translit": "ḥārāh", "polish": "płonąć gniewem"},
+      {"hebrew": "הִלֵּל", "translit": "hillēl", "polish": "chwalić, wysławiać"},
+      {"hebrew": "הִתְפַּלֵּל", "translit": "hitpallēl", "polish": "modlić się"},
+      {"hebrew": "חֲצִי", "translit": "ḥăṣî", "polish": "połowa"}
+    ],
+    "Lekcja 33": [
+      {"hebrew": "הִכָּה", "translit": "hikkāh", "polish": "uderzyć, zabić"},
+      {"hebrew": "הִגִּיד", "translit": "higgîd", "polish": "oznajmić, powiedzieć"},
+      {"hebrew": "הוֹשִׁיעַ", "translit": "hôšîa‘", "polish": "wybawić, pomóc"},
+      {"hebrew": "הוֹרָה", "translit": "hôrāh", "polish": "pouczać, uczyć"},
+      {"hebrew": "יְשׁוּעָה", "translit": "yešû‘āh", "polish": "wybawienie, zbawienie"},
+      {"hebrew": "מַעֲשֶׂה", "translit": "ma‘ăśeh", "polish": "czyn, dzieło"}
+    ],
+    "Lekcja 34": [
+      {"hebrew": "הֵבִין", "translit": "hēbîn", "polish": "zrozumieć, pojąć"},
+      {"hebrew": "הֵכִין", "translit": "hēkîn", "polish": "przygotować, ustanowić"},
+      {"hebrew": "הֵקִים", "translit": "hēqîm", "polish": "podnieść, wznieść, postawić"},
+      {"hebrew": "הֵשִׁיב", "translit": "hēšîb", "polish": "oddać, przywrócić, odpowiedzieć"},
+      {"hebrew": "הֵמִית", "translit": "hēmît", "polish": "uśmiercić, zabić"},
+      {"hebrew": "עוֹלָה", "translit": "‘ōlāh", "polish": "ofiara całopalna"}
+    ],
+    "Lekcja 35": [
+      {"hebrew": "בִּקֵּשׁ", "translit": "biqqēš", "polish": "szukać, prosić"},
+      {"hebrew": "דִּבֶּר", "translit": "dibber", "polish": "mówić"},
+      {"hebrew": "סִפֵּר", "translit": "sippēr", "polish": "opowiadać, liczyć"},
+      {"hebrew": "צִוָּה", "translit": "ṣiwwāh", "polish": "nakazać, rozkazać"},
+      {"hebrew": "קִדֵּשׁ", "translit": "qiddēš", "polish": "poświęcić, uświęcić"},
+      {"hebrew": "שִׁלַּח", "translit": "šillaḥ", "polish": "wypuścić, odesłać"}
+    ],
+    "Lekcja 36": [
+      {"hebrew": "הִבִּיט", "translit": "hibbîṭ", "polish": "patrzeć, spoglądać"},
+      {"hebrew": "הִגִּיעַ", "translit": "higgîa‘", "polish": "dotknąć, dotrzeć, osiągnąć"},
+      {"hebrew": "הוֹצִיא", "translit": "hôṣî’", "polish": "wyprowadzić, wynieść"},
+      {"hebrew": "הוֹרִיד", "translit": "hôrîd", "polish": "sprowadzić w dół, zdjąć"},
+      {"hebrew": "הוֹלִיד", "translit": "hôlîd", "polish": "zrodzić, stać się ojcem"}
+    ],
+    "Lekcja 37": [
+      {"hebrew": "מִשְׁכָּן", "translit": "miškān", "polish": "przybytek, mieszkanie"},
+      {"hebrew": "מִקְדָּשׁ", "translit": "miqdāš", "polish": "sanktuarium, miejsce święte"},
+      {"hebrew": "מַרְאֶה", "translit": "mar’eh", "polish": "widok, wygląd, zjawisko"},
+      {"hebrew": "נָגַע", "translit": "nāga‘", "polish": "dotykać, uderzać"},
+      {"hebrew": "נָסַע", "translit": "nāsa‘", "polish": "wyruszać, odjeżdżać"},
+      {"hebrew": "רָחַץ", "translit": "rāḥaṣ", "polish": "myć, obmywać"}
+    ],
+    "Lekcja 38": [
+      {"hebrew": "טָהֵר", "translit": "ṭāhēr", "polish": "być czystym (rytualnie)"},
+      {"hebrew": "טָמֵא", "translit": "ṭāmē’", "polish": "być nieczystym (rytualnie)"},
+      {"hebrew": "שָׁחַט", "translit": "šāḥaṭ", "polish": "zabijać, rżnąć (ofiarę)"},
+      {"hebrew": "הִלְבִּישׁ", "translit": "hilbîš", "polish": "ubierać kogoś (Hifil)"},
+      {"hebrew": "הִקְטִיר", "translit": "hiqṭîr", "polish": "spalać ofiarę, kadzić"}
+    ],
+    "Lekcja 39": [
+      {"hebrew": "נָח", "translit": "nāḥ", "polish": "odpoczywać"},
+      {"hebrew": "רָץ", "translit": "rāṣ", "polish": "biegać"},
+      {"hebrew": "שָׂמַח", "translit": "śāmaḥ", "polish": "cieszyć się"},
+      {"hebrew": "שָׂמֵחַ", "translit": "śāmēaḥ", "polish": "radosny, wesoły"},
+      {"hebrew": "שִׂמְחָה", "translit": "śimḥāh", "polish": "radość"},
+      {"hebrew": "שָׂפָה", "translit": "śāpāh", "polish": "warga, brzeg, język"}
+    ],
+    "Lekcja 40": [
+      {"hebrew": "חֹדֶשׁ", "translit": "ḥōdeš", "polish": "nów księżyca, miesiąc"},
+      {"hebrew": "בֹּקֶר", "translit": "bōqer", "polish": "ranek, poranek"},
+      {"hebrew": "עֶרֶב", "translit": "‘ereb", "polish": "wieczór"},
+      {"hebrew": "כּוֹכָב", "translit": "kôkāb", "polish": "gwiazda"},
+      {"hebrew": "שֶׁמֶשׁ", "translit": "šemeš", "polish": "słońce (m. lub ż.)"},
+      {"hebrew": "יָרֵחַ", "translit": "yārēaḥ", "polish": "księżyc"}
+    ],
+    "Lekcja 41": [
+      {"hebrew": "בֵּרֵךְ", "translit": "bērēk", "polish": "błogosławić (Piel)"},
+      {"hebrew": "גֵּרֵשׁ", "translit": "gērēš", "polish": "wypędzać, wyganiać"},
+      {"hebrew": "מֵאֵן", "translit": "mē’ēn", "polish": "odmawiać"},
+      {"hebrew": "מִהַר", "translit": "mihar", "polish": "śpieszyć się"},
+      {"hebrew": "שִׁלֵּם", "translit": "šillēm", "polish": "odpłacać, dopełniać, wynagradzać"},
+      {"hebrew": "שֵׁנִי", "translit": "šēnî", "polish": "drugi"}
+    ],
+    "Lekcja 42": [
+      {"hebrew": "הִתְהַלֵּךְ", "translit": "hithallēk", "polish": "przechadzać się, chodzić tam i z powrotem"},
+      {"hebrew": "הִתְפַּלֵּל", "translit": "hitpallēl", "polish": "modlić się"},
+      {"hebrew": "הִתְקַדֵּשׁ", "translit": "hitqaddēš", "polish": "uświęcać się"},
+      {"hebrew": "הִתְבָּרֵךְ", "translit": "hitbārēk", "polish": "uważać się za błogosławionego, być błogosławionym"},
+      {"hebrew": "חֲלוֹם", "translit": "ḥălôm", "polish": "sen"},
+      {"hebrew": "חָלַם", "translit": "ḥālam", "polish": "śnić"}
+    ],
+    "Lekcja 43": [
+      {"hebrew": "חֵטְא", "translit": "ḥēṭ’", "polish": "grzech, wina"},
+      {"hebrew": "עָוֺן", "translit": "‘āwֺn", "polish": "nieprawość, wina, kara"},
+      {"hebrew": "פֶּשַׁע", "translit": "peša‘", "polish": "wykroczenie, przestępstwo, bunt"},
+      {"hebrew": "חָלָה", "translit": "ḥālāh", "polish": "być chorym"},
+      {"hebrew": "חָלָל", "translit": "ḥālāl", "polish": "zabity, przebity"}
+    ],
+    "Lekcja 44": [
+      {"hebrew": "צֶדֶק", "translit": "ṣedeq", "polish": "sprawiedliwość, słuszność"},
+      {"hebrew": "צְדָקָה", "translit": "ṣedāqāh", "polish": "sprawiedliwość, prawy czyn"},
+      {"hebrew": "צַדִּיק", "translit": "ṣaddîq", "polish": "sprawiedliwy"},
+      {"hebrew": "רָשָׁע", "translit": "rāšā‘", "polish": "niegodziwy, winny"},
+      {"hebrew": "הִצְדִּיק", "translit": "hiṣdîq", "polish": "usprawiedliwiać, przyznawać rację"},
+      {"hebrew": "הִרְשִׁיעַ", "translit": "hiršîa‘", "polish": "potępiać, uznawać za winnego"}
+    ],
+    "Lekcja 45": [
+      {"hebrew": "אָסַר", "translit": "’āsar", "polish": "wiązać, uwięzić"},
+      {"hebrew": "חָבַשׁ", "translit": "ḥābaš", "polish": "wiązać, owijać, osiodłać"},
+      {"hebrew": "לָכַד", "translit": "lākad", "polish": "schwytać, zdobyć"},
+      {"hebrew": "מַאֲסָר", "translit": "ma’ăśār", "polish": "więzienie"},
+      {"hebrew": "מוֹסֵר", "translit": "môsēr", "polish": "więzy, okowy"}
+    ],
+    "Lekcja 46": [
+      {"hebrew": "בָּקָר", "translit": "bāqār", "polish": "bydło, rogacizna"},
+      {"hebrew": "צֹאן", "translit": "ṣō’n", "polish": "trzoda, owce i kozy (ż.)"},
+      {"hebrew": "גָּמָל", "translit": "gāmāl", "polish": "wielbłąd"},
+      {"hebrew": "חֲמוֹר", "translit": "ḥămôr", "polish": "osioł"},
+      {"hebrew": "סוּס", "translit": "sûs", "polish": "koń"},
+      {"hebrew": "פֶּרֶד", "translit": "pered", "polish": "muł"}
+    ],
+    "Lekcja 47": [
+      {"hebrew": "זָרַע", "translit": "zāra‘", "polish": "siać"},
+      {"hebrew": "זֶרַע", "translit": "zera‘", "polish": "nasienie, potomstwo"},
+      {"hebrew": "קָצַר", "translit": "qāṣar", "polish": "żąć, zbierać żniwo"},
+      {"hebrew": "קָצִיר", "translit": "qāṣîr", "polish": "żniwo"},
+      {"hebrew": "כֶּרֶם", "translit": "kerem", "polish": "winnica"},
+      {"hebrew": "זַיִת", "translit": "zayit", "polish": "oliwka, drzewo oliwne"}
+    ],
+    "Lekcja 48": [
+      {"hebrew": "הִשְׁקָה", "translit": "hišqāh", "polish": "poić, nawadniać (Hifil)"},
+      {"hebrew": "הִרְבָּה", "translit": "hirbāh", "polish": "rozmnażać, czynić licznym"},
+      {"hebrew": "הִגְלָה", "translit": "higlāh", "polish": "uprowadzić do niewoli, skazać na wygnanie"},
+      {"hebrew": "הֶעֱלָה", "translit": "he‘ĕlāh", "polish": "wprowadzić na górę, złożyć ofiarę całopalną"},
+      {"hebrew": "הֶרְאָה", "translit": "her’āh", "polish": "pokazać"}
+    ],
+    "Lekcja 49": [
+      {"hebrew": "שָׂמַח", "translit": "śāmaḥ", "polish": "cieszyć się, radować się"},
+      {"hebrew": "שִׂמְחָה", "translit": "śimḥāh", "polish": "radość"},
+      {"hebrew": "גִּיל", "translit": "gîl", "polish": "radować się, drżeć (z emocji)"},
+      {"hebrew": "חָגָה", "translit": "ḥāgāh", "polish": "świętować, obchodzić święto"},
+      {"hebrew": "חַג", "translit": "ḥag", "polish": "święto"}
+    ],
+    "Lekcja 50": [
+      {"hebrew": "כָּעַס", "translit": "kā‘as", "polish": "gniewać się, być zirytowanym"},
+      {"hebrew": "כַּעַס", "translit": "ka‘as", "polish": "gniew, irytacja"},
+      {"hebrew": "הִכְעִיס", "translit": "hik‘îs", "polish": "pobudzać do gniewu, drażnić"},
+      {"hebrew": "קָצַף", "translit": "qāṣap", "polish": "wrzeć, burzyć się, gniewać się"},
+      {"hebrew": "קֶצֶף", "translit": "qeṣep", "polish": "gniew, furia"}
+    ],
+    "Lekcja 51": [
+      {"hebrew": "נָחַם", "translit": "nāḥam", "polish": "żałować, pocieszać (zazwyczaj Nifal/Piel)"},
+      {"hebrew": "נִחַם", "translit": "niḥam", "polish": "pocieszać (Piel)"},
+      {"hebrew": "תַּנְחוּמִים", "translit": "tanḥûmîm", "polish": "pociecha, pocieszenie"},
+      {"hebrew": "שָׁלוֹם", "translit": "šālôm", "polish": "pokój, pomyślność"}
+    ],
+    "Lekcja 52": [
+      {"hebrew": "פָּלַל", "translit": "pālal", "polish": "wyrokować, sądzić"},
+      {"hebrew": "הִתְפַּלֵּל", "translit": "hitpallēl", "polish": "modlić się, wstawiać się"},
+      {"hebrew": "תְּפִלָּה", "translit": "tepillāh", "polish": "modlitwa"},
+      {"hebrew": "הִלֵּל", "translit": "hillēl", "polish": "chwalić, wysławiać"},
+      {"hebrew": "תְּהִלָּה", "translit": "tehillāh", "polish": "chwała, pieśń pochwalna"}
+    ],
+    "Lekcja 53": [
+      {"hebrew": "יָצַק", "translit": "yāṣaq", "polish": "wylewać, odlewać (metal)"},
+      {"hebrew": "יָצַר", "translit": "yāṣar", "polish": "formować, kształtować"},
+      {"hebrew": "יָצַת", "translit": "yāṣat", "polish": "podpalać, płonąć"},
+      {"hebrew": "יוֹצֵר", "translit": "yôṣēr", "polish": "twórca, garncarz"},
+      {"hebrew": "מַצֵּבָה", "translit": "maṣṣēbāh", "polish": "stela, pomnik, kolumna"}
+    ],
+    "Lekcja 54": [
+      {"hebrew": "קָנָה", "translit": "qānāh", "polish": "kupować, nabywać, stwarzać"},
+      {"hebrew": "קִנְיָן", "translit": "qinyān", "polish": "własność, dobytek"},
+      {"hebrew": "מִקְנֶה", "translit": "miqneh", "polish": "stado, inwentarz, żywy powiernik"},
+      {"hebrew": "מִקְנָה", "translit": "miqnāh", "polish": "zakup, kupno"}
+    ],
+    "Lekcja 55": [
+      {"hebrew": "כָּרַע", "translit": "kāra‘", "polish": "klękać, upadać na kolana"},
+      {"hebrew": "בָּרַךְ", "translit": "bārak", "polish": "klękać (w Qal), błogosławić (w Piel)"},
+      {"hebrew": "בֶּרֶךְ", "translit": "berek", "polish": "kolano (ż.)"},
+      {"hebrew": "אַשְׁרֵי", "translit": "’ašrê", "polish": "szczęśliwy, błogosławiony (wykrzyknik)"},
+      {"hebrew": "תּוֹעֵבָה", "translit": "tô‘ēbāh", "polish": "obrzydliwość, odraza"}
+    ]
+
         };
-   
-  localStorage.setItem(DB_KEY, JSON.stringify(books));
-      books = JSON.parse(localStorage.getItem(DB_KEY));
-	 }
+        localStorage.setItem(DB_KEY, JSON.stringify(books));
+    }
+    books = JSON.parse(localStorage.getItem(DB_KEY));
+	 /// Zbieramy wszystkie słowa w kolejności lekcji (1 do 55)
+let allWords = [];
+const bookKey = "T. Lambdin – Wprowadzenie do hebrajskiego biblijnego";
+const lessons = Object.keys(books[bookKey] || {});
 
+// Sortujemy lekcje po numerze (Lekcja 1, 2, ..., 55)
+lessons.sort((a, b) => {
+    const numA = parseInt(a.replace('Lekcja ', ''));
+    const numB = parseInt(b.replace('Lekcja ', ''));
+    return numA - numB;
+});
+
+// Łączymy słowa z wszystkich lekcji w jedną listę
+lessons.forEach(lesson => {
+    allWords.push(...books[bookKey][lesson]);
+});
+
+// Tworzymy mapę: hebrajskie słowo → numer pliku MP3 (001, 002, ..., 359)
+const wordToIndex = new Map();
+allWords.forEach((word, idx) => {
+    const fileNum = String(idx + 1).padStart(4, '0');  // 1 → '001', 2 → '002' itd.
+    wordToIndex.set(word.hebrew, fileNum);
+});
+
+// Nowa funkcja speak – odtwarza MP3 zamiast speechSynthesis
+function speak(hebrew) {
+    const fileNum = wordToIndex.get(hebrew);
+    if (fileNum) {
+        // Ścieżka do folderu w assets
+        const audioPath = `words_hebrew/${fileNum}.mp3`;
+        const audio = new Audio(audioPath);
+        
+        audio.load(); // Wymuszenie załadowania pliku przed odtworzeniem
+        audio.play().catch(error => {
+            console.error('Błąd odtwarzania:', audioPath, error);
+            // Jeśli nadal nie działa, sprawdź czy na pewno nie ma myślnika na początku pliku
+        });
+    } else {
+        console.warn('Brak mapowania dla słowa:', hebrew);
+    }
+}
     let currentBook = null;
     let currentLesson = null;
     let currentWords = [];
@@ -1061,75 +1322,75 @@
     let isRevealed = false;
     let isReviewMode = false;
 
-    let quizWords = [];
-    let quizIndex = 0;
-    let correctAnswers = 0;
+    const hebrewAlphabet = [
+        { letter: "א", name: "alef", pron: "niema " },
+        { letter: "ב", name: "bet", pron: "b / w" },
+        { letter: "ג", name: "gimel", pron: "g" },
+        { letter: "ד", name: "dalet", pron: "d" },
+        { letter: "ה", name: "he", pron: "h" },
+        { letter: "ו", name: "waw", pron: "w" },
+        { letter: "ז", name: "zayin", pron: "z" },
+        { letter: "ח", name: "chet", pron: "ch gardłowe" },
+        { letter: "ט", name: "tet", pron: "t" },
+        { letter: "י", name: "yod", pron: "j" },
+        { letter: "כ ך", name: "kaf", pron: "k / ch" },
+        { letter: "ל", name: "lamed", pron: "l" },
+        { letter: "מ ם", name: "mem", pron: "m" },
+        { letter: "נ ן", name: "nun", pron: "n" },
+        { letter: "ס", name: "samekh", pron: "s" },
+        { letter: "ע", name: "ayin", pron: "ciche" },
+        { letter: "פ ף", name: "pe", pron: "p / f" },
+        { letter: "צ ץ", name: "tsade", pron: "ts" },
+        { letter: "ק", name: "qof", pron: "k głębokie" },
+        { letter: "ר", name: "resh", pron: "r" },
+        { letter: "שׁ", name: "shin", pron: "sz" },
+        { letter: "שׂ", name: "sin", pron: "s" },
+        { letter: "ת", name: "taw", pron: "t" }
+    ];
 
-    function markTodayActive() {
-        const today = new Date().toISOString().slice(0,10);
-        if (!stats.activeDates.includes(today)) {
-            stats.activeDates.push(today);
-            localStorage.setItem(STATS_KEY, JSON.stringify(stats));
-        }
-    }
+    const practiceWords = [
+        {"hebrew":"שָׁלוֹם","translit":"szalom"},
+        {"hebrew":"אָדָם","translit":"adam"},
+        {"hebrew":"בַּיִת","translit":"bajit"},
+        {"hebrew":"יוֹם","translit":"jom"},
+        {"hebrew":"מֶלֶךְ","translit":"melech"},
+        {"hebrew":"טוֹב","translit":"tow"},
+        {"hebrew":"גָּדוֹל","translit":"gadol"}
+    ];
 
-    function getDueWords() {
-        const today = new Date().toISOString().slice(0, 10);
-        return reviewPool.filter(word => !word.dueDate || word.dueDate <= today);
-    }
+    const hebrewVowels = [
+        { symbol: "ָ", name: "qamats", polish: "a" },
+        { symbol: "ַ", name: "patach", polish: "a" },
+        { symbol: "ֵ", name: "tsere", polish: "e" },
+        { symbol: "ֶ", name: "segol", polish: "e" },
+        { symbol: "ִ", name: "hireq", polish: "i" },
+        { symbol: "ֹ", name: "holam", polish: "o" },
+        { symbol: "וֹ", name: "holam male", polish: "o" },
+        { symbol: "ֻ", name: "qubbuts", polish: "u" },
+        { symbol: "וּ", name: "shureq", polish: "u" },
+        { symbol: "ְ", name: "sheva", polish: "e ciche" }
+    ];
 
-    function scheduleWord(word, quality) {
-        if (!word.reps) word.reps = 0;
-        if (!word.interval) word.interval = 1;
-        if (!word.ease) word.ease = 2.5;
-
-        if (quality < 3) {
-            word.reps = 0;
-            word.interval = 1;
-        } else {
-            word.reps++;
-            if (word.reps === 1) word.interval = 1;
-            else if (word.reps === 2) word.interval = 6;
-            else word.interval = Math.round(word.interval * word.ease);
-
-            word.ease = Math.max(1.3, word.ease + (quality >= 4 ? (quality === 5 ? 0.15 : 0.1) : -0.2));
-        }
-
-        const next = new Date();
-        next.setDate(next.getDate() + word.interval);
-        word.dueDate = next.toISOString().slice(0, 10);
-
-        localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewPool));
-    }
-
-    function addWordToReview(word) {
-        if (!reviewPool.some(w => w.hebrew === word.hebrew && w.polish === word.polish)) {
-            word.reps = 0;
-            word.interval = 1;
-            word.ease = 2.5;
-            word.dueDate = new Date().toISOString().slice(0, 10);
-            reviewPool.push(word);
-            localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewPool));
-        }
-    }
-
-    function showScreen(screenName) {
+    let alphabetIndex = 0;
+    let vowelIndex = 0;
+    function showScreen(name) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(screenName + 'Screen').classList.add('active');
+        document.getElementById(name + 'Screen').classList.add('active');
     }
 
-    function backToApp() { window.location.href = 'app.html'; }
-    function backToBooks() { showScreen('book'); renderBooks(); }
+ function backToApp() { window.location.href = 'app.html'; } 
+function backToBooks() { showScreen('book'); renderBooks(); }
     function backToMode() { showScreen('mode'); updateReviewCount(); updateQuizButton(); }
+    function backToLessons() { showScreen('lesson'); }
 
     function renderBooks() {
         const grid = document.getElementById('bookGrid');
         grid.innerHTML = '';
-        Object.keys(books).sort().forEach(book => {
-            const div = document.createElement('div');
-            div.className = 'card-btn';
-            div.textContent = book;
-            div.onclick = () => {
+        Object.keys(books).forEach(book => {
+            const btn = document.createElement('div');
+            btn.className = 'card-btn';
+            btn.textContent = book;
+            btn.onclick = () => {
                 currentBook = book;
                 document.getElementById('bookTitle').textContent = book;
                 document.getElementById('currentBookName').textContent = book;
@@ -1137,13 +1398,12 @@
                 updateReviewCount();
                 updateQuizButton();
             };
-            grid.appendChild(div);
+            grid.appendChild(btn);
         });
     }
 
     function updateReviewCount() {
-        const due = getDueWords().length;
-        document.getElementById('reviewCount').textContent = due + ' (z ' + reviewPool.length + ')';
+        document.getElementById('reviewCount').textContent = reviewPool.length;
     }
 
     function updateQuizButton() {
@@ -1151,65 +1411,37 @@
         btn.classList.toggle('disabled', reviewPool.length < 10);
     }
 
-    function renderArchive() {
-        const list = document.getElementById('archiveList');
-        if (archivePool.length === 0) {
-            list.innerHTML = '<div style="color: #aaa; font-style: italic;">Brak słów w archiwum</div>';
-            return;
-        }
-        list.innerHTML = '';
-        archivePool.sort((a, b) => a.hebrew.localeCompare(b.hebrew)).forEach(word => {
-            const item = document.createElement('div');
-            item.className = 'archive-item';
-            const textDiv = document.createElement('div');
-            textDiv.innerHTML = `
-                <div class="archive-hebrew">${word.hebrew}</div>
-                <div class="archive-polish">${word.polish}</div>
-                ${word.translit ? `<div style="font-size:1.3rem; color:#777; margin-top:6px;">${word.translit}</div>` : ''}
-            `;
-            const btn = document.createElement('button');
-            btn.className = 'btn-restore';
-            btn.textContent = 'Przywróć';
-            btn.onclick = () => {
-                archivePool = archivePool.filter(w => !(w.hebrew === word.hebrew && w.polish === word.polish));
-                localStorage.setItem(ARCHIVE_KEY, JSON.stringify(archivePool));
-                addWordToReview(word);
-                renderArchive();
-                updateReviewCount();
-            };
-            item.appendChild(textDiv);
-            item.appendChild(btn);
-            list.appendChild(item);
+    function addAllLessonWordsToReview() {
+        const lesson = books[currentBook][currentLesson];
+        lesson.forEach(word => {
+            if (!reviewPool.find(w => w.hebrew === word.hebrew && w.polish === word.polish)) {
+                const copy = { ...word, reps: 0, interval: 1, ease: 2.5 };
+                copy.dueDate = new Date().toISOString().slice(0,10);
+                reviewPool.push(copy);
+            }
         });
+        localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewPool));
     }
 
-    function renderStats() {
-        markTodayActive();
-        const book = books[currentBook] || {};
-        let totalWords = 0;
-        let completed = 0;
-        let totalLessons = Object.keys(book).length;
+    function getDueWords() {
+        const today = new Date().toISOString().slice(0,10);
+        return reviewPool.filter(w => !w.dueDate || w.dueDate <= today);
+    }
 
-        Object.values(book).forEach(lesson => totalWords += lesson.length);
-        if (progress[currentBook]) completed = Object.values(progress[currentBook]).filter(v => v).length;
-
-        const percent = totalWords ? Math.round((reviewPool.length / totalWords) * 100) : 0;
-
-        document.getElementById('statTotalWords').textContent = totalWords;
-        document.getElementById('statCompletedLessons').textContent = completed + ' / ' + totalLessons;
-        document.getElementById('statMastered').textContent = reviewPool.length;
-        document.getElementById('statArchived').textContent = archivePool.length;
-        document.getElementById('statProgressPercent').textContent = percent + '%';
-        document.getElementById('progressFill').style.width = percent + '%';
-        document.getElementById('statReviewSessions').textContent = stats.reviewSessions || 0;
-
-        const quizText = stats.quizTotal ? `${stats.quizCorrect} / ${stats.quizTotal} (${Math.round(stats.quizCorrect / stats.quizTotal * 100)}%)` : 'Brak';
-        document.getElementById('statQuizCorrect').textContent = quizText;
-        document.getElementById('statActiveDays').textContent = stats.activeDates.length;
+    function scheduleWord(word, quality) {
+        if (quality >= 4) {
+            word.interval = (word.interval || 1) * 2;
+        } else {
+            word.interval = 1;
+        }
+        const next = new Date();
+        next.setDate(next.getDate() + word.interval);
+        word.dueDate = next.toISOString().slice(0,10);
+        localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewPool));
     }
 
     function openMode(mode) {
-        if (mode === 'learn') {
+      if (mode === 'learn') {
             isReviewMode = false;
             const grid = document.getElementById('lessonGrid');
             grid.innerHTML = '';
@@ -1225,133 +1457,78 @@
             showScreen('lesson');
         } else if (mode === 'review') {
             isReviewMode = true;
-            stats.reviewSessions = (stats.reviewSessions || 0) + 1;
+	    stats.reviewSessions = (stats.reviewSessions || 0) + 1;
             localStorage.setItem(STATS_KEY, JSON.stringify(stats));
             const due = getDueWords();
             if (due.length === 0) {
-                alert('Brak słów do powtórki dziś! Wróć jutro. 🎉');
-                backToMode();
+                alert('Brak słów do powtórki dziś!');
                 return;
             }
-            currentWords = due.sort(() => 0.5 - Math.random());
+            currentWords = due.slice();
             currentIndex = 0;
-            isRevealed = false;
-            document.getElementById('lessonTitle').textContent = `Powtórka – ${due.length} słów`;
+            document.getElementById('lessonTitle').textContent = 'Powtórka';
             showCard();
             showScreen('flashcard');
-        } else if (mode === 'fun') {
-            showScreen('fun');
-        } else if (mode === 'archive') {
-            renderArchive();
-            showScreen('archive');
         } else if (mode === 'quiz') {
-            if (reviewPool.length < 10) { alert('Za mało słów w powtórkach.'); return; }
+            if (reviewPool.length < 10) {
+                alert('Za mało przerobionych słów do quizu.');
+                return;
+            }
             startQuiz();
-        } else if (mode === 'stats') {
+        } else if (mode === 'archive') {
+            showScreen('archive');
+            renderArchive();
+                } else if (mode === 'stats') {
             renderStats();
             showScreen('stats');
         }
     }
 
-    function startQuiz() {
-        const pool = [...reviewPool];
-        pool.sort(() => 0.5 - Math.random());
-        quizWords = pool.slice(0, 10);
-        quizIndex = 0;
-        correctAnswers = 0;
-        document.getElementById('quizSummary').style.display = 'none';
-        showQuizQuestion();
-        showScreen('quiz');
-    }
-
-    function showQuizQuestion() {
-        if (quizIndex >= quizWords.length) {
-            stats.quizCorrect += correctAnswers;
-            stats.quizTotal += 10;
-            localStorage.setItem(STATS_KEY, JSON.stringify(stats));
-            document.getElementById('quizHebrew').textContent = '';
-            document.getElementById('quizOptions').innerHTML = '';
-            document.getElementById('quizProgress').textContent = 'Zakończono!';
-            document.getElementById('quizSummary').innerHTML = `Poprawnych: ${correctAnswers} / 10`;
-            document.getElementById('quizSummary').style.display = 'block';
+    function renderArchive() {
+        const list = document.getElementById('archiveList');
+        list.innerHTML = '';
+        if (archivePool.length === 0) {
+            list.innerHTML = '<p style="color:#777;">Archiwum jest puste.</p>';
             return;
         }
-        const w = quizWords[quizIndex];
-        document.getElementById('quizCurrent').textContent = quizIndex + 1;
-        document.getElementById('quizHebrew').textContent = w.hebrew;
-
-        let opts = [w.polish];
-        let others = reviewPool.filter(x => x.polish !== w.polish);
-        others.sort(() => 0.5 - Math.random());
-        for (let i = 0; i < 3 && i < others.length; i++) opts.push(others[i].polish);
-        opts.sort(() => 0.5 - Math.random());
-
-        const cont = document.getElementById('quizOptions');
-        cont.innerHTML = '';
-        opts.forEach(o => {
-            const btn = document.createElement('div');
-            btn.className = 'quiz-option';
-            btn.textContent = o;
-            btn.onclick = () => {
-                document.querySelectorAll('.quiz-option').forEach(el => el.style.pointerEvents = 'none');
-                if (o === w.polish) {
-                    btn.classList.add('correct');
-                    correctAnswers++;
-                } else {
-                    btn.classList.add('wrong');
-                    document.querySelectorAll('.quiz-option').forEach(el => {
-                        if (el.textContent === w.polish) el.classList.add('correct');
-                    });
-                }
-                setTimeout(() => { quizIndex++; showQuizQuestion(); }, 2000);
-            };
-            cont.appendChild(btn);
+        archivePool.forEach(word => {
+            const div = document.createElement('div');
+            div.style = 'padding:12px; background:white; margin:8px 0; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.1);';
+            div.innerHTML = `<strong>${word.hebrew}</strong> – ${word.polish}`;
+            list.appendChild(div);
         });
     }
 
     function startLearning(lesson) {
         isReviewMode = false;
-        currentWords = [...books[currentBook][lesson]];
         currentLesson = lesson;
+        currentWords = books[currentBook][lesson].slice();
         currentIndex = 0;
         isRevealed = false;
-        document.getElementById('lessonTitle').textContent = lesson;  // tylko nazwa lekcji, np. "Lekcja 5"
+        document.getElementById('lessonTitle').textContent = lesson;
         showCard();
         showScreen('flashcard');
     }
 
-    function speakWord(text) {
-        if ('speechSynthesis' in window) {
-            const u = new SpeechSynthesisUtterance(text);
-            u.lang = 'he-IL';
-            u.rate = 0.8;
-            speechSynthesis.cancel();
-            speechSynthesis.speak(u);
-        }
-    }
-
     function showCard() {
-        if (currentIndex >= currentWords.length) {
-            if (!isReviewMode) {
-                if (!progress[currentBook]) progress[currentBook] = {};
-                progress[currentBook][currentLesson] = true;
-                localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
-                alert("Gratulacje! Ukończyłeś lekcję! 🎉");
-            } else {
-                alert("Koniec powtórki!");
-            }
-            backToMode();
-            return;
-        }
+  if (currentIndex >= currentWords.length) {
+    if (!isReviewMode) {
+        addAllLessonWordsToReview();
+        if (!progress[currentBook]) progress[currentBook] = {};
+        progress[currentBook][currentLesson] = true;
+        localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
 
+        // Nowe przyjazne powiadomienie
+        showCompletionModal();
+    }
+    backToMode();
+    return;
+}
         const w = currentWords[currentIndex];
-        document.getElementById('front').innerHTML = `
-            <button class="pronounce-btn" onclick="speakWord('${w.hebrew}')">🔊</button>
-            <div style="font-size: clamp(3.8rem, 12vw, 7rem); margin-top: 60px;">${w.hebrew}</div>
-            ${w.translit ? `<div style="font-size: clamp(1.6rem, 5vw, 2.4rem); margin-top: 20px;">${w.translit}</div>` : ''}
-            <div style="margin-top: 40px; font-size: clamp(1.1rem, 3.8vw, 1.5rem); opacity: 0.8;">
-                Kliknij fiszkę, aby zobaczyć tłumaczenie
-            </div>
+         document.getElementById('front').innerHTML = `
+            <button class="pronounce-btn" onclick="event.stopPropagation(); speak('${w.hebrew}')">🔊</button>
+            <div>${w.hebrew}</div>
+            ${w.translit ? `<div class="hebrew-translit">${w.translit}</div>` : ''}
         `;
         document.getElementById('back').innerHTML = `<div>${w.polish}</div>`;
         isRevealed = false;
@@ -1359,228 +1536,235 @@
     }
 
     function updateButtons() {
-        document.querySelector('.btn-check').style.display = isRevealed ? 'none' : 'inline-block';
-        document.getElementById('btn-learn-master').style.display = (!isReviewMode && isRevealed) ? 'inline-block' : 'none';
-        document.getElementById('btn-learn-notmaster').style.display = (!isReviewMode && isRevealed) ? 'inline-block' : 'none';
-        document.getElementById('btn-master').style.display = (isReviewMode && isRevealed) ? 'inline-block' : 'none';
-        document.getElementById('btn-notmaster').style.display = (isReviewMode && isRevealed) ? 'inline-block' : 'none';
-        document.getElementById('btn-archive').style.display = (isReviewMode && isRevealed) ? 'inline-block' : 'none';
+        document.querySelector('.btn-check').style.display = isRevealed ? 'none' : 'block';
+        document.getElementById('btn-learn-master').style.display = (!isReviewMode && isRevealed) ? 'block' : 'none';
+        document.getElementById('btn-learn-notmaster').style.display = (!isReviewMode && isRevealed) ? 'block' : 'none';
+        document.getElementById('btn-master').style.display = (isReviewMode && isRevealed) ? 'block' : 'none';
+        document.getElementById('btn-notmaster').style.display = (isReviewMode && isRevealed) ? 'block' : 'none';
+        document.getElementById('btn-archive').style.display = (isReviewMode && isRevealed) ? 'block' : 'none';
     }
 
-    document.getElementById('flashcard').onclick = () => { if (!isRevealed) { document.getElementById('flashcard').classList.add('flipped'); isRevealed = true; updateButtons(); } };
-    document.querySelector('.btn-check').onclick = () => { if (!isRevealed) { document.getElementById('flashcard').classList.add('flipped'); isRevealed = true; updateButtons(); } };
+    document.getElementById('flashcard').onclick = () => {
+        if (!isRevealed) {
+            document.getElementById('flashcard').classList.add('flipped');
+            isRevealed = true;
+            updateButtons();
+        }
+    };
+
+    document.querySelector('.btn-check').onclick = () => {
+        if (!isRevealed) {
+            document.getElementById('flashcard').classList.add('flipped');
+            isRevealed = true;
+            updateButtons();
+        }
+    };
 
     function nextCard() {
         document.getElementById('flashcard').classList.remove('flipped');
-        setTimeout(() => { currentIndex++; showCard(); }, 850);
+        currentIndex++;
+        setTimeout(showCard, 600);
     }
 
-document.getElementById('btn-learn-master').onclick = () => {
-    const word = currentWords[currentIndex];
-    // Dopiero teraz, gdy użytkownik kliknie "Umiem", dodajemy słowo do długoterminowej puli powtórek
-    addWordToReview(word);
-    scheduleWord(word, 5);  // dobra ocena – długi interval od razu
-    nextCard();
-};
+    document.getElementById('btn-learn-master').onclick = nextCard;
+    document.getElementById('btn-learn-notmaster').onclick = () => {
+        const word = currentWords[currentIndex];
+        currentWords.splice(currentIndex, 1);
+        currentWords.push(word);
+        document.getElementById('flashcard').classList.remove('flipped');
+        setTimeout(showCard, 600);
+    };
 
-document.getElementById('btn-learn-notmaster').onclick = () => {
-    const word = currentWords[currentIndex];
-    
-    // Usuwamy słowo z bieżącej pozycji w kolejce lekcji
-    currentWords.splice(currentIndex, 1);
-    
-    // Wstawiamy je na koniec kolejki – będzie powtarzane, dopóki nie kliknie "Umiem"
-    currentWords.push(word);
-    
-    // NIE dodajemy jeszcze do reviewPool – zrobimy to dopiero po kliknięciu "Umiem"
-    
-    // Przechodzimy do następnej karty (bez zwiększania currentIndex, bo już usunęliśmy bieżącą)
-    document.getElementById('flashcard').classList.remove('flipped');
-    setTimeout(() => { showCard(); }, 850);  // używamy showCard bezpośrednio, bo currentIndex już nie wskazuje na poprawne słowo
-};
+    document.getElementById('btn-master').onclick = () => { 
+        scheduleWord(currentWords[currentIndex], 5); 
+        nextCard(); 
+    };
 
-document.getElementById('btn-master').onclick = () => { 
-    scheduleWord(currentWords[currentIndex], 4); 
-    nextCard(); 
-};
+    document.getElementById('btn-notmaster').onclick = () => { 
+        scheduleWord(currentWords[currentIndex], 2); 
+        nextCard(); 
+    };
 
-document.getElementById('btn-notmaster').onclick = () => { 
-    scheduleWord(currentWords[currentIndex], 2); 
-    nextCard(); 
-};
-
-document.getElementById('btn-archive').onclick = () => {
-    const w = currentWords[currentIndex];
-    reviewPool = reviewPool.filter(x => !(x.hebrew === w.hebrew && x.polish === w.polish));
-    localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewPool));
-    if (!archivePool.some(x => x.hebrew === w.hebrew && x.polish === w.polish)) {
-        archivePool.push(w);
+    document.getElementById('btn-archive').onclick = () => {
+        const word = currentWords[currentIndex];
+        archivePool.push(word);
+        reviewPool = reviewPool.filter(w => w.hebrew !== word.hebrew || w.polish !== word.polish);
         localStorage.setItem(ARCHIVE_KEY, JSON.stringify(archivePool));
-    }
-    updateReviewCount();
-    nextCard();
-};
+        localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewPool));
+        nextCard();
+    };
 
-    function startMatchGame() {
-        const due = getDueWords();
-        if (due.length < 4) {
-            alert('Za mało słów do gry (min. 4).');
-            backToMode();
-            return;
-        }
-        const selected = due.sort(() => 0.5 - Math.random()).slice(0, 8);
-        const pairs = [...selected, ...selected];
-        pairs.sort(() => 0.5 - Math.random());
-
-        const game = document.getElementById('matchGame');
-        game.innerHTML = '';
-        let flipped = [];
-        let matched = 0;
-
-        pairs.forEach((word, i) => {
-            const card = document.createElement('div');
-            card.className = 'match-card';
-            card.innerHTML = '?';
-            card.onclick = () => {
-                if (card.classList.contains('flipped') || card.classList.contains('matched') || flipped.length === 2) return;
-                card.classList.add('flipped');
-                card.innerHTML = `${word.hebrew}<br><small>${word.polish}</small>`;
-                flipped.push({card, word});
-
-                if (flipped.length === 2) {
-                    if (flipped[0].word.hebrew === flipped[1].word.hebrew) {
-                        setTimeout(() => {
-                            flipped.forEach(f => f.card.classList.add('matched'));
-                            matched += 2;
-                            if (matched === pairs.length) {
-                                document.getElementById('matchResult').textContent = 'Brawo! Wszystkie pary dopasowane! 🎉';
-                                document.getElementById('matchResult').style.display = 'block';
-                            }
-                            flipped = [];
-                        }, 800);
-                    } else {
-                        setTimeout(() => {
-                            flipped.forEach(f => {
-                                f.card.classList.remove('flipped');
-                                f.card.innerHTML = '?';
-                            });
-                            flipped = [];
-                        }, 1200);
-                    }
-                }
-            };
-            game.appendChild(card);
-        });
-        showScreen('match');
-    }
-
-    function startTypingGame() {
-        const due = getDueWords();
-        if (due.length === 0) {
-            alert('Brak słów do gry.');
-            backToMode();
-            return;
-        }
-        let words = due.sort(() => 0.5 - Math.random());
+    function startQuiz() {
+        let words = reviewPool.slice().sort(() => Math.random() - 0.5).slice(0, 10);
         let index = 0;
-        let score = 0;
-
-        function nextWord() {
+        let correct = 0;
+        function showQuestion() {
             if (index >= words.length) {
-                document.getElementById('typingFeedback').textContent = `Koniec! Twój wynik: ${score} pkt 🎉`;
+                document.getElementById('quizSummary').innerHTML = `<strong>Wynik: ${correct}/10</strong><br>Gratulacje! 🎉`;
+                document.getElementById('quizSummary').style.display = 'block';
+                stats.quizCorrect += correct;
+                stats.quizTotal += 10;
+                localStorage.setItem(STATS_KEY, JSON.stringify(stats));
                 return;
             }
-            const w = words[index];
-            document.getElementById('typingWord').textContent = w.hebrew;
-            document.getElementById('typingInput').value = '';
-            document.getElementById('typingInput').focus();
-            document.getElementById('typingFeedback').textContent = '';
+            document.getElementById('quizCurrent').textContent = index + 1;
+            document.getElementById('quizHebrew').textContent = words[index].hebrew;
+            let options = [words[index].polish];
+            let distractors = reviewPool.filter(w => w.polish !== words[index].polish)
+                .sort(() => Math.random() - 0.5).slice(0,3);
+            options.push(...distractors.map(w => w.polish));
+            options.sort(() => Math.random() - 0.5);
+            const container = document.getElementById('quizOptions');
+            container.innerHTML = '';
+            options.forEach(opt => {
+                const btn = document.createElement('div');
+                btn.className = 'quiz-option';
+                btn.textContent = opt;
+                btn.onclick = () => {
+                    if (opt === words[index].polish) {
+                        btn.classList.add('correct');
+                        correct++;
+                    } else {
+                        btn.classList.add('wrong');
+                    }
+                    setTimeout(() => {
+                        index++;
+                        showQuestion();
+                    }, 2000);
+                };
+                container.appendChild(btn);
+            });
+        }
+        showQuestion();
+        showScreen('quiz');
+    }
+
+    function startAlphabetLearn() {
+        alphabetIndex = 0;
+        updateAlphabetCard();
+        showScreen('alphabetLearn');
+    }
+
+    function updateAlphabetCard() {
+        const l = hebrewAlphabet[alphabetIndex];
+        document.getElementById('alphabetFront').innerHTML = `
+            <div style="font-size:6rem">${l.letter}</div>
+            <div>${l.name}</div>
+            <div>${l.pron}</div>
+        `;
+    }
+
+    function nextLetter() {
+        alphabetIndex = (alphabetIndex + 1) % hebrewAlphabet.length;
+        updateAlphabetCard();
+    }
+
+    function prevLetter() {
+        alphabetIndex = (alphabetIndex - 1 + hebrewAlphabet.length) % hebrewAlphabet.length;
+        updateAlphabetCard();
+    }
+
+    function startVowelsLearn() {
+        vowelIndex = 0;
+        updateVowelCard();
+        showScreen('vowelsLearn');
+    }
+
+    function updateVowelCard() {
+        const v = hebrewVowels[vowelIndex];
+        document.getElementById('vowelsFront').innerHTML = `
+            <div style="font-size:5.5rem">${v.symbol}</div>
+            <div>${v.name}</div>
+            <div>${v.polish}</div>
+        `;
+    }
+
+    function nextVowel() {
+        vowelIndex = (vowelIndex + 1) % hebrewVowels.length;
+        updateVowelCard();
+    }
+
+    function prevVowel() {
+        vowelIndex = (vowelIndex - 1 + hebrewVowels.length) % hebrewVowels.length;
+        updateVowelCard();
+    }
+
+    function startAlphabetPractice() {
+        let practiceIndex = 0;
+        let correctCount = 0;
+        const words = practiceWords.slice().sort(() => Math.random() - 0.5);
+
+        function nextPractice() {
+            if (practiceIndex >= words.length) {
+                document.getElementById('practiceFeedback').textContent = 'Koniec ćwiczeń!';
+                return;
+            }
+            document.getElementById('practiceWord').textContent = words[practiceIndex].hebrew;
+            document.getElementById('practiceInput').value = '';
+            document.getElementById('practiceInput').focus();
+            document.getElementById('practiceCorrect').textContent = correctCount;
+            document.getElementById('practiceTotal').textContent = practiceIndex;
         }
 
-        document.getElementById('typingInput').onkeydown = (e) => {
+        document.getElementById('practiceInput').onkeydown = e => {
             if (e.key === 'Enter') {
-                const input = document.getElementById('typingInput').value.trim().toLowerCase();
-                const correct = words[index].polish.toLowerCase();
-                if (input === correct) {
-                    document.getElementById('typingFeedback').innerHTML = 'Brawo! ✅';
-                    document.getElementById('typingFeedback').style.color = '#27ae60';
-                    score += 10;
-                    scheduleWord(words[index], 5);
+                const answer = document.getElementById('practiceInput').value.trim().toLowerCase();
+                const correct = words[practiceIndex].translit.toLowerCase();
+                if (answer === correct) {
+                    correctCount++;
+                    document.getElementById('practiceFeedback').textContent = 'Dobrze! ✅';
                 } else {
-                    document.getElementById('typingFeedback').innerHTML = `Niepoprawne. Poprawne: ${words[index].polish} ❌`;
-                    document.getElementById('typingFeedback').style.color = '#e74c3c';
-                    scheduleWord(words[index], 2);
+                    document.getElementById('practiceFeedback').textContent = `Źle. Poprawne: ${words[practiceIndex].translit}`;
                 }
-                document.getElementById('typingScore').textContent = 'Punkty: ' + score;
-                index++;
-                setTimeout(nextWord, 1500);
+                practiceIndex++;
+                setTimeout(nextPractice, 1500);
             }
         };
 
-        document.getElementById('typingScore').textContent = 'Punkty: 0';
-        nextWord();
-        showScreen('typing');
+        nextPractice();
+        showScreen('alphabetPractice');
     }
 
-    function startSpeedRound() {
-        const due = getDueWords();
-        if (due.length === 0) {
-            alert('Brak słów do gry.');
-            backToMode();
-            return;
-        }
-        let words = due.sort(() => 0.5 - Math.random());
-        let index = 0;
-        let timeLeft = 60;
-        let score = 0;
-        let timerInterval;
+function showCompletionModal() {
+    // Tworzymy modal, jeśli jeszcze nie istnieje
+    let modal = document.getElementById('completionModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'completionModal';
+        modal.innerHTML = `
+            <div class="modal-overlay">
+                <div class="modal-content">
+                    <div class="modal-icon">🎉</div>
+                    <h3>Gratulacje!</h3>
+                    <p>Lekcja ukończona</p>
+                    <p style="font-size:1.1rem; margin:10px 0; color:#27ae60;">
+                        Słowa zostały dodane do powtórek i quizu ✨
+                    </p>
+                    <button class="btn-know modal-btn">OK</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
 
-        function showWord() {
-            if (index >= words.length || timeLeft <= 0) endGame();
-            const w = words[index];
-            document.getElementById('speedFront').innerHTML = `
-                <button class="pronounce-btn" onclick="speakWord('${w.hebrew}')">🔊</button>
-                <div style="font-size: clamp(3.5rem, 11vw, 6rem); margin-top: 60px;">${w.hebrew}</div>
-            `;
-        }
-
-        function tick() {
-            timeLeft--;
-            document.getElementById('timer').textContent = timeLeft;
-            if (timeLeft <= 0) endGame();
-        }
-
-        function endGame() {
-            clearInterval(timerInterval);
-            document.getElementById('speedFront').innerHTML = '<div style="font-size: 2.5rem;">Koniec! 🎉</div>';
-            document.getElementById('speedScore').textContent = `Wynik: ${score} pkt`;
-            document.querySelectorAll('#speedScreen button:not(.btn-back)').forEach(b => b.disabled = true);
-        }
-
-        window.speedAnswer = (correct) => {
-            if (correct) {
-                score += 10;
-                timeLeft += 2;
-                scheduleWord(words[index], 5);
-            } else {
-                scheduleWord(words[index], 2);
-            }
-            document.getElementById('speedScore').textContent = `Punkty: ${score}`;
-            index++;
-            showWord();
+        // Kliknięcie w przycisk zamyka modal
+        modal.querySelector('.modal-btn').onclick = () => {
+            modal.classList.remove('show');
         };
 
-        timerInterval = setInterval(tick, 1000);
-        document.getElementById('timer').textContent = timeLeft;
-        document.getElementById('speedScore').textContent = 'Punkty: 0';
-        showWord();
-        showScreen('speed');
+        // Kliknięcie w tło też zamyka
+        modal.querySelector('.modal-overlay').onclick = () => {
+            modal.classList.remove('show');
+        };
     }
 
+    // Pokazujemy modal
+    modal.classList.add('show');
+}
+
+    // Inicjalizacja
     renderBooks();
     updateReviewCount();
     updateQuizButton();
 </script>
-
 </body>
 </html>
