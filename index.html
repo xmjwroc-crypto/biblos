@@ -11,15 +11,13 @@
     <!-- Czcionka antyczna dla tytułu -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&display=swap" rel="stylesheet">
 
-    <!-- Cropper.js (jeśli nadal używasz) -->
-    <link rel="stylesheet" href="cropper.min.css">
-    <script src="cropper.min.js"></script>
+
 
     <style>
         #avatarInput {
-    display: none !important;
-}
-	:root {
+            display: none !important;
+        }
+        :root {
             --bg-gradient: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #cfe8fc 100%);
             --card: rgba(255, 255, 255, 0.95);
             --text: #1e293b;
@@ -237,35 +235,72 @@
             .change-avatar-btn { width: 36px; height: 36px; font-size: 1.2rem; }
             .user-name { font-size: 1.7rem; }
         }
-#existingUserScreen {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    margin-top: 16px;
-}
+        #existingUserScreen {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 16px;
+        }
 
-#existingUserScreen button {
-    margin: 8px 0;
-}
-	</style>
+        #existingUserScreen button {
+            margin: 8px 0;
+        }
+
+        /* Nowy modal o autorze */
+        #aboutModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+        .about-container {
+            background: white;
+            border-radius: 28px;
+            padding: 40px 32px;
+            max-width: 400px;
+            width: 95vw;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+        }
+        .about-container h2 {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2.4rem;
+            margin-bottom: 24px;
+            color: var(--accent-greek);
+        }
+        .about-container p {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            color: var(--text);
+        }
+        #closeAbout {
+            margin-top: 32px;
+            padding: 12px 40px;
+            font-size: 1.2rem;
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>BIBLOS</h1>
-
+    <h1 id="title">BIBLOS</h1>
+ <div id="existingUserScreen">
+        <div class="avatar-container">
+            <div id="avatarDisplay" class="avatar avatar-default"></div>
+          
+        </div>
+        <div class="user-name" id="welcomeName"></div>
     <div id="newUserScreen">
         <p>Podaj swoje imię, aby rozpocząć</p>
         <input type="text" id="nameInput" placeholder="Wpisz imię..." autofocus>
         <button class="btn-primary" id="saveNameBtn">Rozpocznij naukę</button>
     </div>
 
-    <div id="existingUserScreen">
-        <div class="avatar-container">
-            <div id="avatarDisplay" class="avatar avatar-default"></div>
-            <button class="change-avatar-btn" id="changeAvatarBtn" title="Zmień awatar">✏️</button>
-        </div>
-        <div class="user-name" id="welcomeName"></div>
+   
 
         <button class="btn-primary" id="continueBtn">Kontynuuj</button>
         <button class="btn-secondary" id="newProfileBtn">Nowy profil</button>
@@ -286,8 +321,18 @@
     </div>
 </div>
 
+<!-- Modal o autorze -->
+<div id="aboutModal">
+    <div class="about-container">
+        <h2>O twórcy</h2>
+        <p>Ksiądz Marcin Krzysztof Januszkiewicz<br>PWT Wrocław</p>
+        <p><strong>Aplikacja Biblos 2026</strong></p>
+        <button class="btn-primary" id="closeAbout">Zamknij</button>
+    </div>
+</div>
+
 <script>
-    // Twój oryginalny JavaScript – działa bez zmian
+    // Twój oryginalny JavaScript
     const USER_KEY = 'biblos_current_user';
     const AVATAR_KEY = 'biblos_user_avatar';
 
@@ -310,6 +355,11 @@
     const cancelCrop = document.getElementById('cancelCrop');
     const saveCrop = document.getElementById('saveCrop');
     let cropper = null;
+
+    // Nowe elementy dla ukrytej funkcji
+    const title = document.getElementById('title');
+    const aboutModal = document.getElementById('aboutModal');
+    const closeAbout = document.getElementById('closeAbout');
 
     function getFirstLetter(name) {
         return name.trim().charAt(0).toUpperCase();
@@ -433,6 +483,35 @@
 
     cropperModal.onclick = (e) => {
         if (e.target === cropperModal) cancelCrop.click();
+    };
+
+    // === UKRYTA FUNKCJA ===
+    let clickCount = 0;
+    let clickTimer = null;
+
+    title.addEventListener('click', () => {
+        clickCount++;
+
+        if (clickCount === 1) {
+            clickTimer = setTimeout(() => {
+                clickCount = 0;
+            }, 800); // czas na kolejne kliknięcia (możesz zmienić)
+        } else if (clickCount === 3) {
+            clearTimeout(clickTimer);
+            clickCount = 0;
+            aboutModal.style.display = 'flex';
+        }
+    });
+
+    // Zamknięcie modala o autorze
+    closeAbout.onclick = () => {
+        aboutModal.style.display = 'none';
+    };
+
+    aboutModal.onclick = (e) => {
+        if (e.target === aboutModal) {
+            aboutModal.style.display = 'none';
+        }
     };
 
     checkUser();
