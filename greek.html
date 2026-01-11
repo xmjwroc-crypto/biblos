@@ -8,6 +8,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#f5e6d3">
+	<meta name="color-scheme" content="light only">
 
 <style>
     :root {
@@ -153,9 +154,9 @@
     }
     .flipped .card-inner { transform: rotateY(180deg); }
 
-    .card-front > div:first-child { font-size: clamp(2.5rem, 7vw, 4rem); margin-top: 60px; }
+    .card-front > div:first-child { font-size: clamp(1.5rem, 7vw, 4rem); margin-top: 20px; }
     .card-front > div:nth-child(2) { font-size: clamp(1.6rem, 5vw, 2.4rem); margin-top: 20px; }
-    .card-front > div:last-child { font-size: clamp(1.1rem, 3.8vw, 1.5rem); margin-top: 40px; opacity: 0.8; }
+    .card-front > div:last-child { font-size: clamp(1.1rem, 3.8vw, 1.5rem); margin-top: 20px; opacity: 0.8; }
 
     .card-back > div {
         font-size: clamp(1.5rem, 6vw, 4rem) !important;
@@ -260,72 +261,8 @@
     .progress-bar { height: 20px; background: #e0e0e0; border-radius: 10px; overflow: hidden; margin: 15px 0; }
     .progress-fill { height: 100%; background: linear-gradient(90deg, var(--success), #2ecc71); width: 0%; transition: width 1.2s ease; }
 
-    .game-grid {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        margin: 20px 0;
-        flex: 1;
-    }
-    .game-card {
-        background: white;
-        border-radius: 18px;
-        padding: 28px 16px;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        cursor: pointer;
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--primary);
-        transition: 0.3s;
-    }
-    .game-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
-    .game-card .icon { font-size: 3.5rem; margin-bottom: 12px; display: block; }
-
-    #matchGame {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
-        max-width: 100%;
-        margin: 20px auto;
-        flex: 1;
-    }
-    .match-card {
-        aspect-ratio: 1/1;
-        background: white;
-        border-radius: 16px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.6rem;
-        cursor: pointer;
-        box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-        transition: 0.3s;
-        padding: 8px;
-        text-align: center;
-    }
-    .match-card:hover { transform: scale(1.05); }
-    .match-card.flipped, .match-card.matched { background: #e6f2ff; color: var(--primary); }
-    .match-card.matched { opacity: 0.6; cursor: default; }
-
-    #typingInput {
-        font-size: 1.6rem;
-        padding: 16px;
-        width: 90%;
-        max-width: 420px;
-        margin: 20px auto;
-        border: 3px solid var(--primary);
-        border-radius: 16px;
-        text-align: center;
-    }
-    #typingFeedback { font-size: 1.8rem; margin: 20px 0; min-height: 50px; }
-
-    #timer { font-size: 3.5rem; font-weight: bold; color: var(--accent); margin: 15px 0; }
-    #speedScore { font-size: 2.2rem; margin: 20px 0; }
-    .big-text { font-size: 2rem; margin: 20px 0; }
-
     @media (min-width: 768px) {
-        .grid, .game-grid, .quiz-options, .stats-grid { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+        .grid, .quiz-options, .stats-grid { flex-direction: row; flex-wrap: wrap; justify-content: center; }
         .btn-group { flex-direction: row; }
         .flashcard { height: 70vh; max-height: 640px; }
         h1 { font-size: 3rem; }
@@ -338,19 +275,18 @@
         margin-bottom: 10px !important;
     }
 
-    /* Lepszy kontrast przycisków tylko w tych ekranach */
     #bookScreen .card-btn,
     #lessonScreen .card-btn {
         background: linear-gradient(135deg, #ffffff, #f8f9fa) !important;
         border: 1px solid #e0e0e0 !important;
         box-shadow: 0 8px 20px rgba(0,0,0,0.12) !important;
-	padding: 12px 32px !important;     /* mniejszy padding pionowy */
-    	height: fit-content !important;
-    	line-height: 1.4 !important;
-    	display: inline-block !important;
-    	width: fit-content !important;
-    	min-width: 220px !important;
-   	 margin: 10px auto !important;
+        padding: 12px 32px !important;
+        height: fit-content !important;
+        line-height: 1.4 !important;
+        display: inline-block !important;
+        width: fit-content !important;
+        min-width: 220px !important;
+        margin: 10px auto !important;
     }
 
     /* Ładny efekt hover/active tylko w tych ekranach */
@@ -363,8 +299,91 @@
         border-color: var(--accent) !important;
         background: linear-gradient(135deg, #fffdf7, #f5f2eb) !important;
     }
+#completionModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 1000;
+}
 
-    /* ======================================================================== */
+#completionModal.show {
+    display: block;
+}
+
+.modal-overlay {
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(8px);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 24px;
+    padding: 30px 20px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    max-width: 90%;
+    animation: scaleIn 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.modal-icon {
+    font-size: 4.5rem;
+    margin-bottom: 10px;
+}
+
+.modal-content h3 {
+    font-size: 1.8rem;
+    color: var(--primary);
+    margin: 10px 0;
+}
+
+.modal-content p {
+    color: #444;
+    margin: 8px 0;
+}
+
+.modal-btn {
+    margin-top: 20px;
+    background: var(--success);
+    min-width: 160px;
+    padding: 14px 30px !important;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0.7); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+#introMenuScreen .card-btn {
+    width: 100%;                    /* pełna szerokość jak pozostałe */
+    padding: 24px 16px !important; /* taki sam padding jak w głównej aplikacji */
+    min-height: 140px;              /* stała wysokość dla wyrównania */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+#introMenuScreen .card-btn .icon {
+    font-size: 3.5rem;              /* większa ikona, jak w innych przyciskach */
+    margin-bottom: 14px;
+}
+
+#introMenuScreen .card-btn {
+    font-size: 1.4rem;              /* nieco większa czcionka tekstu */
+    font-weight: 700;
+}
 </style>
 </head>
 <body>
@@ -395,10 +414,6 @@
                 <div class="icon">❓</div>
                 Quiz
             </div>
-            <div class="card-btn" onclick="openMode('fun')">
-                <div class="icon">🎲</div>
-                Zabawa
-            </div>
             <div class="card-btn" onclick="openMode('archive')">
                 <div class="icon">📦</div>
                 Archiwum
@@ -414,63 +429,266 @@
         <button class="btn-back" onclick="backToBooks()">Powrót</button>
     </div>
 
-    <div id="funScreen" class="screen">
-        <h2>Wybierz tryb zabawy 🎲</h2>
-        <div class="game-grid">
-            <div class="game-card" onclick="startMatchGame()">
-                <div class="icon">🧩</div>
-                Dopasuj pary
-            </div>
-            <div class="game-card" onclick="startTypingGame()">
-                <div class="icon">✍️</div>
-                Pisanie tłumaczenia
-            </div>
-            <div class="game-card" onclick="startSpeedRound()">
-                <div class="icon">⚡</div>
-                Szybki strzał
-            </div>
-        </div>
-        <button class="btn-back" onclick="backToMode()">Powrót</button>
-    </div>
-
-    <div id="matchScreen" class="screen">
-        <h2>Dopasuj pary 🧩</h2>
-        <div id="matchGame"></div>
-        <div class="big-text" id="matchResult" style="display:none;"></div>
-        <button class="btn-back" onclick="backToMode()">Zakończ</button>
-    </div>
-
-    <div id="typingScreen" class="screen">
-        <h2>Pisanie tłumaczenia ✍️</h2>
-        <div class="quiz-greek" id="typingWord"></div>
-        <input type="text" id="typingInput" placeholder="Wpisz polskie tłumaczenie..." autocomplete="off">
-        <div id="typingFeedback"></div>
-        <div class="big-text" id="typingScore">Punkty: 0</div>
-        <button class="btn-back" onclick="backToMode()">Zakończ</button>
-    </div>
-
-    <div id="speedScreen" class="screen">
-        <h2>Szybki strzał ⚡</h2>
-        <div id="timer">60</div>
-        <div class="flashcard" id="speedFlashcard">
-            <div class="card-inner">
-                <div class="card-front" id="speedFront"></div>
-            </div>
-        </div>
-        <div class="btn-group">
-            <button class="btn-know" onclick="speedAnswer(true)">Umiem ✅</button>
-            <button class="btn-hard" onclick="speedAnswer(false)">Nie umiem 🔄</button>
-        </div>
-        <div class="big-text" id="speedScore">Punkty: 0</div>
-        <button class="btn-back" onclick="backToMode()">Zakończ</button>
-    </div>
-
-    <div id="lessonScreen" class="screen">
+     <div id="lessonScreen" class="screen">
         <h2>Nauka – <span id="currentBookName">...</span></h2>
+        <div style="margin: 20px 0;">
+            <div class="card-btn intro-btn" onclick="showScreen('introMenu')">
+                <div class="icon">📖</div>Wprowadzenie do alfabetu greckiego
+            </div>
+        </div>
         <div class="grid" id="lessonGrid"></div>
         <button class="btn-back" onclick="backToMode()">Powrót</button>
     </div>
 
+   <div id="introMenuScreen" class="screen">
+    <h2>Wprowadzenie do alfabetu greckiego</h2>
+			<div class="grid">
+<div class="card-btn" onclick="showScreen('introText')">
+            <div class="icon">📜</div>Wprowadzenie tekstowe </div>
+			
+<div class="card-btn" onclick="startAlphabetLearning()">
+            <div class="icon">🔠</div>Nauka alfabetu </div>
+			
+<div class="card-btn" onclick="startcwiczenia()">
+			<div class="icon">✍️</div>Ćwiczenia </div>
+			</div>
+    <button class="btn-back" onclick="backToLessons()">Powrót do lekcji</button>
+</div>
+    <div id="introTextScreen" class="screen">
+        <h2>Wprowadzenie</h2>
+        <div class="intro-text">
+<section class="greek-lesson">
+
+<style>
+.greek-lesson {
+  max-width: 960px;
+  margin: 3rem auto;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #222 !important;
+  line-height: 1.75;
+  background-color: white !important;     /* nowe – wymusza białe tło */
+  color-scheme: light only;                /* kluczowe – wyłącza dark mode w WebView */
+}
+
+.greek-lesson h1,
+.greek-lesson h2,
+.greek-lesson h3,
+.greek-lesson p,
+.greek-lesson strong,
+.greek-lesson td,
+.greek-lesson th {
+  color: #222 !important;
+}
+
+.greek-lesson table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.5rem 0;
+  background-color: white !important;
+}
+
+.greek-lesson th {
+  background-color: #f2f5f8 !important;
+}
+
+.greek-lesson tr:nth-child(even) td {
+  background-color: #fafbfc !important;
+}
+
+.example {
+  background: #f5f7fa !important;
+  border-left: 4px solid #5a78b6;
+  padding: 1rem 1.2rem;
+  margin: 1.5rem 0;
+  color: #222 !important;
+}
+</style>
+
+<h1>Wprowadzenie do fonetyki języka greckiego (koiné)</h1>
+
+<p>
+Greka koiné jest językiem Nowego Testamentu oraz wielu tekstów wczesnochrześcijańskich.
+Jej zapis opiera się na alfabecie greckim, który – w przeciwieństwie do hebrajskiego –
+zawiera zarówno spółgłoski, jak i samogłoski. W tej lekcji poznasz alfabet,
+zasady czytania samogłosek, dyftongi oraz podstawowe znaki fonetyczne,
+takie jak przydech i akcent.
+</p>
+
+<h2>Alfabet grecki</h2>
+
+<p>
+Alfabet grecki składa się z <strong>24 liter</strong> i zapisywany jest
+<strong>od lewej do prawej</strong>. Każda litera ma ustaloną nazwę oraz wymowę,
+która w grece koiné różni się nieco od współczesnej greki.
+</p>
+
+<table>
+<thead>
+<tr>
+<th>Litera</th>
+<th>Nazwa</th>
+<th>Wymowa przybliżona</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Α α</td><td>alfa</td><td>a</td></tr>
+<tr><td>Β β</td><td>beta</td><td>b</td></tr>
+<tr><td>Γ γ</td><td>gamma</td><td>g / nosowe n</td></tr>
+<tr><td>Δ δ</td><td>delta</td><td>d</td></tr>
+<tr><td>Ε ε</td><td>epsilon</td><td>e (krótkie)</td></tr>
+<tr><td>Ζ ζ</td><td>zeta</td><td>z</td></tr>
+<tr><td>Η η</td><td>eta</td><td>e (długie)</td></tr>
+<tr><td>Θ θ</td><td>theta</td><td>th</td></tr>
+<tr><td>Ι ι</td><td>jota</td><td>i</td></tr>
+<tr><td>Κ κ</td><td>kappa</td><td>k</td></tr>
+<tr><td>Λ λ</td><td>lambda</td><td>l</td></tr>
+<tr><td>Μ μ</td><td>my</td><td>m</td></tr>
+<tr><td>Ν ν</td><td>ny</td><td>n</td></tr>
+<tr><td>Ξ ξ</td><td>ksi</td><td>ks</td></tr>
+<tr><td>Ο ο</td><td>omikron</td><td>o (krótkie)</td></tr>
+<tr><td>Π π</td><td>pi</td><td>p</td></tr>
+<tr><td>Ρ ρ</td><td>rho</td><td>r</td></tr>
+<tr><td>Σ σ/ς</td><td>sigma</td><td>s</td></tr>
+<tr><td>Τ τ</td><td>tau</td><td>t</td></tr>
+<tr><td>Υ υ</td><td>ypsilon</td><td>u / y</td></tr>
+<tr><td>Φ φ</td><td>phi</td><td>ph</td></tr>
+<tr><td>Χ χ</td><td>chi</td><td>ch</td></tr>
+<tr><td>Ψ ψ</td><td>psi</td><td>ps</td></tr>
+<tr><td>Ω ω</td><td>omega</td><td>o (długie)</td></tr>
+</tbody>
+</table>
+
+<h2>Gamma przed κ, χ, γ, ξ</h2>
+
+<p>
+Litera <strong>gamma (γ)</strong> zmienia swoją wymowę, gdy stoi przed
+<strong>κ, χ, γ lub ξ</strong>. W takiej pozycji czytana jest
+<strong>jak nosowe „n”</strong>.
+</p>
+
+<div class="example">
+ἄγγελος <em>angelos</em> – anioł<br>
+ἐκκλησία <em>ekklēsia</em> – zgromadzenie
+</div>
+
+<h2>Samogłoski: krótkie i długie</h2>
+
+<p>
+W grece koiné samogłoski dzielą się na <strong>krótkie</strong> i
+<strong>długie</strong>. Długość samogłoski ma znaczenie dla akcentu
+i rytmu wyrazu.
+</p>
+
+<table>
+<thead>
+<tr>
+<th>Samogłoski krótkie</th>
+<th>Samogłoski długie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ε (epsilon)<br>ο (omikron)</td>
+<td>η (eta)<br>ω (omega)</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Samogłoski <strong>α, ι, υ</strong> mogą być zarówno krótkie, jak i długie,
+w zależności od kontekstu.
+</p>
+
+<h2>Dyftongi</h2>
+
+<p>
+<strong>Dyftong</strong> to połączenie dwóch samogłosek czytanych razem
+jako jeden dźwięk.
+</p>
+
+<table>
+<thead>
+<tr>
+<th>Dyftong</th>
+<th>Czytamy jako</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>αι</td><td>aj</td></tr>
+<tr><td>ει</td><td>ej</td></tr>
+<tr><td>οι</td><td>oj</td></tr>
+<tr><td>αυ</td><td>au</td></tr>
+<tr><td>ευ</td><td>eu</td></tr>
+<tr><td>ου</td><td>u</td></tr>
+</tbody>
+</table>
+
+<h2>Przydech</h2>
+
+<p>
+Na początku wyrazu samogłoski oraz litera <strong>rho</strong> mogą mieć
+<strong>przydech</strong>, czyli znak określający obecność lub brak dźwięku „h”.
+</p>
+
+<p>
+Wyróżniamy:
+<strong>przydech łagodny</strong> (brak „h”) oraz
+<strong>przydech mocny</strong> (czytamy „h”).
+</p>
+
+<div class="example">
+ἀνθρωπος <em>anthrōpos</em> – człowiek<br>
+ὁ λόγος <em>ho logos</em> – słowo
+</div>
+
+<h2>Akcent</h2>
+
+<p>
+Greka koiné posiada <strong>akcent</strong>, który zaznaczany jest
+nad samogłoską. Akcent wskazuje, na którą sylabę pada nacisk głosu.
+</p>
+
+<p>
+Na etapie początkowym najważniejsze jest, aby:
+<strong>akcent czytać, ale nie analizować jeszcze reguł jego rozmieszczenia</strong>.
+</p>
+
+<div class="example">
+λόγος <em>lógos</em><br>
+ἀγαπή <em>agapē</em>
+</div>
+
+</section>
+        </div>
+        <button class="btn-back" onclick="showScreen('introMenu')">Powrót</button>
+    </div>
+    <div id="startcwiczeniaScreen" class="screen">
+        <h2>Ćwiczenia – transkrypcja</h2>
+        <div class="intro-text">
+        <div class="quiz-greek" id="exerciseWord"></div>
+		<input type="text" id="translitInput" placeholder="Wpisz transkrypcję (np. theos)" autocomplete="off" style="font-size:1.6rem; padding:16px; width:90%; max-width:420px; margin:20px auto; border:3px solid var(--primary); border-radius:16px; text-align:center; display:block;">
+		<button class="btn-check" onclick="checkTransliteration()" style="margin:20px auto; display:block;">Sprawdź</button>
+		<div id="exerciseFeedback" style="font-size:1.8rem; margin:20px 0; min-height:50px;"></div>
+		<button class="btn-back" onclick="showScreen('introMenu')">Powrót</button>
+        </div>
+    </div>
+    <div id="alphabetLearnScreen" class="screen">
+        <h2>Nauka alfabetu</h2>
+        <div class="flashcard" id="alphabetFlashcard"><div class="card-inner"><div class="card-front" id="alphabetFront"></div></div></div>
+        <div class="btn-group" style="flex-direction: row; justify-content: space-between; margin: 30px 0;">
+            <button class="btn-hard" onclick="prevLetter()">⬅️ Wstecz</button>
+            <button class="btn-know" onclick="nextLetter()">Dalej ➡️</button>
+        </div>
+        <button class="btn-back" onclick="showScreen('introMenu')">Powrót</button>
+    </div>
+    <div id="alphabetPracticeScreen" class="screen">
+        <h2>Ćwiczenia – wpisz polską wymowę słówka</h2>
+        <div class="quiz-hebrew" id="practiceWord"></div>
+        <input type="text" id="practiceInput" placeholder="Wpisz wymowę po polsku (np. szalom)" autocomplete="off">
+        <div id="practiceFeedback"></div>
+        <div class="big-text">Poprawne: <span id="practiceCorrect">0</span> / <span id="practiceTotal">0</span></div>
+        <button class="btn-back" onclick="showScreen('introMenu')">Powrót</button>
+    </div>
     <div id="flashcardScreen" class="screen">
         <h2 id="lessonTitle">Lekcja ...</h2>
         <div class="flashcard" id="flashcard">
@@ -549,6 +767,8 @@
         </div>
         <button class="btn-back" onclick="backToMode()">Powrót</button>
     </div>
+  
+
 </div>
 
 <script>
@@ -572,40 +792,41 @@
         activeDates: []
     };
 
-  if (!books["A. Piwowar - Język grecki Nowego Testamentu"]) {
+     if (!books["A. Piwowar - Język grecki Nowego Testamentu"]) {
         books["A. Piwowar - Język grecki Nowego Testamentu"] = {
 "Lekcja 3": [
-                {"greek":"ἀκούω","translit":"akouō","polish":"słyszeć, słuchać, wysłuchiwać (z G lub A)"},
-                {"greek":"βλέπω","translit":"blepō","polish":"widzieć, patrzeć (z A, podwójnym A lub εἰς + A); strzec się (ἀπό + G)"},
-                {"greek":"γράφω","translit":"graphō","polish":"pisać, zapisywać"},
-                {"greek":"ἐσθίω","translit":"esthiō","polish":"jeść, spożywać (z A)"},
-                {"greek":"εὑρίσκω","translit":"heuriskō","polish":"znaleźć, znajdować (z A)"},
-                {"greek":"λέγω","translit":"legō","polish":"mówić (z A lub D); nazywać (podwójne A)"},
-                {"greek":"λύω","translit":"lyō","polish":"rozwiązywać, uwalniać, niszczyć (z A)"},
-                {"greek":"παιδεύω","translit":"paideuō","polish":"wychowywać, uczyć, karcić (z A)"},
-                {"greek":"πέμπω","translit":"pempō","polish":"posyłać, wysyłać (z A)"},
-                {"greek":"πιστεύω","translit":"pisteuō","polish":"wierzyć (D osoby, A rzeczy); powierzać (A + D)"},
-                {"greek":"εἰμί","translit":"eimi","polish":"być, istnieć"},
-                {"greek":"ἄγγελος, -ου, ὁ","translit":"angelos","polish":"posłaniec, anioł"},
-                {"greek":"ἀδελφός, -ου, ὁ","translit":"adelphos","polish":"brat"},
-                {"greek":"ἄνθρωπος, -ου, ὁ","translit":"anthrōpos","polish":"człowiek, ludzie"},
-                {"greek":"ἄρτος, -ου, ὁ","translit":"artos","polish":"chleb, pokarm"},
-                {"greek":"δοῦλος, -ου, ὁ","translit":"doulos","polish":"niewolnik, sługa"},
-                {"greek":"ἔρημος, -ου, ἡ","translit":"erēmos","polish":"pustynia"},
-                {"greek":"θεός, -ου, ὁ/ἡ","translit":"theos","polish":"Bóg, bóstwo"},
-                {"greek":"λόγος, -ου, ὁ","translit":"logos","polish":"słowo, mowa, nauka"},
-                {"greek":"νόμος, -ου, ὁ","translit":"nomos","polish":"prawo, zasada"},
-                {"greek":"ὁδός, -οῦ, ἡ","translit":"hodos","polish":"droga, podróż"},
-                {"greek":"οἶκος, -ου, ὁ","translit":"oikos","polish":"dom, rodzina"},
-                {"greek":"υἱός, -ου, ὁ","translit":"huios","polish":"syn"},
-                {"greek":"ἀγαθός","translit":"agathos","polish":"dobry"},
-                {"greek":"ἅγιος","translit":"hagios","polish":"święty"},
-                {"greek":"κακός","translit":"kakos","polish":"zły, szkodliwy"},
-                {"greek":"νεκρός","translit":"nekros","polish":"umarły, martwy"},
-                {"greek":"καί","translit":"kai","polish":"i, także"},
-                {"greek":"ὅτι","translit":"hoti","polish":"że, ponieważ, dlatego że"},
-                {"greek":"οὐ, οὐκ, οὐχ","translit":"ou, ouk, ouch","polish":"nie"}
-            ],"Lekcja 4": [
+   {"greek":"ἀκούω","translit":"akouō","polish":"słyszeć, słuchać, wysłuchiwać (z G lub A)"},
+   {"greek":"βλέπω","translit":"blepō","polish":"widzieć, patrzeć (z A, podwójnym A lub εἰς + A); strzec się (ἀπό + G)"},
+    {"greek":"γράφω","translit":"graphō","polish":"pisać, zapisywać"},
+    {"greek":"ἐσθίω","translit":"esthiō","polish":"jeść, spożywać (z A)"},
+    {"greek":"εὑρίσκω","translit":"heuriskō","polish":"znaleźć, znajdować (z A)"},
+    {"greek":"λέγω","translit":"legō","polish":"mówić (z A lub D); nazywać (podwójne A)"},
+    {"greek":"λύω","translit":"lyō","polish":"rozwiązywać, uwalniać, niszczyć (z A)"},
+    {"greek":"παιδεύω","translit":"paideuō","polish":"wychowywać, uczyć, karcić (z A)"},
+    {"greek":"πέμπω","translit":"pempō","polish":"posyłać, wysyłać (z A)"},
+    {"greek":"πιστεύω","translit":"pisteuō","polish":"wierzyć (D osoby, A rzeczy); powierzać (A + D)"},
+    {"greek":"εἰμί","translit":"eimi","polish":"być, istnieć"},
+    {"greek":"ἄγγελος, -ου, ὁ","translit":"angelos","polish":"posłaniec, anioł"},
+    {"greek":"ἀδελφός, -ου, ὁ","translit":"adelphos","polish":"brat"},
+    {"greek":"ἄνθρωπος, -ου, ὁ","translit":"anthrōpos","polish":"człowiek, ludzie"},
+    {"greek":"ἄρτος, -ου, ὁ","translit":"artos","polish":"chleb, pokarm"},
+    {"greek":"δοῦλος, -ου, ὁ","translit":"doulos","polish":"niewolnik, sługa"},
+    {"greek":"ἔρημος, -ου, ἡ","translit":"erēmos","polish":"pustynia"},
+    {"greek":"θεός, -ου, ὁ/ἡ","translit":"theos","polish":"Bóg, bóstwo"},
+    {"greek":"λόγος, -ου, ὁ","translit":"logos","polish":"słowo, mowa, nauka"},
+    {"greek":"νόμος, -ου, ὁ","translit":"nomos","polish":"prawo, zasada"},
+    {"greek":"ὁδός, -οῦ, ἡ","translit":"hodos","polish":"droga, podróż"},
+    {"greek":"οἶκος, -ου, ὁ","translit":"oikos","polish":"dom, rodzina"},
+    {"greek":"υἱός, -ου, ὁ","translit":"huios","polish":"syn"},
+    {"greek":"ἀγαθός","translit":"agathos","polish":"dobry"},
+    {"greek":"ἅγιος","translit":"hagios","polish":"święty"},
+    {"greek":"κακός","translit":"kakos","polish":"zły, szkodliwy"},
+    {"greek":"νεκρός","translit":"nekros","polish":"umarły, martwy"},
+    {"greek":"καί","translit":"kai","polish":"i, także"},
+    {"greek":"ὅτι","translit":"hoti","polish":"że, ponieważ, dlatego że"},
+    {"greek":"οὐ, οὐκ, οὐχ","translit":"ou, ouk, ouch","polish":"nie"}
+],
+"Lekcja 4": [
     {"greek":"εἰς","translit":"eis","polish":"do, ku, w, na (z A); ze względu na, względem"},
     {"greek":"ἄγω","translit":"agō","polish":"prowadzić, iść (z A)"},
     {"greek":"αἴρω","translit":"airō","polish":"podnosić, brać, usuwać, zabijać (z A)"},
@@ -2078,7 +2299,35 @@
 };
         localStorage.setItem(DB_KEY, JSON.stringify(books));
         books = JSON.parse(localStorage.getItem(DB_KEY));
+};
+    function speak(greek) {
+        let index = -1;
+        const bookKey = "A. Piwowar - Język grecki Nowego Testamentu";
+        if (books[bookKey]) {
+            const lessons = Object.keys(books[bookKey]).sort((a, b) => {
+                return parseInt(a.replace('Lekcja ', '')) - parseInt(b.replace('Lekcja ', ''));
+            });
+            let counter = 0;
+            for (const lesson of lessons) {
+                for (const word of books[bookKey][lesson]) {
+                    if (word.greek === greek) {
+                        index = counter;
+                        break;
+                    }
+                    counter++;
+                }
+                if (index !== -1) break;
+            }
+        }
+
+        if (index !== -1) {
+            const fileNum = String(index + 1).padStart(4, '0');
+            const audio = new Audio(`words_greek/${fileNum}.mp3`);
+            audio.play().catch(e => console.warn("Błąd odtwarzania:", e));
+        }
     }
+    // <<<=== KONIEC ZMIANY ===>>>
+
 
     let currentBook = null;
     let currentLesson = null;
@@ -2139,9 +2388,9 @@
         }
     }
 
-    function showScreen(screenName) {
+   function showScreen(name) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(screenName + 'Screen').classList.add('active');
+        document.getElementById(name + 'Screen').classList.add('active');
     }
 
     function backToApp() { window.location.href = 'app.html'; }
@@ -2265,8 +2514,6 @@
             document.getElementById('lessonTitle').textContent = `Powtórka – ${due.length} słów`;
             showCard();
             showScreen('flashcard');
-        } else if (mode === 'fun') {
-            showScreen('fun');
         } else if (mode === 'archive') {
             renderArchive();
             showScreen('archive');
@@ -2346,33 +2593,27 @@
         showScreen('flashcard');
     }
 
-    function speakWord(text) {
-        if ('speechSynthesis' in window) {
-            const u = new SpeechSynthesisUtterance(text);
-            u.lang = 'el-GR';
-            u.rate = 0.8;
-            speechSynthesis.cancel();
-            speechSynthesis.speak(u);
-        }
-    }
+    
 
     function showCard() {
-        if (currentIndex >= currentWords.length) {
-            if (!isReviewMode) {
-                if (!progress[currentBook]) progress[currentBook] = {};
-                progress[currentBook][currentLesson] = true;
-                localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
-                alert("Gratulacje! Ukończyłeś lekcję! 🎉");
-            } else {
-                alert("Koniec powtórki!");
-            }
-            backToMode();
-            return;
-        }
+      if (currentIndex >= currentWords.length) {
+    if (!isReviewMode) {
+        if (!progress[currentBook]) progress[currentBook] = {};
+        progress[currentBook][currentLesson] = true;
+        localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
+
+        // Pokazujemy ładny modal zamiast alertu
+        showCompletionModal();
+    } else {
+        alert("Koniec powtórki!");
+    }
+    backToMode();
+    return;
+}
 
         const w = currentWords[currentIndex];
         document.getElementById('front').innerHTML = `
-            <button class="pronounce-btn" onclick="speakWord('${w.greek}')">🔊</button>
+       
             <div style="font-size: clamp(3.8rem, 12vw, 7rem); margin-top: 60px;">${w.greek}</div>
             ${w.translit ? `<div style="font-size: clamp(1.6rem, 5vw, 2.4rem); margin-top: 20px;">${w.translit}</div>` : ''}
                     `;
@@ -2398,104 +2639,196 @@
         setTimeout(() => { currentIndex++; showCard(); }, 850);
     }
 
-document.getElementById('btn-learn-master').onclick = () => {
-    const word = currentWords[currentIndex];
-    // Dopiero teraz, gdy użytkownik kliknie "Umiem", dodajemy słowo do długoterminowej puli powtórek
-    addWordToReview(word);
-    scheduleWord(word, 5);  // dobra ocena – długi interval od razu
-    nextCard();
-};
+    document.getElementById('btn-learn-master').onclick = () => {
+        const word = currentWords[currentIndex];
+        addWordToReview(word);
+        scheduleWord(word, 5);
+        nextCard();
+    };
 
-document.getElementById('btn-learn-notmaster').onclick = () => {
-    const word = currentWords[currentIndex];
-    currentWords.splice(currentIndex, 1);
-    currentWords.push(word);
-    document.getElementById('flashcard').classList.remove('flipped');
-    setTimeout(() => { showCard(); }, 850); 
-};
+    document.getElementById('btn-learn-notmaster').onclick = () => {
+        const word = currentWords[currentIndex];
+        currentWords.splice(currentIndex, 1);
+        currentWords.push(word);
+        document.getElementById('flashcard').classList.remove('flipped');
+        setTimeout(() => { showCard(); }, 850); 
+    };
 
-document.getElementById('btn-master').onclick = () => { 
-    scheduleWord(currentWords[currentIndex], 4); 
-    nextCard(); 
-};
+    document.getElementById('btn-master').onclick = () => { 
+        scheduleWord(currentWords[currentIndex], 4); 
+        nextCard(); 
+    };
 
-document.getElementById('btn-notmaster').onclick = () => { 
-    scheduleWord(currentWords[currentIndex], 2); 
-    nextCard(); 
-};
-
-document.getElementById('btn-archive').onclick = () => {
-    const w = currentWords[currentIndex];
-    reviewPool = reviewPool.filter(x => !(x.greek === w.greek && x.polish === w.polish));
-    localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewPool));
-    if (!archivePool.some(x => x.greek === w.greek && x.polish === w.polish)) {
-        archivePool.push(w);
-        localStorage.setItem(ARCHIVE_KEY, JSON.stringify(archivePool));
-    }
-    updateReviewCount();
-    nextCard();
-};
-
-    // Gry (match, typing, speed) 
-    function startMatchGame() {
-        const due = getDueWords();
-        if (due.length < 4) {
-            alert('Za mało słów do gry (min. 4).');
-            backToMode();
-            return;
+    document.getElementById('btn-notmaster').onclick = () => { 
+        scheduleWord(currentWords[currentIndex], 2); 
+        nextCard(); 
+    };
+function backToLessons() {
+    showScreen('lesson');
+}
+    document.getElementById('btn-archive').onclick = () => {
+        const w = currentWords[currentIndex];
+        reviewPool = reviewPool.filter(x => !(x.greek === w.greek && x.polish === w.polish));
+        localStorage.setItem(REVIEW_KEY, JSON.stringify(reviewPool));
+        if (!archivePool.some(x => x.greek === w.greek && x.polish === w.polish)) {
+            archivePool.push(w);
+            localStorage.setItem(ARCHIVE_KEY, JSON.stringify(archivePool));
         }
-        const selected = due.sort(() => 0.5 - Math.random()).slice(0, 8);
-        const pairs = [...selected, ...selected];
-        pairs.sort(() => 0.5 - Math.random());
+        updateReviewCount();
+        nextCard();
+    };
+    // Ćwiczenia transkrypcji – alfabet grecki
+    const transliterationExercises = [
+        {greek: "θεός", translit: "theos"},
+        {greek: "λόγος", translit: "logos"},
+        {greek: "κύριος", translit: "kyrios"},
+        {greek: "ἄγγελος", translit: "angelos"},
+        {greek: "ἀδελφός", translit: "adelphos"},
+        {greek: "Ἰησοῦς", translit: "Iēsous"},
+        {greek: "Χριστός", translit: "Christos"},
+        {greek: "πνεῦμα", translit: "pneuma"},
+        {greek: "ἐκκλησία", translit: "ekklēsia"},
+        {greek: "βασιλεία", translit: "basileia"},
+        {greek: "ἅγιος", translit: "hagios"},
+        {greek: "ἀγάπη", translit: "agapē"},
+        {greek: "νόμος", translit: "nomos"},
+        {greek: "οὐρανός", translit: "ouranos"},
+        {greek: "ἄνθρωπος", translit: "anthrōpos"}
+    ];
 
-        const game = document.getElementById('matchGame');
-        game.innerHTML = '';
-        let flipped = [];
-        let matched = 0;
+    let currentExercise = null;
 
-        pairs.forEach((word, i) => {
-            const card = document.createElement('div');
-            card.className = 'match-card';
-            card.innerHTML = '?';
-            card.onclick = () => {
-                if (card.classList.contains('flipped') || card.classList.contains('matched') || flipped.length === 2) return;
-                card.classList.add('flipped');
-                card.innerHTML = `${word.greek}<br><small>${word.polish}</small>`;
-                flipped.push({card, word});
-
-                if (flipped.length === 2) {
-                    if (flipped[0].word.greek === flipped[1].word.greek) {
-                        setTimeout(() => {
-                            flipped.forEach(f => f.card.classList.add('matched'));
-                            matched += 2;
-                            if (matched === pairs.length) {
-                                document.getElementById('matchResult').textContent = 'Brawo! Wszystkie pary dopasowane! 🎉';
-                                document.getElementById('matchResult').style.display = 'block';
-                            }
-                            flipped = [];
-                        }, 800);
-                    } else {
-                        setTimeout(() => {
-                            flipped.forEach(f => {
-                                f.card.classList.remove('flipped');
-                                f.card.innerHTML = '?';
-                            });
-                            flipped = [];
-                        }, 1200);
-                    }
-                }
-            };
-            game.appendChild(card);
-        });
-        showScreen('match');
+    function startExercise() {
+        const idx = Math.floor(Math.random() * transliterationExercises.length);
+        currentExercise = transliterationExercises[idx];
+        document.getElementById('exerciseWord').textContent = currentExercise.greek;
+        document.getElementById('translitInput').value = '';
+        document.getElementById('exerciseFeedback').innerHTML = '';
     }
 
-    // startTypingGame i startSpeedRound – analogicznie zamień hebrew na greek
+    function checkTransliteration() {
+        if (!currentExercise) return;
+        const input = document.getElementById('translitInput').value.trim().toLowerCase();
+        const correct = currentExercise.translit.toLowerCase();
+        const fb = document.getElementById('exerciseFeedback');
 
+        if (input === correct) {
+            fb.innerHTML = '✅ Brawo! Poprawnie!';
+            fb.style.color = 'var(--success)';
+            setTimeout(startExercise, 1600);
+        } else {
+            fb.innerHTML = `❌ Błąd. Poprawnie: <strong>${currentExercise.translit}</strong>`;
+            fb.style.color = '#e74c3c';
+        }
+    }
+	// Obsługa Enter w polu input
+document.addEventListener('DOMContentLoaded', function() {
+    const input = document.getElementById('translitInput');
+    if (input) {
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkTransliteration();
+            }
+        });
+    }
+});
     renderBooks();
     updateReviewCount();
     updateQuizButton();
-</script>
+function showCompletionModal() {
+    // Tworzymy modal tylko raz
+    let modal = document.getElementById('completionModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'completionModal';
+        modal.innerHTML = `
+            <div class="modal-overlay">
+                <div class="modal-content">
+                    <div class="modal-icon">🎉</div>
+                    <h3>Gratulacje!</h3>
+                    <p>Lekcja ukończona</p>
+                    <p style="font-size:1.1rem; margin:10px 0; color:#27ae60;">
+                        Słowa zostały dodane do powtórek i quizu ✨
+                    </p>
+                    <button class="btn-know modal-btn">OK</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        // Zamykanie modala
+        modal.querySelector('.modal-btn').onclick = () => {
+            modal.classList.remove('show');
+        };
+        modal.querySelector('.modal-overlay').onclick = () => {
+            modal.classList.remove('show');
+        };
+    }
+
+    // Pokazujemy modal
+    modal.classList.add('show');
+}
+// === NAUKA ALFABETU GRECKIEGO ===
+
+const greekAlphabet = [
+    { big: "Α", small: "α", name: "alfa", pron: "a" },
+    { big: "Β", small: "β", name: "beta", pron: "b" },
+    { big: "Γ", small: "γ", name: "gamma", pron: "g" },
+    { big: "Δ", small: "δ", name: "delta", pron: "d" },
+    { big: "Ε", small: "ε", name: "epsilon", pron: "e" },
+    { big: "Ζ", small: "ζ", name: "dzeta", pron: "z" },
+    { big: "Η", small: "η", name: "eta", pron: "ē (długie e)" },
+    { big: "Θ", small: "θ", name: "theta", pron: "th" },
+    { big: "Ι", small: "ι", name: "jota", pron: "i" },
+    { big: "Κ", small: "κ", name: "kappa", pron: "k" },
+    { big: "Λ", small: "λ", name: "lambda", pron: "l" },
+    { big: "Μ", small: "μ", name: "mi", pron: "m" },
+    { big: "Ν", small: "ν", name: "ni", pron: "n" },
+    { big: "Ξ", small: "ξ", name: "ksi", pron: "ks" },
+    { big: "Ο", small: "ο", name: "omicron", pron: "o" },
+    { big: "Π", small: "π", name: "pi", pron: "p" },
+    { big: "Ρ", small: "ρ", name: "rho", pron: "r" },
+    { big: "Σ", small: "σ/ς", name: "sigma", pron: "s" },
+    { big: "Τ", small: "τ", name: "tau", pron: "t" },
+    { big: "Υ", small: "υ", name: "ypsilon", pron: "y / u" },
+    { big: "Φ", small: "φ", name: "phi", pron: "ph" },
+    { big: "Χ", small: "χ", name: "chi", pron: "ch" },
+    { big: "Ψ", small: "ψ", name: "psi", pron: "ps" },
+    { big: "Ω", small: "ω", name: "omega", pron: "ō (długie o)" }
+];
+
+let alphabetIndex = 0;
+
+function showAlphabetCard() {
+    const l = greekAlphabet[alphabetIndex];
+    document.getElementById('alphabetFront').innerHTML = `
+        <div style="font-size: clamp(3.5rem, 6vw, 4rem);">${l.big}<br>${l.small}</div>
+        <div style="font-size: clamp(1.6rem, 5vw, 2.5rem); margin-top: 10px;">${l.name}</div>
+        <div style="font-size: clamp(1.3rem, 3vw, 2rem); margin-top: 10px; opacity: 0.9;">${l.pron}</div>
+    `;
+}
+
+function startAlphabetLearning() {
+    alphabetIndex = 0;
+    showAlphabetCard();
+    showScreen('alphabetLearn');
+}
+
+function nextLetter() {
+    alphabetIndex = (alphabetIndex + 1) % greekAlphabet.length;
+    showAlphabetCard();
+}
+
+function prevLetter() {
+    alphabetIndex = (alphabetIndex - 1 + greekAlphabet.length) % greekAlphabet.length;
+    showAlphabetCard();
+}
+
+function startcwiczenia() {
+
+        showScreen('startcwiczenia');
+		startExercise();
+}</script>
 
 </body>
 </html>
