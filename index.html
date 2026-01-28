@@ -3,250 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Biblos – Logowanie</title>
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-
-    <!-- Czcionka antyczna dla tytułu -->
+    <title>Biblos</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&display=swap" rel="stylesheet">
-
-
-
     <style>
-        #avatarInput {
-            display: none !important;
-        }
         :root {
             --bg-gradient: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #cfe8fc 100%);
             --card: rgba(255, 255, 255, 0.95);
-            --text: #1e293b;
-            --text-muted: #64748b;
             --accent-hebrew: #f59e0b;
             --accent-greek: #0ea5e9;
-            --accent-hover: #fbbf24;
-            --shadow-sm: 0 4px 12px rgba(0,0,0,0.06);
-            --shadow-md: 0 10px 30px rgba(0,0,0,0.1);
             --shadow-lg: 0 20px 50px rgba(0,0,0,0.12);
-            --border: rgba(0,0,0,0.08);
+            --text-muted: #94a3b8;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background: var(--bg-gradient);
-            color: var(--text);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            margin: 0;
         }
 
         .container {
             width: 100%;
-            max-width: 420px;
+            max-width: 400px;
             background: var(--card);
             backdrop-filter: blur(16px);
             border-radius: 32px;
             box-shadow: var(--shadow-lg);
-            padding: 40px 32px;
+            padding: 60px 32px 40px; /* Większy padding u góry, mniejszy u dołu */
             text-align: center;
+            border: 1px solid rgba(0,0,0,0.08);
             display: flex;
             flex-direction: column;
-            gap: 36px;
-            border: 1px solid var(--border);
+            align-items: center;
         }
 
-        /* Antyczny tytuł z gradientem */
         h1 {
             font-family: 'Cinzel Decorative', serif;
-            font-size: 3.6rem;
-            font-weight: 900;
-            letter-spacing: 7px;
+            font-size: 3.8rem;
+            margin-bottom: 50px;
             background: linear-gradient(90deg, var(--accent-hebrew), var(--accent-greek));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
+            letter-spacing: 8px;
+            cursor: pointer;
+			touch-action: manipulation;
         }
 
-        /* Nowy użytkownik */
-        #newUserScreen p {
-            font-size: 1.4rem;
-            color: var(--text-muted);
-            margin-bottom: 24px;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 16px 20px;
-            font-size: 1.4rem;
-            border: 2px solid var(--border);
-            border-radius: 24px;
-            background: white;
-            color: var(--text);
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        input[type="text"]:focus {
-            outline: none;
-            border-color: var(--accent-greek);
-            box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15);
-        }
-        input[type="text"]::placeholder {
-            color: var(--text-muted);
-        }
-
-        /* Przyciski */
-        button {
-            padding: 16px 32px;
-            font-size: 1.4rem;
-            font-weight: 600;
+        .btn-enter {
+            padding: 20px 40px;
+            font-size: 1.6rem;
+            font-weight: 700;
             border: none;
             border-radius: 50px;
             cursor: pointer;
+            background: linear-gradient(135deg, var(--accent-greek), var(--accent-hebrew));
+            color: white;
+            box-shadow: 0 10px 20px rgba(14, 165, 233, 0.3);
             transition: all 0.3s ease;
             width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 60px; /* Odstęp od przycisku resetu */
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent-greek), var(--accent-hebrew));
-            color: white;
-            box-shadow: var(--shadow-md);
-        }
-        .btn-primary:hover {
+        .btn-enter:hover {
             transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 15px 30px rgba(14, 165, 233, 0.4);
         }
 
-        .btn-secondary {
-            background: transparent;
-            border: 2px solid var(--text-muted);
-            color: var(--text-muted);
-        }
-        .btn-secondary:hover {
-            background: var(--text-muted);
-            color: white;
-            transform: translateY(-4px);
-        }
-
-        .btn-danger {
-            background: #ef4444;
-            color: white;
-        }
-        .btn-danger:hover {
-            background: #dc2626;
-            transform: translateY(-4px);
-        }
-
-        /* Awatar */
-        .avatar-container {
-            position: relative;
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 20px;
-        }
-        .avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            box-shadow: var(--shadow-md);
-            border: 4px solid white;
-        }
-        .avatar-default {
-            background: linear-gradient(135deg, var(--accent-greek), var(--accent-hebrew));
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4.2rem;
-            font-weight: bold;
-        }
-
-        .change-avatar-btn {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 40px;
-            height: 40px;
-            background: rgba(0,0,0,0.6);
+        .btn-reset {
+            background: none;
             border: none;
-            border-radius: 50%;
-            color: white;
-            font-size: 1.4rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-decoration: underline;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s;
-        }
-        .change-avatar-btn:hover {
-            background: rgba(0,0,0,0.8);
-            transform: scale(1.1);
+            transition: color 0.2s;
+            padding: 10px;
         }
 
-        .user-name {
-            font-size: 1.9rem;
-            font-weight: 600;
-            margin-bottom: 32px;
+        .btn-reset:hover {
+            color: #ef4444; /* Czerwony przy najechaniu */
         }
 
-        /* Cropper modal – lekko unowocześniony */
-        #cropperModal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.9);
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            padding: 20px;
-        }
-        .cropper-container {
-            width: 95vw;
-            max-width: 480px;
-            background: white;
-            border-radius: 28px;
-            overflow: hidden;
-            box-shadow: var(--shadow-lg);
-        }
-        #cropImage {
-            max-height: 70vh;
-            width: 100%;
-        }
-        .cropper-buttons {
-            padding: 20px;
-            background: #f8fafc;
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-        }
-
-        /* Responsywność */
-        @media (max-width: 480px) {
-            .container { padding: 36px 24px; gap: 32px; }
-            h1 { font-size: 3.2rem; letter-spacing: 5px; }
-            input[type="text"] { padding: 15px; font-size: 1.3rem; }
-            button { padding: 15px; font-size: 1.3rem; }
-            .avatar-container { width: 100px; height: 100px; }
-            .avatar, .avatar-default { width: 100px; height: 100px; font-size: 3.6rem; }
-            .change-avatar-btn { width: 36px; height: 36px; font-size: 1.2rem; }
-            .user-name { font-size: 1.7rem; }
-        }
-        #existingUserScreen {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            margin-top: 16px;
-        }
-
-        #existingUserScreen button {
-            margin: 8px 0;
-        }
-
-        /* Nowy modal o autorze */
+        /* Modal o autorze */
         #aboutModal {
             display: none;
             position: fixed;
@@ -254,33 +98,14 @@
             background: rgba(0,0,0,0.85);
             align-items: center;
             justify-content: center;
-            z-index: 2000;
-            padding: 20px;
+            z-index: 1000;
         }
-        .about-container {
+        .about-box {
             background: white;
+            padding: 40px;
             border-radius: 28px;
-            padding: 40px 32px;
-            max-width: 400px;
-            width: 95vw;
             text-align: center;
-            box-shadow: var(--shadow-lg);
-        }
-        .about-container h2 {
-            font-family: 'Cinzel Decorative', serif;
-            font-size: 2.4rem;
-            margin-bottom: 24px;
-            color: var(--accent-greek);
-        }
-        .about-container p {
-            font-size: 1.3rem;
-            line-height: 1.6;
-            color: var(--text);
-        }
-        #closeAbout {
-            margin-top: 32px;
-            padding: 12px 40px;
-            font-size: 1.2rem;
+            max-width: 320px;
         }
     </style>
 </head>
@@ -288,233 +113,74 @@
 
 <div class="container">
     <h1 id="title">BIBLOS</h1>
- <div id="existingUserScreen">
-        <div class="avatar-container">
-            <div id="avatarDisplay" class="avatar avatar-default"></div>
-          
-        </div>
-        <div class="user-name" id="welcomeName"></div>
-    <div id="newUserScreen">
-        <p>Podaj swoje imię, aby rozpocząć</p>
-        <input type="text" id="nameInput" placeholder="Wpisz imię..." autofocus>
-        <button class="btn-primary" id="saveNameBtn">Rozpocznij naukę</button>
-    </div>
-
-   
-
-        <button class="btn-primary" id="continueBtn">Kontynuuj</button>
-        <button class="btn-secondary" id="newProfileBtn">Nowy profil</button>
-        <button class="btn-danger" id="resetAllBtn">Reset danych</button>
-    </div>
-
-    <input type="file" id="avatarInput" accept="image/*">
+    
+    <button class="btn-enter" id="enterBtn">Rozpocznij naukę</button>
+    
+    <button class="btn-reset" id="resetBtn">Resetuj wszystkie postępy</button>
 </div>
 
-<!-- Modal croppera -->
-<div id="cropperModal">
-    <div class="cropper-container">
-        <img id="cropImage" src="" alt="Przytnij awatar">
-        <div class="cropper-buttons">
-            <button class="btn-secondary" id="cancelCrop">Anuluj</button>
-            <button class="btn-primary" id="saveCrop">Zapisz</button>
-        </div>
-    </div>
-</div>
-
-<!-- Modal o autorze -->
 <div id="aboutModal">
-    <div class="about-container">
-        <h2>O twórcy</h2>
-        <p>Ksiądz Marcin Krzysztof Januszkiewicz<br>PWT Wrocław</p>
+    <div class="about-box">
+        <h2 style="font-family: 'Cinzel Decorative'; color: #0ea5e9;">O twórcy</h2>
+        <p style="font-size: 1.2rem; margin: 20px 0;">Ksiądz Marcin Krzysztof Januszkiewicz<br>PWT Wrocław</p>
         <p><strong>Aplikacja Biblos 2026</strong></p>
-        <button class="btn-primary" id="closeAbout">Zamknij</button>
+        <button onclick="document.getElementById('aboutModal').style.display='none'" 
+                style="margin-top:20px; padding:10px 20px; border-radius:20px; border:none; background:#eee; cursor:pointer;">
+            Zamknij
+        </button>
     </div>
 </div>
 
 <script>
-    // Twój oryginalny JavaScript
     const USER_KEY = 'biblos_current_user';
-    const AVATAR_KEY = 'biblos_user_avatar';
 
-    const newUserScreen = document.getElementById('newUserScreen');
-    const existingUserScreen = document.getElementById('existingUserScreen');
-    const nameInput = document.getElementById('nameInput');
-    const saveNameBtn = document.getElementById('saveNameBtn');
-
-    const avatarDisplay = document.getElementById('avatarDisplay');
-    const changeAvatarBtn = document.getElementById('changeAvatarBtn');
-    const avatarInput = document.getElementById('avatarInput');
-
-    const welcomeName = document.getElementById('welcomeName');
-    const continueBtn = document.getElementById('continueBtn');
-    const newProfileBtn = document.getElementById('newProfileBtn');
-    const resetAllBtn = document.getElementById('resetAllBtn');
-
-    const cropperModal = document.getElementById('cropperModal');
-    const cropImage = document.getElementById('cropImage');
-    const cancelCrop = document.getElementById('cancelCrop');
-    const saveCrop = document.getElementById('saveCrop');
-    let cropper = null;
-
-    // Nowe elementy dla ukrytej funkcji
-    const title = document.getElementById('title');
-    const aboutModal = document.getElementById('aboutModal');
-    const closeAbout = document.getElementById('closeAbout');
-
-    function getFirstLetter(name) {
-        return name.trim().charAt(0).toUpperCase();
-    }
-
-    function loadAvatar() {
-        const savedAvatar = localStorage.getItem(AVATAR_KEY);
-        const user = localStorage.getItem(USER_KEY) || '?';
-
-        if (savedAvatar) {
-            avatarDisplay.style.backgroundImage = `url(${savedAvatar})`;
-            avatarDisplay.style.backgroundSize = 'cover';
-            avatarDisplay.style.backgroundPosition = 'center';
-            avatarDisplay.textContent = '';
-            avatarDisplay.classList.remove('avatar-default');
-        } else {
-            avatarDisplay.style.backgroundImage = '';
-            avatarDisplay.classList.add('avatar-default');
-            avatarDisplay.textContent = getFirstLetter(user);
+    // 1. Zapewnienie ID
+    function ensureIdentity() {
+        let user = localStorage.getItem(USER_KEY);
+        if (!user) {
+            localStorage.setItem(USER_KEY, 'Uczeń Biblos');
         }
     }
 
-    function checkUser() {
-        const savedUser = localStorage.getItem(USER_KEY);
-        if (savedUser && savedUser.trim() !== '') {
-            newUserScreen.style.display = 'none';
-            existingUserScreen.style.display = 'block';
-            welcomeName.textContent = `Witaj, ${savedUser}!`;
-            loadAvatar();
-        } else {
-            newUserScreen.style.display = 'block';
-            existingUserScreen.style.display = 'none';
-            nameInput.focus();
-        }
-    }
-
-    function goToApp() {
+    // 2. Przycisk wejścia
+    document.getElementById('enterBtn').onclick = () => {
+        ensureIdentity();
         window.location.href = 'app.html';
-    }
-
-    saveNameBtn.onclick = () => {
-        let name = nameInput.value.trim();
-        if (name === '') { alert('Proszę podać imię!'); return; }
-        name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
-        localStorage.setItem(USER_KEY, name);
-        goToApp();
-    };
-    nameInput.addEventListener('keypress', e => { if (e.key === 'Enter') saveNameBtn.click(); });
-
-    continueBtn.onclick = () => goToApp();
-
-    newProfileBtn.onclick = () => {
-        if (confirm('Czy na pewno chcesz utworzyć nowy profil?')) {
-            localStorage.removeItem(USER_KEY);
-            localStorage.removeItem(AVATAR_KEY);
-            checkUser();
-            nameInput.value = '';
-            nameInput.focus();
-        }
     };
 
-    resetAllBtn.onclick = () => {
-        if (confirm('UWAGA! To nieodwracalnie usunie WSZYSTKIE dane aplikacji.\nKontynuować?')) {
-            if (confirm('Ostatnie ostrzeżenie. Na pewno?')) {
+    // 3. Resetowanie danych (z podwójnym potwierdzeniem)
+    document.getElementById('resetBtn').onclick = () => {
+        if (confirm('Czy na pewno chcesz skasować wszystkie swoje postępy w nauce? Tej operacji nie da się cofnąć.')) {
+            if (confirm('OSTATNIE OSTRZEŻENIE: Stracisz wszystkie zaliczone lekcje i powtórki. Kontynuować?')) {
                 localStorage.clear();
-                alert('Wszystkie dane zostały usunięte.');
-                checkUser();
+                alert('Dane zostały wyczyszczone.');
+                location.reload(); // Odśwież stronę, żeby system stworzył czyste ID
             }
         }
     };
 
-    changeAvatarBtn.onclick = () => avatarInput.click();
+   // Poprawiona ukryta funkcja o autorze
+    let clicks = 0;
+    let lastClick = 0;
 
-    avatarInput.onchange = (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        if (!file.type.startsWith('image/')) {
-            alert('Proszę wybrać plik obrazu.');
-            avatarInput.value = '';
-            return;
+    document.getElementById('title').addEventListener('click', (e) => {
+        const currentTime = new Date().getTime();
+        const timeDiff = currentTime - lastClick;
+
+        // Jeśli kliknięcie nastąpiło szybciej niż w pół sekundy od poprzedniego
+        if (timeDiff < 500) {
+            clicks++;
+        } else {
+            clicks = 1;
         }
 
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-            cropImage.src = ev.target.result;
-            cropperModal.style.display = 'flex';
+        lastClick = currentTime;
 
-            if (cropper) cropper.destroy();
-
-            cropper = new Cropper(cropImage, {
-                aspectRatio: 1,
-                viewMode: 1,
-                autoCropArea: 1,
-                responsive: true,
-                background: false,
-                modal: true,
-                guides: true
-            });
-        };
-        reader.readAsDataURL(file);
-    };
-
-    cancelCrop.onclick = () => {
-        cropperModal.style.display = 'none';
-        if (cropper) cropper.destroy();
-        avatarInput.value = '';
-    };
-
-    saveCrop.onclick = () => {
-        if (!cropper) return;
-
-        const canvas = cropper.getCroppedCanvas({ width: 300, height: 300 });
-        const base64 = canvas.toDataURL('image/jpeg', 0.92);
-        localStorage.setItem(AVATAR_KEY, base64);
-        loadAvatar();
-
-        cropperModal.style.display = 'none';
-        cropper.destroy();
-        avatarInput.value = '';
-    };
-
-    cropperModal.onclick = (e) => {
-        if (e.target === cropperModal) cancelCrop.click();
-    };
-
-    // === UKRYTA FUNKCJA ===
-    let clickCount = 0;
-    let clickTimer = null;
-
-    title.addEventListener('click', () => {
-        clickCount++;
-
-        if (clickCount === 1) {
-            clickTimer = setTimeout(() => {
-                clickCount = 0;
-            }, 800); // czas na kolejne kliknięcia (możesz zmienić)
-        } else if (clickCount === 3) {
-            clearTimeout(clickTimer);
-            clickCount = 0;
-            aboutModal.style.display = 'flex';
+        if (clicks === 3) {
+            document.getElementById('aboutModal').style.display = 'flex';
+            clicks = 0; // Reset po sukcesie
         }
     });
-
-    // Zamknięcie modala o autorze
-    closeAbout.onclick = () => {
-        aboutModal.style.display = 'none';
-    };
-
-    aboutModal.onclick = (e) => {
-        if (e.target === aboutModal) {
-            aboutModal.style.display = 'none';
-        }
-    };
-
-    checkUser();
 </script>
 
 </body>
